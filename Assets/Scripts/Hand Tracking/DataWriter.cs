@@ -11,10 +11,10 @@ public class DataWriter : MonoBehaviour
     private string dataString;
     private StringBuilder stringBuilder = new StringBuilder ();
 
-    private void Start()
-    {
-        Debug.Log(Application.persistentDataPath);
-    }
+    // private void Start()
+    // {
+    //     Debug.Log(Application.persistentDataPath);
+    // }
 
     public void WriteTrajectoryData(Vector3 p, Vector3 r, string ts, string elapsed, string tag){
     //    position = "x:"+p.x.ToString()+"y:"+p.y.ToString()+"z"+p.z.ToString();

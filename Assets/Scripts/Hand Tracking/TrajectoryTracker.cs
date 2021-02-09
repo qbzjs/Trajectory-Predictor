@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HandPoseTracker : MonoBehaviour
+public class TrajectoryTracker : MonoBehaviour
 {
     // public static HandPoseTracker instance;
 
@@ -32,24 +32,25 @@ public class HandPoseTracker : MonoBehaviour
             jointTag = transform.name;
         }
 
-        dataWriter = gameObject.GetComponent<DataWriter>();
+        // dataWriter = gameObject.GetComponent<DataWriter>();
+        dataWriter = new DataWriter();
     }
     
-    private void OnEnable()
-    {
-        TrackingControl.OnSpaceBar += TrackingControl_OnSpaceBar;
+    private void OnEnable(){
+        InputManager.OnRecordAction += ToggleTrackingRecord;
     }
 
     private void OnDisable()
     {
-        TrackingControl.OnSpaceBar -= TrackingControl_OnSpaceBar;
+        InputManager.OnRecordAction -= ToggleTrackingRecord;
     }
-    private void TrackingControl_OnSpaceBar(string id)
+    private void ToggleTrackingRecord(string id)
     {
         if (!trackTrajectory)
         {
             Debug.Log("---Start Tracking---");
             //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
+            dataWriter = new DataWriter();
             testID = jointTag + "_" + id;
             elapsedTime = 0;
             trackTrajectory = true;

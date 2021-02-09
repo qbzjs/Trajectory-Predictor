@@ -23,4 +23,6 @@ namespace Enums
         TargetDuration
     }
     public enum GameStatus{Ready, Running, Complete}
+    
+    public enum UserInput{GamePad_A, GamePad_B, GamePad_X, GamePad_Y, L_Button, R_Button, Up, Down, Left, Right}
 }
