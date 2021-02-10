@@ -82,7 +82,7 @@ public class GamePadInput : MonoBehaviour {
 		rTrigger = Input.GetAxis ("rTrigger");
 		triggerAxis = Input.GetAxis ("TriggersAxis");
 		
-		Debug.Log("lTrigger: "+lTrigger + " -- " + "rTrigger: " + rTrigger);
+//		Debug.Log("lTrigger: "+lTrigger + " -- " + "rTrigger: " + rTrigger);
 
 		if (triggerAxis > 0) {
 			triggerAxis_L = triggerAxis;
