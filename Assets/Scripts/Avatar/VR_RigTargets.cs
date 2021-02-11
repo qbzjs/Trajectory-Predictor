@@ -1,9 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RootMotion.FinalIK;
 
 public class VR_RigTargets : MonoBehaviour
 {
+    public Transform avatar;
+    public VRIK vrIK;
+    public float height = 1f;
+    public float armLength = 1.2f;
+
+    [Space(10)]
     public Transform VR_Camera;
     public Transform VR_ControllerLeft;
     public Transform VR_ControllerRight;
@@ -12,30 +19,56 @@ public class VR_RigTargets : MonoBehaviour
     public Transform VR_FootTrackerLeft;
     public Transform VR_FootTrackerRight;
 
+    [Space(10)]
     public Transform headTarget;
     public Vector3 headTargetOffset;
+    public Vector3 headTargetRotation;
+    [Space(10)]
     public Transform leftHandTarget;
     public Vector3 leftHandTargetOffset;
+    public Vector3 leftHandTargetRotation;
+    [Space(10)]
     public Transform rightHandTarget;
     public Vector3 rightHandTargetOffset;
-
+    public Vector3 rightHandTargetRotation;
+    [Space(10)]
     //TODO feet added later
     public Transform leftFootTarget;
     public Transform rightFootTarget;
 
-    void Start()
+    void Awake()
     {
-        
+        BuildRig();
+    }
+    void BuildRig()
+    {
+        headTarget.transform.parent = VR_Camera;
+        leftHandTarget.transform.parent = VR_ControllerLeft;
+        rightHandTarget.transform.parent = VR_ControllerRight;
+
+        headTarget.transform.position = new Vector3(VR_Camera.transform.position.x + headTargetOffset.x, VR_Camera.transform.position.y + headTargetOffset.y, VR_Camera.transform.position.z + headTargetOffset.z);
+        leftHandTarget.transform.position = new Vector3(VR_ControllerLeft.transform.position.x + leftHandTargetOffset.x, VR_ControllerLeft.transform.position.y + leftHandTargetOffset.y, VR_ControllerLeft.transform.position.z + leftHandTargetOffset.z);
+        rightHandTarget.transform.position = new Vector3(VR_ControllerRight.transform.position.x + rightHandTargetOffset.x, VR_ControllerRight.transform.position.y + rightHandTargetOffset.y, VR_ControllerRight.transform.position.z + rightHandTargetOffset.z);
+
+        headTarget.eulerAngles = headTargetRotation;
+        leftHandTarget.eulerAngles = leftHandTargetRotation;
+        rightHandTarget.eulerAngles = rightHandTargetRotation;
+
+//        float rigScaler = height
+//        avatar.localScale = new Vector3(avatar.localScale.x + height, avatar.localScale.y + height, avatar.localScale.z + height);
+
+        vrIK = avatar.GetComponent<VRIK>();
+        vrIK.solver.leftArm.armLengthMlp = armLength;
+        vrIK.solver.rightArm.armLengthMlp = armLength;
+        vrIK.solver.spine.headTarget = headTarget;
+        vrIK.solver.leftArm.target = leftHandTarget;
+        vrIK.solver.rightArm.target = rightHandTarget;
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-        headTarget.transform.position = new Vector3(VR_Camera.transform.position.x + headTargetOffset.x, VR_Camera.transform.position.y + headTargetOffset.y, VR_Camera.transform.position.z + headTargetOffset.z);
-        headTarget.transform.rotation = VR_Camera.rotation;
-
- //       leftHandTarget.transform.position = new Vector3(VR_ControllerLeft.transform.position.x + leftHandTargetOffset.x, VR_ControllerLeft.transform.position.y + leftHandTargetOffset.y, VR_ControllerLeft.transform.position.z + leftHandTargetOffset.z);
-
- //       rightHandTarget.transform.position = new Vector3(VR_ControllerLeft.transform.position.x + rightHandTargetOffset.x, VR_ControllerLeft.transform.position.y + rightHandTargetOffset.y, VR_ControllerLeft.transform.position.z + rightHandTargetOffset.z);
+        //headTarget.transform.position = new Vector3(VR_Camera.transform.position.x + headTargetOffset.x, VR_Camera.transform.position.y + headTargetOffset.y, VR_Camera.transform.position.z + headTargetOffset.z);
+        //leftHandTarget.transform.position = new Vector3(VR_ControllerLeft.transform.position.x + leftHandTargetOffset.x, VR_ControllerLeft.transform.position.y + leftHandTargetOffset.y, VR_ControllerLeft.transform.position.z + leftHandTargetOffset.z);
+        //rightHandTarget.transform.position = new Vector3(VR_ControllerRight.transform.position.x + rightHandTargetOffset.x, VR_ControllerRight.transform.position.y + rightHandTargetOffset.y, VR_ControllerRight.transform.position.z + rightHandTargetOffset.z);
     }
 }
