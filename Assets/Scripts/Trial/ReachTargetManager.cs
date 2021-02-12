@@ -5,6 +5,13 @@ using UnityEngine;
 public class ReachTargetManager : MonoBehaviour
 {
 
+    public GameObject[] reachTarget = new GameObject[5];
+
+    public Material targetDefault;
+    public Material targetHighlight;
+
+    public bool animateTargets;
+
     private void OnEnable()
     {
         TrialSequence.OnTargetAction += TrialSequence_OnTargetAction;
@@ -14,15 +21,31 @@ public class ReachTargetManager : MonoBehaviour
         TrialSequence.OnTargetAction -= TrialSequence_OnTargetAction;
     }
 
-    private void TrialSequence_OnTargetAction(int targetNumber)
+    void Awake()
     {
-        Debug.Log(targetNumber);
+        for (int i = 0; i < reachTarget.Length; i++)
+        {
+            reachTarget[i].GetComponent<Renderer>().material = targetDefault;
+        }
     }
 
-    void Start()
+    private void TrialSequence_OnTargetAction(int targetNumber)
     {
-        
+        Debug.Log(targetNumber +" : " + reachTarget[targetNumber].name.ToString());
+
+        for(int i=0; i<reachTarget.Length; i++)
+        {
+            reachTarget[i].GetComponent<Renderer>().material = targetDefault;
+        }
+
+        reachTarget[targetNumber].GetComponent<Renderer>().material = targetHighlight;
+        if (animateTargets)
+        {
+            reachTarget[targetNumber].GetComponent<TargetAnimator>().ScaleTarget();
+        }
     }
+
+
     void Update()
     {
         

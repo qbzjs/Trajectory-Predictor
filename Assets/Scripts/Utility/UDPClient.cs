@@ -119,7 +119,7 @@ public class UDPClient : MonoBehaviour
             catch (Exception e)
             {
                 //Console.WriteLine(e.ToString());
-                Debug.Log("Error:" + e.ToString());
+                Debug.Log("UDP Error (NO DATA RECEIVED) :" + e.ToString());
             }
 
             //CONVERT BYTE_ARRAY OF DOUBLES TO FLOATS

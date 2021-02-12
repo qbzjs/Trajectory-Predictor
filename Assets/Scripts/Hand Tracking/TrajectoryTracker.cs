@@ -44,11 +44,13 @@ public class TrajectoryTracker : MonoBehaviour
     {
         InputManager.OnRecordAction -= ToggleTrackingRecord;
     }
-    private void ToggleTrackingRecord(string id)
+    private void ToggleTrackingRecord(bool t, string id)
     {
+        //trackTrajectory = t;
+
         if (!trackTrajectory)
         {
-            Debug.Log("---Start Tracking---");
+            Debug.Log("---- Start Trajectory Tracking : " + jointTag);
             //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
             dataWriter = new DataWriter();
             testID = jointTag + "_" + id;
@@ -57,7 +59,7 @@ public class TrajectoryTracker : MonoBehaviour
         }
         else
         {
-            Debug.Log("---Stop Tracking---");
+            Debug.Log("---- Stop Trajectory Tracking : " + jointTag);
             trackTrajectory = false;
             dataWriter.WriteData(testID);
         }

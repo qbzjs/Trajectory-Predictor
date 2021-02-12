@@ -11,10 +11,10 @@ public class Settings : MonoBehaviour {
 	public static Settings instance;
 
 	public bool active;
-	public GameObject settingsPanel;
+//	public GameObject settingsPanel;
 	
 	[Header("SEQUENCE SETTINGS")]
-	public TrialType trialType = TrialType.Four_Targets;
+	public TrialType trialType = TrialType.CentreOut;
 	[Range(5, 20)] 
 	public int repetitions = 15; // num of sequences to run
 	[Range(1, 10)] 
@@ -78,17 +78,20 @@ public class Settings : MonoBehaviour {
 	private void Start() {
 		//initialise display
 		InitialiseInterface();
-		settingsPanel.SetActive(true);
+		displayObjects.settingsPanel.SetActive(true);
+		displayObjects.TrialUI.SetActive(true);
+		displayObjects.trial2D.SetActive(true);
+		displayObjects.trial2D_RenderTexture.SetActive(true);
 		active = true;
 	}
 
 	public void ToggleSettings() {
 		if (active) {
-			settingsPanel.SetActive(false);
+			displayObjects.settingsPanel.SetActive(false);
 			active = false;
 		}
 		else {
-			settingsPanel.SetActive(true);
+			displayObjects.settingsPanel.SetActive(true);
 			active = true;
 		}
 	}
@@ -117,14 +120,21 @@ public class Settings : MonoBehaviour {
 		if (trialType == TrialType.Four_Targets && initialised) {
 			restVisible = true;
 			SetRestVisible(restVisible);
-//			settingsPanel.transform.Find("Rest Toggle").transform.Find("Rest Toggle").GetComponent<Toggle>().isOn = restVisible;
-			settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise();
+			//			settingsPanel.transform.Find("Rest Toggle").transform.Find("Rest Toggle").GetComponent<Toggle>().isOn = restVisible;
+			displayObjects.settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise();
 		}
 		if (trialType == TrialType.Three_Targets  && initialised) {
 			restVisible = false;
 			SetRestVisible(restVisible);
-			settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise();
+			displayObjects.settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise();
 //			settingsPanel.transform.Find("Rest Toggle").transform.Find("Rest Toggle").GetComponent<Toggle>().isOn = restVisible;
+		}
+		if (trialType == TrialType.CentreOut && initialised)
+		{
+			restVisible = true;
+			SetRestVisible(restVisible);
+			displayObjects.settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise();
+			//			settingsPanel.transform.Find("Rest Toggle").transform.Find("Rest Toggle").GetComponent<Toggle>().isOn = restVisible;
 		}
 
 		initialised = true;
@@ -316,10 +326,15 @@ public class Settings : MonoBehaviour {
 			
 			//trial
 			string tt = EasySave.Load<string>("trialType");
+			if (tt == "CentreOut")
+			{
+				trialType = TrialType.CentreOut;
+			}
 			if (tt == "Four_Targets") {
 				trialType = TrialType.Four_Targets;
 			}
-			else {
+			if (tt == "Three_Targets")
+			{
 				trialType = TrialType.Three_Targets;
 			}
 
@@ -327,7 +342,7 @@ public class Settings : MonoBehaviour {
 			startDelay = EasySave.Load<int>("startDelay");
 			restDuration = EasySave.Load<int>("restDuration");
 			targetDuration = EasySave.Load<int>("targetDuration");
-			
+
 			//interface
 			animateTargets = EasySave.Load<bool>("animateTargets");
 			labelsVisible = EasySave.Load<bool>("labelsVisible");
@@ -366,7 +381,7 @@ public class Settings : MonoBehaviour {
 			portSend = 3010;
 			
 			//trial
-			trialType = TrialType.Four_Targets;
+			trialType = TrialType.CentreOut;
 			repetitions = 15;
 			startDelay = 2;
 			restDuration = 2;
@@ -411,7 +426,7 @@ public class Settings : MonoBehaviour {
 		SetStartDelay(startDelay);
 		SetRestDuration(restDuration);
 		SetTargetDuration(targetDuration);
-		
+
 		//interface
 		SetAnimateTargets(animateTargets);
 		SetLabelsVisible(labelsVisible);

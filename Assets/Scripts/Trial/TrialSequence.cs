@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Enums;
-using UnityEngine.AI;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class TrialSequence : MonoBehaviour {
@@ -29,8 +29,8 @@ public class TrialSequence : MonoBehaviour {
     
 
     [Header("SEQUENCE OBJECTS (rest last object)")]
-    public GameObject[] target = new GameObject[4];
-    private GameObject[] t = new GameObject[4];
+    public GameObject[] target = new GameObject[5];
+    private GameObject[] t = new GameObject[5];
     [Space(5)]
     public Material defaultMaterial;
     public Material highlightedMaterial;
@@ -70,6 +70,7 @@ public class TrialSequence : MonoBehaviour {
     }
     public void InitialiseTrial() {
         
+        //TODO fix trial initilisation - centre out or 4 targets has error 
         if (trialType == TrialType.Three_Targets) {
             //take the last object away from the array
             GameObject[] g = new GameObject[3];
@@ -122,7 +123,7 @@ public class TrialSequence : MonoBehaviour {
         sequenceIndex = 0;
         elapsedTime = 0;
         RestTarget();
-        Debug.Log("-----TRIAL STOPPED-----");
+        Debug.Log("-----TRIAL STOPPED----- ");
         Settings.instance.Status = GameStatus.Ready;
         UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Game Ready");
         UI_DisplayText.instance.SetProgress(sequenceIndex, sequenceOrder.Length);
@@ -169,7 +170,7 @@ public class TrialSequence : MonoBehaviour {
         //3D Target Event
         if (OnTargetAction != null)
         {
-            OnTargetAction(tNum);
+            OnTargetAction(tNumID);
         }
 
         //2D Target Highlight

@@ -14,25 +14,28 @@ public class TrialControls : MonoBehaviour
 
     void Start () {
         initialColour = playButton.gameObject.GetComponent<Image>().color;
-        SetStop();
+        //SetStop();
     }
 
     public void SetPlay () {
-        TrialSequence.instance.StartTrial();
+        InputManager.instance.StartTrialSequence();
+        InputManager.instance.SetTrajectoryRecording(true);
+        SetControls(Settings.instance.Status);
     }
     public void SetStop () {
-
-        TrialSequence.instance.StopTrial();
+        InputManager.instance.StopTrialSequence();
+        InputManager.instance.SetTrajectoryRecording(false);
+        SetControls(Settings.instance.Status);
     }
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            TrialSequence.instance.StartTrial();
+            SetPlay();
         }
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            TrialSequence.instance.StopTrial();
+            SetStop();
         }
 
-        SetControls(Settings.instance.Status);
+  //      SetControls(Settings.instance.Status);
     }
 
     private void SetControls(GameStatus status) {

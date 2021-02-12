@@ -6,7 +6,7 @@ public class TargetAnimator : MonoBehaviour {
 
 	private GameObject target;
 
-	public Vector3 initialScale;
+	private Vector3 initialScale;
 	
 	void Awake () {
 		target = gameObject;

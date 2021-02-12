@@ -3,7 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UI_DisplayObjects : MonoBehaviour {
-	
+
+	[Header("Objects")]
+	public GameObject TrialUI;
+	public GameObject settingsPanel;
+	public GameObject trial2D;
+	public GameObject trial2D_RenderTexture;
+
+	[Space(10)]
+	[Header("UI Objects")]
 	public GameObject controlCharacter_C;
 	public GameObject controlCharacter_L;
 	public GameObject controlCharacter_T;

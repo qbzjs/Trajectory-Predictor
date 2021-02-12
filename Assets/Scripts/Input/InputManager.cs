@@ -9,7 +9,9 @@ using UnityEngine;
 /// </summary>
 public class InputManager : MonoBehaviour
 {
-    public delegate void RecordAction(string id);
+    public static InputManager instance;
+
+    public delegate void RecordAction(bool t, string id);
     public static event RecordAction OnRecordAction;
     
     private void OnEnable(){
@@ -25,22 +27,9 @@ public class InputManager : MonoBehaviour
         GamePadInput.OnGamePad_Y -= GamePadInput_OnGamePad_Y;
     }
 
-    private void GamePadInput_OnGamePad_A(UserInput b){
-        //START RECORDING DATA
-    }
-    private void GamePadInput_OnGamePad_B(UserInput b){
-        
-    }
-    private void GamePadInput_OnGamePad_X(UserInput b){
-        
-    }
-    private void GamePadInput_OnGamePad_Y(UserInput b){
-        
-    }
-
-    void Start()
+    void Awake()
     {
-        
+        instance = this;
     }
 
     
@@ -48,14 +37,41 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            SendRecordAction();
+            SetTrajectoryRecording(true);
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SetTrajectoryRecording(false);
         }
     }
+    private void GamePadInput_OnGamePad_A(UserInput b)
+    {
+        //START RECORDING DATA
+    }
+    private void GamePadInput_OnGamePad_B(UserInput b)
+    {
 
-    void SendRecordAction(){
+    }
+    private void GamePadInput_OnGamePad_X(UserInput b)
+    {
+
+    }
+    private void GamePadInput_OnGamePad_Y(UserInput b)
+    {
+
+    }
+    public void StartTrialSequence()
+    {
+        TrialSequence.instance.StartTrial();
+    }
+    public void StopTrialSequence()
+    {
+        TrialSequence.instance.StopTrial();
+    }
+    public void SetTrajectoryRecording(bool t){
         if (OnRecordAction != null)
         {
-            OnRecordAction(System.Guid.NewGuid().ToString());
+            OnRecordAction(t, System.Guid.NewGuid().ToString());
         }
     }
 }

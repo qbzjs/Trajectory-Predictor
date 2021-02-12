@@ -16,13 +16,19 @@ public class SetTrialType : MonoBehaviour {
 	public Color highlightedColour;
 	
 	void Start () {
-		initialColour = fourButton.image.color;
+		initialColour = centreOutButton.image.color;
 		Initialise();
 	}
 
 	private void Initialise() {
 		trialType = Settings.instance.trialType;
-		
+
+		if (trialType == TrialType.CentreOut)
+		{
+			centreOutButton.image.color = highlightedColour;
+			fourButton.image.color = initialColour;
+			threeButton.image.color = initialColour;
+		}
 		if (trialType == TrialType.Four_Targets) {
 			centreOutButton.image.color = initialColour;
 			threeButton.image.color = initialColour;
@@ -33,11 +39,7 @@ public class SetTrialType : MonoBehaviour {
 			fourButton.image.color = initialColour;
 			centreOutButton.image.color = initialColour;
 		}
-		if(trialType == TrialType.CentreOut){
-			centreOutButton.image.color = highlightedColour;
-			fourButton.image.color = initialColour;
-			threeButton.image.color = initialColour;
-		}
+
 	}
 	public void SetCentreOut () {
 		threeButton.image.color = initialColour;
