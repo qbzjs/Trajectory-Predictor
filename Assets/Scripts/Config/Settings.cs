@@ -14,6 +14,7 @@ public class Settings : MonoBehaviour {
 //	public GameObject settingsPanel;
 	
 	[Header("SEQUENCE SETTINGS")]
+	public TaskSide taskSide = TaskSide.Left;
 	public TrialType trialType = TrialType.CentreOut;
 	[Range(5, 20)] 
 	public int repetitions = 15; // num of sequences to run
@@ -113,6 +114,10 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 //---------TRIAL----------------	
+	public void SetReachTaskSide(TaskSide side){
+		taskSide = side;
+		//todo ..........
+	}
 	public void SetTrialType(TrialType type) {
 		trialType = type;
 		TrialSequence.instance.trialType = trialType;

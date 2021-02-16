@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class ReachTargetManager : MonoBehaviour
-{
-
+using Enums;
+    
+public class ReachTargetManager : MonoBehaviour{
+    
+    private GameObject reachObject;
+    private Vector3 positionLeft;
+    private Vector3 positionRight;
+        
     public GameObject[] reachTarget = new GameObject[5];
 
     public Material targetDefault;
@@ -21,8 +25,12 @@ public class ReachTargetManager : MonoBehaviour
         TrialSequence.OnTargetAction -= TrialSequence_OnTargetAction;
     }
 
-    void Awake()
-    {
+    void Awake(){
+        reachObject = gameObject;
+        positionLeft = reachObject.transform.position;
+        float x = Mathf.Abs(reachObject.transform.position.x);
+        positionRight = new Vector3(x, reachObject.transform.position.y, reachObject.transform.position.z);
+        
         for (int i = 0; i < reachTarget.Length; i++)
         {
             reachTarget[i].GetComponent<Renderer>().material = targetDefault;
@@ -46,8 +54,14 @@ public class ReachTargetManager : MonoBehaviour
     }
 
 
-    void Update()
+    public void SetReachSide(TaskSide side)
     {
-        
+        if (side == TaskSide.Left){
+            reachObject.transform.position = positionLeft;
+        }
+
+        if (side == TaskSide.Right){
+            reachObject.transform.position = positionRight;
+        }
     }
 }
