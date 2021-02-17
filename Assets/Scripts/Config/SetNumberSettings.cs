@@ -7,7 +7,7 @@ using TMPro;
 
 public class SetNumberSettings : MonoBehaviour {
 
-    public SettingsValue settingValue;
+    public TrialSettingsValue trialSettingValue;
     
     public TextMeshProUGUI numberText;
     public int min = 0;
@@ -21,16 +21,16 @@ public class SetNumberSettings : MonoBehaviour {
     }
 
     private void Initialise() {
-        if (settingValue == SettingsValue.Repetitions) {
+        if (trialSettingValue == TrialSettingsValue.Repetitions) {
             SetNumber(Settings.instance.repetitions);
         }
-        if (settingValue == SettingsValue.StartDelay) {
+        if (trialSettingValue == TrialSettingsValue.StartDelay) {
             SetNumber(Settings.instance.startDelay);
         }
-        if (settingValue == SettingsValue.RestDuration) {
+        if (trialSettingValue == TrialSettingsValue.RestDuration) {
             SetNumber(Settings.instance.restDuration);
         }
-        if (settingValue == SettingsValue.TargetDuration) {
+        if (trialSettingValue == TrialSettingsValue.TargetDuration) {
             SetNumber(Settings.instance.targetDuration);
         }
     }
@@ -74,16 +74,16 @@ public class SetNumberSettings : MonoBehaviour {
     }
 
     private void SetValue(int v) {
-        if (settingValue == SettingsValue.Repetitions) {
+        if (trialSettingValue == TrialSettingsValue.Repetitions) {
             Settings.instance.SetRepetitions(v);
         }
-        if (settingValue == SettingsValue.StartDelay) {
+        if (trialSettingValue == TrialSettingsValue.StartDelay) {
             Settings.instance.SetStartDelay(v);
         }
-        if (settingValue == SettingsValue.RestDuration) {
+        if (trialSettingValue == TrialSettingsValue.RestDuration) {
             Settings.instance.SetRestDuration(v);
         }
-        if (settingValue == SettingsValue.TargetDuration) {
+        if (trialSettingValue == TrialSettingsValue.TargetDuration) {
             Settings.instance.SetTargetDuration(v);
         }
     }

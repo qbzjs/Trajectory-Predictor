@@ -1,13 +1,20 @@
 ﻿
 namespace Enums 
 {
-    public enum TaskSide {
-        Left,Right
-    }
+
     public enum TrialType {
         Three_Targets,
         Four_Targets,
         CentreOut
+    }
+
+    public enum TaskSide{
+        Left, Right
+    }
+
+    public enum TrialParadigm
+    {
+        Avatar3D, Screen2D
     }
 
     public enum CharacterColourType {
@@ -32,12 +39,14 @@ namespace Enums
         Score
     }
 
-    public enum SettingsValue {
+    public enum TrialSettingsValue {
         Repetitions,
         StartDelay,
         RestDuration,
-        TargetDuration
+        TargetDuration,
+        ActionObservation
     }
+
     public enum GameStatus{Ready, Running, Complete}
     
     public enum UserInput{GamePad_A, GamePad_B, GamePad_X, GamePad_Y, L_Button, R_Button, Up, Down, Left, Right}

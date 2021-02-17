@@ -11,11 +11,13 @@ public class Settings : MonoBehaviour {
 	public static Settings instance;
 
 	public bool active;
-//	public GameObject settingsPanel;
-	
+	//	public GameObject settingsPanel;
+
 	[Header("SEQUENCE SETTINGS")]
-	public TaskSide taskSide = TaskSide.Left;
+	public TrialParadigm trialParadigm = TrialParadigm.Avatar3D;
 	public TrialType trialType = TrialType.CentreOut;
+	public TaskSide taskSide = TaskSide.Left;
+
 	[Range(5, 20)] 
 	public int repetitions = 15; // num of sequences to run
 	[Range(1, 10)] 
@@ -65,13 +67,16 @@ public class Settings : MonoBehaviour {
 	public Color controlRestColour;
 	public Color controlActiveColour;
 
+	//Object pools
 	private UI_DisplayObjects displayObjects;
+	private ReachTaskObjects reachTaskObjects;
 
 	private bool initialised = false;
 
 	void Awake () {
 		instance = this;
 		displayObjects = GetComponent<UI_DisplayObjects>();
+		reachTaskObjects = GetComponent<ReachTaskObjects>();
 		//check and load save files
 		LoadSave();
 	}
@@ -114,10 +119,7 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 //---------TRIAL----------------	
-	public void SetReachTaskSide(TaskSide side){
-		taskSide = side;
-		//todo ..........
-	}
+
 	public void SetTrialType(TrialType type) {
 		trialType = type;
 		TrialSequence.instance.trialType = trialType;
@@ -145,6 +147,29 @@ public class Settings : MonoBehaviour {
 		initialised = true;
 		SaveState();
 	}
+	public void SetTrialParadigm(TrialParadigm paradigm)
+	{
+		trialParadigm = paradigm;
+        //set the 2d trial camera to render on or off
+        if (trialParadigm == TrialParadigm.Avatar3D)
+        {
+			displayObjects.trialCameraScreen2D.SetActive(false);
+        }
+        else
+        {
+			displayObjects.trialCameraScreen2D.SetActive(true);
+		}
+		SaveState();
+	}
+
+	public void SetReachTaskSide(TaskSide side)
+	{
+		taskSide = side;
+		//contact 3d target manager
+		reachTaskObjects.reachTaskObject.GetComponent<ReachTargetManager>().SetReachSide(taskSide);
+		SaveState();
+	}
+
 	public void SetRepetitions(int num) {
 		repetitions = num;
 		TrialSequence.instance.repetitions = repetitions;
@@ -178,6 +203,10 @@ public class Settings : MonoBehaviour {
 		for (int i = 0; i < displayObjects.labels.Length; i++) {
 			displayObjects.labels[i].SetActive(labelsVisible);
 		}
+		for (int i = 0; i < reachTaskObjects.labels.Length; i++)
+		{
+			reachTaskObjects.labels[i].SetActive(labelsVisible);
+		}
 		SaveState();
 	}
 	public void SetRestVisible(bool t) {
@@ -188,16 +217,19 @@ public class Settings : MonoBehaviour {
 	public void SetDisplayScore(bool t) {
 		displayScore = t;
 		displayObjects.scoreDisplay.SetActive(displayScore);
+		reachTaskObjects.scoreDisplay.SetActive(displayScore);
 		SaveState();
 	}
 	public void SetDisplayStatus(bool t) {
 		displayStatus = t;
 		displayObjects.statusDisplay.SetActive(displayStatus);
+		reachTaskObjects.statusDisplay.SetActive(displayStatus);
 		SaveState();
 	}
 	public void SetDisplayProgress(bool t) {
 		displayProgress = t;
 		displayObjects.progressDisplay.SetActive(displayProgress);
+		reachTaskObjects.progressDisplay.SetActive(displayProgress);
 		SaveState();
 	}
 	public void SetShowFrametrate(bool t) {
@@ -292,6 +324,9 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("portSend", portSend);
 		//trial
 		EasySave.Save("trialType", trialType.ToString());
+		EasySave.Save("trialParadigm", trialParadigm.ToString());
+		EasySave.Save("taskSide", taskSide.ToString());
+
 		EasySave.Save("repetitions", repetitions);
 		EasySave.Save("startDelay", startDelay);
 		EasySave.Save("restDuration", restDuration);
@@ -343,6 +378,26 @@ public class Settings : MonoBehaviour {
 				trialType = TrialType.Three_Targets;
 			}
 
+			string tp = EasySave.Load<string>("trialParadigm");
+			if (tp == "Avatar3D")
+			{
+				trialParadigm = TrialParadigm.Avatar3D;
+			}
+			if (tp == "Screen2D")
+			{
+				trialParadigm = TrialParadigm.Screen2D;
+			}
+
+			string ts = EasySave.Load<string>("taskSide");
+			if (ts == "Left")
+			{
+				taskSide = TaskSide.Left;
+			}
+			if (ts == "Right")
+			{
+				taskSide = TaskSide.Right;
+			}
+
 			repetitions = EasySave.Load<int>("repetitions");
 			startDelay = EasySave.Load<int>("startDelay");
 			restDuration = EasySave.Load<int>("restDuration");
@@ -387,6 +442,8 @@ public class Settings : MonoBehaviour {
 			
 			//trial
 			trialType = TrialType.CentreOut;
+			trialParadigm = TrialParadigm.Avatar3D;	
+			taskSide = TaskSide.Left;
 			repetitions = 15;
 			startDelay = 2;
 			restDuration = 2;
@@ -427,6 +484,8 @@ public class Settings : MonoBehaviour {
 		
 		//trial
 		SetTrialType(trialType);
+		SetTrialParadigm(trialParadigm);
+		SetReachTaskSide(taskSide);
 		SetRepetitions(repetitions);
 		SetStartDelay(startDelay);
 		SetRestDuration(restDuration);

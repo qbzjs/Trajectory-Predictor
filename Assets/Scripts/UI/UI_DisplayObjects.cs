@@ -9,6 +9,7 @@ public class UI_DisplayObjects : MonoBehaviour {
 	public GameObject settingsPanel;
 	public GameObject trial2D;
 	public GameObject trial2D_RenderTexture;
+	public GameObject trialCameraScreen2D;
 
 	[Space(10)]
 	[Header("UI Objects")]

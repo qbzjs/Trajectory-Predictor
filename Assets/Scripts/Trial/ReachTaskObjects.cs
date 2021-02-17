@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class ReachTaskObjects : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject reachTaskObject;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	public GameObject[] labels = new GameObject[3];
+	public GameObject scoreDisplay;
+	public GameObject statusDisplay;
+	public GameObject progressDisplay;
+	
+	public GameObject rest;
+	public GameObject outerLines;
+	public GameObject innerLinesA;
+	public GameObject innerLinesB;
+	public GameObject ringOuter;
+
 }
