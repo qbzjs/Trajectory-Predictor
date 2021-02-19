@@ -1477,7 +1477,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 185427987}
   m_HandleRect: {fileID: 185427986}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 0.9999995
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5052,7 +5052,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 263687533}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1538981040}
+        m_TargetAssemblyTypeName: SettingsTabNavigation, Assembly-CSharp
+        m_MethodName: SelectTab
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &263687533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8614,7 +8626,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 137323262}
   m_HandleRect: {fileID: 137323261}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -11429,7 +11441,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1062319891}
   m_HandleRect: {fileID: 1062319890}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -12843,7 +12855,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 762672476}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1538981040}
+        m_TargetAssemblyTypeName: SettingsTabNavigation, Assembly-CSharp
+        m_MethodName: SelectTab
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &762672476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18512,7 +18536,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0000077188}
+  m_AnchoredPosition: {x: 0, y: -0.000076293945}
   m_SizeDelta: {x: 0, y: 780}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1074754387
@@ -18893,7 +18917,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0000061406618}
+  m_AnchoredPosition: {x: 0, y: -0.000076293945}
   m_SizeDelta: {x: 0, y: 780}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1096512645
@@ -22191,7 +22215,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1319428204}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1538981040}
+        m_TargetAssemblyTypeName: SettingsTabNavigation, Assembly-CSharp
+        m_MethodName: SelectTab
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1319428204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22205,7 +22241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9803922, g: 0.56078434, b: 0.050980397, a: 1}
+  m_Color: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -22491,7 +22527,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00003180392}
+  m_AnchoredPosition: {x: 0, y: -0.000076293945}
   m_SizeDelta: {x: 0, y: 780}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1328052750
@@ -24264,7 +24300,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00035838783}
+  m_AnchoredPosition: {x: 0, y: 0.00030517578}
   m_SizeDelta: {x: 0, y: 780}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1462533437
@@ -25931,6 +25967,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1538981039}
+  - component: {fileID: 1538981040}
   m_Layer: 5
   m_Name: Settings Panel
   m_TagString: Untagged
@@ -25964,6 +26001,34 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1538981040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538981038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05a1a71d2e91ecb48a0971871826ae16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tabs:
+  - {fileID: 1319428201}
+  - {fileID: 762672473}
+  - {fileID: 263687530}
+  - {fileID: 1907141843}
+  panels:
+  - {fileID: 1865721966}
+  - {fileID: 1941756391}
+  - {fileID: 638061763}
+  - {fileID: 372209719}
+  highlightedColour: {r: 0.9803922, g: 0.56078434, b: 0.050980397, a: 1}
+  scrollTime: 0.5
+  panelOffset: 1500
+  index: 0
+  initialScale: 0
+  panelParent: {fileID: 0}
 --- !u!1 &1540363317
 GameObject:
   m_ObjectHideFlags: 0
@@ -31194,7 +31259,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2063804511}
   m_HandleRect: {fileID: 2063804510}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -31320,7 +31385,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1907141846}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1538981040}
+        m_TargetAssemblyTypeName: SettingsTabNavigation, Assembly-CSharp
+        m_MethodName: SelectTab
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1907141846
 MonoBehaviour:
   m_ObjectHideFlags: 0
