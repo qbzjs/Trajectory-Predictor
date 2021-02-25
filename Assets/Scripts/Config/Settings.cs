@@ -18,6 +18,10 @@ public class Settings : MonoBehaviour {
 	public TrialType trialType = TrialType.CentreOut;
 	public TaskSide taskSide = TaskSide.Left;
 
+	[Header("TRIAL SETTINGS")] 
+	public bool actionObservation = false;
+	public bool recordTrajectory = false;
+	
 	[Range(5, 20)] 
 	public int repetitions = 15; // num of sequences to run
 	[Range(1, 10)] 
@@ -43,6 +47,9 @@ public class Settings : MonoBehaviour {
 	public bool linesInnerA = false;
 	public bool linesInnerB = true;
 	public bool ringOuter = false;
+
+	[Header("ENVIRONMENT")] 
+	public bool environment3D = true;
 	
 	[Header("CHARACTER")]
 	public CharacterColourType characterColourType = CharacterColourType.Static;
@@ -170,6 +177,18 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 
+	public void SetActionObservation(bool t){
+		actionObservation = t;
+		 
+		//todo thisgs here...........
+		SaveState();
+	}
+	public void SetRecordTrajectory(bool t){
+		recordTrajectory = t;
+		
+		SaveState();
+	}
+	
 	public void SetRepetitions(int num) {
 		repetitions = num;
 		TrialSequence.instance.repetitions = repetitions;
@@ -326,11 +345,15 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("trialType", trialType.ToString());
 		EasySave.Save("trialParadigm", trialParadigm.ToString());
 		EasySave.Save("taskSide", taskSide.ToString());
+		
+		EasySave.Save("actionObservation", actionObservation);
+		EasySave.Save("recordTrajectory", recordTrajectory);
 
 		EasySave.Save("repetitions", repetitions);
 		EasySave.Save("startDelay", startDelay);
 		EasySave.Save("restDuration", restDuration);
 		EasySave.Save("targetDuration", targetDuration);
+		
 		//interface
 		EasySave.Save("animateTargets", animateTargets);
 		EasySave.Save("labelsVisible", labelsVisible);
@@ -398,6 +421,9 @@ public class Settings : MonoBehaviour {
 				taskSide = TaskSide.Right;
 			}
 
+			actionObservation = EasySave.Load<bool>("actionObservation");
+			recordTrajectory = EasySave.Load<bool>("recordTrajectory");
+			
 			repetitions = EasySave.Load<int>("repetitions");
 			startDelay = EasySave.Load<int>("startDelay");
 			restDuration = EasySave.Load<int>("restDuration");
@@ -444,6 +470,10 @@ public class Settings : MonoBehaviour {
 			trialType = TrialType.CentreOut;
 			trialParadigm = TrialParadigm.Avatar3D;	
 			taskSide = TaskSide.Left;
+
+			actionObservation = false;
+			recordTrajectory = false;
+			
 			repetitions = 15;
 			startDelay = 2;
 			restDuration = 2;
@@ -486,10 +516,15 @@ public class Settings : MonoBehaviour {
 		SetTrialType(trialType);
 		SetTrialParadigm(trialParadigm);
 		SetReachTaskSide(taskSide);
+
+//		SetActionObservation(actionObservation);
+		SetRecordTrajectory(recordTrajectory);
+		
 		SetRepetitions(repetitions);
 		SetStartDelay(startDelay);
 		SetRestDuration(restDuration);
 		SetTargetDuration(targetDuration);
+		
 
 		//interface
 		SetAnimateTargets(animateTargets);

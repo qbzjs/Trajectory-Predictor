@@ -6,7 +6,7 @@ using UnityEngine;
 public class TrajectoryTracker : MonoBehaviour
 {
     // public static HandPoseTracker instance;
-
+    
     public bool trackTrajectory = false;
     
     public Transform joint;
@@ -48,21 +48,24 @@ public class TrajectoryTracker : MonoBehaviour
     {
         //trackTrajectory = t;
 
-        if (!trackTrajectory)
-        {
-            Debug.Log("---- Start Trajectory Tracking : " + jointTag);
-            //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
-            dataWriter = new DataWriter();
-            testID = jointTag + "_" + id;
-            elapsedTime = 0;
-            trackTrajectory = true;
+        if (Settings.instance.recordTrajectory){
+            if (!trackTrajectory)
+            {
+                Debug.Log("---- Start Trajectory Tracking : " + jointTag);
+                //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
+                dataWriter = new DataWriter();
+                testID = jointTag + "_" + id;
+                elapsedTime = 0;
+                trackTrajectory = true;
+            }
+            else
+            {
+                Debug.Log("---- Stop Trajectory Tracking : " + jointTag);
+                trackTrajectory = false;
+                dataWriter.WriteData(testID);
+            }
         }
-        else
-        {
-            Debug.Log("---- Stop Trajectory Tracking : " + jointTag);
-            trackTrajectory = false;
-            dataWriter.WriteData(testID);
-        }
+
     }
 
 

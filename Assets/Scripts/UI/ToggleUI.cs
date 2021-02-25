@@ -4,64 +4,82 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Enums;
+using UnityEngine.Serialization;
 
 public class ToggleUI : MonoBehaviour {
 
-	public InterfaceElement interfaceElement;
+	[FormerlySerializedAs("interfaceElement")] public VisualInterface visualInterface;
 	public Toggle toggle;
 	private Color initialColour;
 	public Color highlightedColour;
 	
-	void Start() {
+	void Start(){
+		toggle = GetComponentInChildren<Toggle>();
 		initialColour = toggle.transform.GetChild(0).GetComponent<Image>().color;
 		Initialise();
 	}
 
 	public void Initialise() {
 		bool b = true;
-		//TODO character could be moved to character class!!
-		if (interfaceElement == InterfaceElement.CharacterVisible_C) {
+		if (visualInterface == VisualInterface.CharacterVisible_C) {
 			b = Settings.instance.characterVisible_C;
 		}
-		if (interfaceElement == InterfaceElement.CharacterVisible_L) {
+		if (visualInterface == VisualInterface.CharacterVisible_L) {
 			b = Settings.instance.characterVisible_L;
 		}
-		if (interfaceElement == InterfaceElement.CharacterVisible_T) {
+		if (visualInterface == VisualInterface.CharacterVisible_T) {
 			b = Settings.instance.characterVisible_T;
 		}
-		if (interfaceElement == InterfaceElement.CharacterVisible_R) {
+		if (visualInterface == VisualInterface.CharacterVisible_R) {
 			b = Settings.instance.characterVisible_R;
 		}
-		if (interfaceElement == InterfaceElement.CharacterVisible_B) {
+		if (visualInterface == VisualInterface.CharacterVisible_B) {
 			b = Settings.instance.characterVisible_B;
 		}
-		if (interfaceElement == InterfaceElement.ColourSmooth) {
+		if (visualInterface == VisualInterface.ColourSmooth) {
 			b = Settings.instance.colourSmoothing;
 		}
-		if (interfaceElement == InterfaceElement.CharacterSmooth) {
+		if (visualInterface == VisualInterface.CharacterSmooth) {
 			b = Settings.instance.characterSmoothing;
 		}
-		if (interfaceElement == InterfaceElement.AnimateTargets) {
-			b = Settings.instance.animateTargets;
-		}
-		if (interfaceElement == InterfaceElement.Labels) {
+		if (visualInterface == VisualInterface.Labels) {
 			b = Settings.instance.labelsVisible;
 		}
-		if (interfaceElement == InterfaceElement.Rest) {
+		if (visualInterface == VisualInterface.Rest) {
 			b = Settings.instance.restVisible;
 		}
-		if (interfaceElement == InterfaceElement.Score) {
+		if (visualInterface == VisualInterface.Score) {
 			b = Settings.instance.displayScore;
 		}
-		if (interfaceElement == InterfaceElement.Status) {
+		if (visualInterface == VisualInterface.Status) {
 			b = Settings.instance.displayStatus;
 		}
-		if (interfaceElement == InterfaceElement.Progress) {
+		if (visualInterface == VisualInterface.Progress) {
 			b = Settings.instance.displayProgress;
 		}
-		if (interfaceElement == InterfaceElement.Framerate) {
+		if (visualInterface == VisualInterface.Framerate) {
 			b = Settings.instance.showFramerate;
 		}
+		if (visualInterface == VisualInterface.AnimateTargets) {
+			b = Settings.instance.animateTargets;
+		}
+		if (visualInterface == VisualInterface.Environment3D) {
+			//b = Settings.instance.environment3D;
+		}
+		if (visualInterface == VisualInterface.Interface3D) {
+			//b = Settings.instance
+		}
+		if (visualInterface == VisualInterface.RenderTexture2D){
+			//b = Settings.instance
+		}
+		if (visualInterface == VisualInterface.ActionObservation) {
+			b = Settings.instance.actionObservation;
+		}
+		if (visualInterface == VisualInterface.RecordTrajectory) {
+			b = Settings.instance.recordTrajectory;
+			Debug.Log(b);
+		}
+
 
 		toggle.isOn = b;
 		
@@ -80,49 +98,63 @@ public class ToggleUI : MonoBehaviour {
 		else {
 			toggle.transform.GetChild(0).GetComponent<Image>().color = initialColour;
 		}
-
-		//TODO character could be moved to character class!!
-		if (interfaceElement == InterfaceElement.CharacterVisible_C) {
+		
+		if (visualInterface == VisualInterface.CharacterVisible_C) {
 			Settings.instance.SetCharacterVisible_C(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.CharacterVisible_L) {
+		if (visualInterface == VisualInterface.CharacterVisible_L) {
 			Settings.instance.SetCharacterVisible_L(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.CharacterVisible_T) {
+		if (visualInterface == VisualInterface.CharacterVisible_T) {
 			Settings.instance.SetCharacterVisible_T(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.CharacterVisible_R) {
+		if (visualInterface == VisualInterface.CharacterVisible_R) {
 			Settings.instance.SetCharacterVisible_R(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.CharacterVisible_B) {
+		if (visualInterface == VisualInterface.CharacterVisible_B) {
 			Settings.instance.SetCharacterVisible_B(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.ColourSmooth) {
+		if (visualInterface == VisualInterface.ColourSmooth) {
 			Settings.instance.SetColourSmoothing(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.CharacterSmooth) {
+		if (visualInterface == VisualInterface.CharacterSmooth) {
 			Settings.instance.SetCharacterSmoothing(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.AnimateTargets) {
-			Settings.instance.SetAnimateTargets(toggle.isOn);
-		}
-		if (interfaceElement == InterfaceElement.Labels) {
+		if (visualInterface == VisualInterface.Labels) {
 			Settings.instance.SetLabelsVisible(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.Rest) {
+		if (visualInterface == VisualInterface.Rest) {
 			Settings.instance.SetRestVisible(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.Score) {
+		if (visualInterface == VisualInterface.Score) {
 			Settings.instance.SetDisplayScore(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.Status) {
+		if (visualInterface == VisualInterface.Status) {
 			Settings.instance.SetDisplayStatus(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.Progress) {
+		if (visualInterface == VisualInterface.Progress) {
 			Settings.instance.SetDisplayProgress(toggle.isOn);
 		}
-		if (interfaceElement == InterfaceElement.Framerate) {
+		if (visualInterface == VisualInterface.Framerate) {
 			Settings.instance.SetShowFrametrate(toggle.isOn);
+		}
+		if (visualInterface == VisualInterface.AnimateTargets) {
+			Settings.instance.SetAnimateTargets(toggle.isOn);
+		}
+		if (visualInterface == VisualInterface.Environment3D) {
+			//Settings.instance.SetEnvironment3D(toggle.isOn);
+		}
+		if (visualInterface == VisualInterface.Interface3D) {
+			
+		}
+		if (visualInterface == VisualInterface.RenderTexture2D){
+			
+		}
+		if (visualInterface == VisualInterface.ActionObservation) {
+			//Settings.instance.SetActionObservation(toggle.isOn);
+		}
+		if (visualInterface == VisualInterface.RecordTrajectory) {
+			Settings.instance.SetRecordTrajectory(toggle.isOn);
 		}
 	}
 }

@@ -28,6 +28,19 @@ public class UI_DisplayObjects : MonoBehaviour {
 	public GameObject innerLinesA;
 	public GameObject innerLinesB;
 	public GameObject ringOuter;
-	
 
+
+	// public GameObject environment3D;
+	// public GameObject interface3D;
+	// public GameObject renderTexture2D;
+	// public GameObject actionObservation;
+	// public GameObject recordTrajectory;
+	// public GameObject particleFX;
+	// public GameObject colourLerp;
+	// public GameObject vibration;
+	// public GameObject audio;
+	// public GameObject spatialAudio;
+
+
+	
 }
