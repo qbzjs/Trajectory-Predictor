@@ -18,13 +18,25 @@ public class ReachTargetManager : MonoBehaviour{
 
     public bool animateTargets;
 
+    private TaskSide taskSide = TaskSide.Left;
+
+    //send general target action
+    public delegate void TargetAction(Transform target, TaskSide side);
+    public static event TargetAction OnTargetAction;
+    //send to ghost target controller - move arm to target - target null move arm back
+    public delegate void TargetRestAction(Transform target, TaskSide side);
+    public static event TargetRestAction OnTargetRestAction;
+
+
     private void OnEnable()
     {
         TrialSequence.OnTargetAction += TrialSequence_OnTargetAction;
+        TrialSequence.OnTargetRestAction += TrialSequence_OnTargetRestAction;
     }
     private void OnDisable()
     {
         TrialSequence.OnTargetAction -= TrialSequence_OnTargetAction;
+        TrialSequence.OnTargetRestAction -= TrialSequence_OnTargetRestAction;
     }
 
     void Awake(){
@@ -51,15 +63,35 @@ public class ReachTargetManager : MonoBehaviour{
         }
 
         reachTarget[targetNumber].GetComponent<Renderer>().material = targetHighlight;
+
         if (animateTargets)
         {
             reachTarget[targetNumber].GetComponent<TargetAnimator>().ScaleTarget();
         }
-    }
 
+        if (OnTargetAction != null)
+        {
+            OnTargetAction(reachTarget[targetNumber].transform, taskSide);
+        }
+    }
+    private void TrialSequence_OnTargetRestAction(int targetNumber)
+    {
+        Debug.Log(targetNumber + " : " + reachTarget[targetNumber].name.ToString());
+
+        for (int i = 0; i < reachTarget.Length; i++)
+        {
+            reachTarget[i].GetComponent<Renderer>().material = targetDefault;
+        }
+
+        if (OnTargetRestAction != null)
+        {
+            OnTargetRestAction(reachTarget[targetNumber].transform, taskSide);
+        }
+    }
 
     public void SetReachSide(TaskSide side)
     {
+        taskSide = side;
         if (side == TaskSide.Left){
             reachObject.transform.position = positionLeft;
         }

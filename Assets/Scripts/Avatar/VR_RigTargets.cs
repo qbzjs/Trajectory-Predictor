@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 using RootMotion.FinalIK;
 
 public class VR_RigTargets : MonoBehaviour
 {
+    public RigType rigType = RigType.AvatarRig;
+
     public Transform avatar;
     public VRIK vrIK;
     public float height = 1f;
@@ -15,6 +18,7 @@ public class VR_RigTargets : MonoBehaviour
     public Transform VR_ControllerLeft;
     public Transform VR_ControllerRight;
 
+    [Space(10)]
     //TODO add feet later 
     public Transform VR_FootTrackerLeft;
     public Transform VR_FootTrackerRight;
@@ -40,35 +44,32 @@ public class VR_RigTargets : MonoBehaviour
     {
         BuildRig();
     }
-    void BuildRig()
+    private void BuildRig()
     {
+        //parent target to rig
         headTarget.transform.parent = VR_Camera;
         leftHandTarget.transform.parent = VR_ControllerLeft;
         rightHandTarget.transform.parent = VR_ControllerRight;
 
+        //apply positions and offsets
         headTarget.transform.position = new Vector3(VR_Camera.transform.position.x + headTargetOffset.x, VR_Camera.transform.position.y + headTargetOffset.y, VR_Camera.transform.position.z + headTargetOffset.z);
         leftHandTarget.transform.position = new Vector3(VR_ControllerLeft.transform.position.x + leftHandTargetOffset.x, VR_ControllerLeft.transform.position.y + leftHandTargetOffset.y, VR_ControllerLeft.transform.position.z + leftHandTargetOffset.z);
         rightHandTarget.transform.position = new Vector3(VR_ControllerRight.transform.position.x + rightHandTargetOffset.x, VR_ControllerRight.transform.position.y + rightHandTargetOffset.y, VR_ControllerRight.transform.position.z + rightHandTargetOffset.z);
 
+        //correct rotations
         headTarget.eulerAngles = headTargetRotation;
         leftHandTarget.eulerAngles = leftHandTargetRotation;
         rightHandTarget.eulerAngles = rightHandTargetRotation;
 
-//        float rigScaler = height
-//        avatar.localScale = new Vector3(avatar.localScale.x + height, avatar.localScale.y + height, avatar.localScale.z + height);
+        //        float rigScaler = height
+        //        avatar.localScale = new Vector3(avatar.localScale.x + height, avatar.localScale.y + height, avatar.localScale.z + height);
 
+        //set rig targets
         vrIK = avatar.GetComponent<VRIK>();
         vrIK.solver.leftArm.armLengthMlp = armLength;
         vrIK.solver.rightArm.armLengthMlp = armLength;
         vrIK.solver.spine.headTarget = headTarget;
         vrIK.solver.leftArm.target = leftHandTarget;
         vrIK.solver.rightArm.target = rightHandTarget;
-    }
-
-    void FixedUpdate()
-    {
-        //headTarget.transform.position = new Vector3(VR_Camera.transform.position.x + headTargetOffset.x, VR_Camera.transform.position.y + headTargetOffset.y, VR_Camera.transform.position.z + headTargetOffset.z);
-        //leftHandTarget.transform.position = new Vector3(VR_ControllerLeft.transform.position.x + leftHandTargetOffset.x, VR_ControllerLeft.transform.position.y + leftHandTargetOffset.y, VR_ControllerLeft.transform.position.z + leftHandTargetOffset.z);
-        //rightHandTarget.transform.position = new Vector3(VR_ControllerRight.transform.position.x + rightHandTargetOffset.x, VR_ControllerRight.transform.position.y + rightHandTargetOffset.y, VR_ControllerRight.transform.position.z + rightHandTargetOffset.z);
     }
 }

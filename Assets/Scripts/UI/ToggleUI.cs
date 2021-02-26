@@ -151,7 +151,7 @@ public class ToggleUI : MonoBehaviour {
 			
 		}
 		if (visualInterface == VisualInterface.ActionObservation) {
-			//Settings.instance.SetActionObservation(toggle.isOn);
+			Settings.instance.SetActionObservation(toggle.isOn);
 		}
 		if (visualInterface == VisualInterface.RecordTrajectory) {
 			Settings.instance.SetRecordTrajectory(toggle.isOn);

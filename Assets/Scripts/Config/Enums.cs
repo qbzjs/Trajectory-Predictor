@@ -1,5 +1,6 @@
 ﻿namespace Enums
 {
+	public enum RigType {AvatarRig, GhostRig}
 	public enum TrialType{
 		Three_Targets,
 		Four_Targets,

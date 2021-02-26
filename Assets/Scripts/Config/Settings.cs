@@ -212,6 +212,8 @@ public class Settings : MonoBehaviour {
 	}
 
 //----------INTERFACE----------------	
+
+
 	public void SetAnimateTargets(bool t) {
 		animateTargets = t;
 		TrialSequence.instance.animateTargets = animateTargets;
@@ -517,7 +519,7 @@ public class Settings : MonoBehaviour {
 		SetTrialParadigm(trialParadigm);
 		SetReachTaskSide(taskSide);
 
-//		SetActionObservation(actionObservation);
+		SetActionObservation(actionObservation);
 		SetRecordTrajectory(recordTrajectory);
 		
 		SetRepetitions(repetitions);

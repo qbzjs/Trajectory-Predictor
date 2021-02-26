@@ -46,7 +46,9 @@ public class TrialSequence : MonoBehaviour {
 
     public delegate void TargetAction(int targetNumber);
     public static event TargetAction OnTargetAction;
-    
+    public delegate void TargetRestAction(int targetNumber);
+    public static event TargetRestAction OnTargetRestAction;
+
     private void OnEnable(){
 
     }
@@ -107,12 +109,13 @@ public class TrialSequence : MonoBehaviour {
 //        InitialiseTrial(); //initialised from settings
         if (!runSequence) {
             resting = true;
-            duration = startDelay;
+            duration = startDelay;           
             sequenceCount = 0;
             sequenceIndex = 0;
             elapsedTime = 0;
             runSequence = true;
             Debug.Log("-----TRIAL STARTED-----");
+            RestTarget();
             Settings.instance.Status = GameStatus.Running;
             UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Game Running");
         }
@@ -155,6 +158,8 @@ public class TrialSequence : MonoBehaviour {
     //------PERMUTATION GENERATION
     private void SetTarget() 
     {
+        Debug.Log("Set Target");
+
         for (int i = 0; i < target.Length; i++)
         {
             target[i].GetComponent<Renderer>().material = defaultMaterial;
@@ -204,6 +209,15 @@ public class TrialSequence : MonoBehaviour {
         {
             target[i].GetComponent<Renderer>().material = defaultMaterial;
         }
+
+        int tNumID = sequenceOrder[sequenceIndex];
+
+        if (OnTargetRestAction != null)
+        {
+            OnTargetRestAction(tNumID);
+        }
+
+        Debug.Log("Rest : " + tNumID);
     }
     private IEnumerator CompleteSequence()
     {
