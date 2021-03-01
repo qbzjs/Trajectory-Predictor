@@ -5319,7 +5319,7 @@ GameObject:
   - component: {fileID: 284909447}
   - component: {fileID: 284909446}
   - component: {fileID: 284909445}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas 3D Display
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20639,7 +20639,7 @@ GameObject:
   - component: {fileID: 1193783537}
   - component: {fileID: 1193783539}
   - component: {fileID: 1193783538}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23032,8 +23032,8 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1333649147}
-  m_LocalRotation: {x: -0, y: 0.9961947, z: -0.08715578, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0.9961947, z: -0.08715578, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.024}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2025884860}
@@ -23041,7 +23041,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 10, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.28750002}
+  m_AnchoredPosition: {x: 0, y: -0.116}
   m_SizeDelta: {x: 0.3, y: 0.1}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1333649149
@@ -23099,7 +23099,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 33
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -26438,7 +26438,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1538981038}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2062591722}
@@ -34123,7 +34123,7 @@ MeshCollider:
   m_GameObject: {fileID: 2098142041}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
