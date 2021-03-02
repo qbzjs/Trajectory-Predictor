@@ -9,6 +9,9 @@ using Random = UnityEngine.Random;
 public class TrialSequence : MonoBehaviour {
     
     public static TrialSequence instance;
+
+    //TODO - add linear sequence
+    public SequenceType sequenceType = SequenceType.Permutation;
     
     //SEQUENCE ACTIVE
     private bool runSequence = false;

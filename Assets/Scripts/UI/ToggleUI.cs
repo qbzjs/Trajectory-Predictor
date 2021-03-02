@@ -64,20 +64,20 @@ public class ToggleUI : MonoBehaviour {
 			b = Settings.instance.animateTargets;
 		}
 		if (visualInterface == VisualInterface.Environment3D) {
-			//b = Settings.instance.environment3D;
+			b = Settings.instance.environment3D;
 		}
-		if (visualInterface == VisualInterface.Interface3D) {
-			//b = Settings.instance
+		if (visualInterface == VisualInterface.Interface3D){
+			b = Settings.instance.interface3D;
 		}
 		if (visualInterface == VisualInterface.RenderTexture2D){
-			//b = Settings.instance
+			b = Settings.instance.renderTexture2D;
 		}
 		if (visualInterface == VisualInterface.ActionObservation) {
 			b = Settings.instance.actionObservation;
 		}
 		if (visualInterface == VisualInterface.RecordTrajectory) {
 			b = Settings.instance.recordTrajectory;
-			Debug.Log(b);
+			//Debug.Log(b);
 		}
 
 
@@ -136,19 +136,19 @@ public class ToggleUI : MonoBehaviour {
 			Settings.instance.SetDisplayProgress(toggle.isOn);
 		}
 		if (visualInterface == VisualInterface.Framerate) {
-			Settings.instance.SetShowFrametrate(toggle.isOn);
+			Settings.instance.SetShowFramerate(toggle.isOn);
 		}
 		if (visualInterface == VisualInterface.AnimateTargets) {
 			Settings.instance.SetAnimateTargets(toggle.isOn);
 		}
 		if (visualInterface == VisualInterface.Environment3D) {
-			//Settings.instance.SetEnvironment3D(toggle.isOn);
+			Settings.instance.Set3DEnvironment(toggle.isOn);
 		}
 		if (visualInterface == VisualInterface.Interface3D) {
-			
+			Settings.instance.SetInterface3D(toggle.isOn);
 		}
 		if (visualInterface == VisualInterface.RenderTexture2D){
-			
+			Settings.instance.SetRenderTexture2D(toggle.isOn);
 		}
 		if (visualInterface == VisualInterface.ActionObservation) {
 			Settings.instance.SetActionObservation(toggle.isOn);

@@ -17,6 +17,7 @@ public class Settings : MonoBehaviour {
 	public TrialParadigm trialParadigm = TrialParadigm.Avatar3D;
 	public TrialType trialType = TrialType.CentreOut;
 	public TaskSide taskSide = TaskSide.Left;
+	public SequenceType sequenceType = SequenceType.Permutation;
 
 	[Header("TRIAL SETTINGS")] 
 	public bool actionObservation = false;
@@ -30,13 +31,18 @@ public class Settings : MonoBehaviour {
 	public int targetDuration = 6;
 	[Range(1, 10)] 
 	public int restDuration = 2;
-
-
+	
 	[Header("STATUS")] 
 	public GameStatus gameStatus = GameStatus.Ready;
 
-	[Header("INTERFACE")] 
-	public bool animateTargets = false;
+	[Header("ENVIRONMENT")] 
+	public bool environment3D = true;
+	
+	[Header("INTERFACE 3D")]
+	public bool interface3D = false;
+	public bool renderTexture2D = false;
+
+	[Header("INTERFACE")]
 	public bool labelsVisible = true;
 	public bool restVisible = false;
 	public bool displayScore = false;
@@ -48,8 +54,9 @@ public class Settings : MonoBehaviour {
 	public bool linesInnerB = true;
 	public bool ringOuter = false;
 
-	[Header("ENVIRONMENT")] 
-	public bool environment3D = true;
+	[Header("FEEDBACK")]
+	public bool animateTargets = false;
+
 	
 	[Header("CHARACTER")]
 	public CharacterColourType characterColourType = CharacterColourType.Static;
@@ -176,16 +183,20 @@ public class Settings : MonoBehaviour {
 		reachTaskObjects.reachTaskObject.GetComponent<ReachTargetManager>().SetReachSide(taskSide);
 		SaveState();
 	}
+	
+	public void SetSequenceType(SequenceType seqType)
+	{
+		sequenceType = seqType;
+		TrialSequence.instance.sequenceType = sequenceType;
+		SaveState();
+	}
 
 	public void SetActionObservation(bool t){
 		actionObservation = t;
-		 
-		//todo thisgs here...........
 		SaveState();
 	}
 	public void SetRecordTrajectory(bool t){
 		recordTrajectory = t;
-		
 		SaveState();
 	}
 	
@@ -213,12 +224,25 @@ public class Settings : MonoBehaviour {
 
 //----------INTERFACE----------------	
 
-
-	public void SetAnimateTargets(bool t) {
-		animateTargets = t;
-		TrialSequence.instance.animateTargets = animateTargets;
+	public void Set3DEnvironment(bool t){
+		environment3D = t;
+		//toggle environment here
+		SetVREnvironment.instance.SetEnvironment();
 		SaveState();
 	}
+	public void SetInterface3D(bool t){
+		interface3D = t;
+		//toggle environment here
+		SetWorldUI.instance.SetUI();
+		SaveState();
+	}
+	public void SetRenderTexture2D(bool t){
+		renderTexture2D = t;
+		//toggle environment here
+		SetWorldUI.instance.SetUI();
+		SaveState();
+	}
+
 	public void SetLabelsVisible(bool t) {
 		labelsVisible = t;
 		for (int i = 0; i < displayObjects.labels.Length; i++) {
@@ -253,7 +277,7 @@ public class Settings : MonoBehaviour {
 		reachTaskObjects.progressDisplay.SetActive(displayProgress);
 		SaveState();
 	}
-	public void SetShowFrametrate(bool t) {
+	public void SetShowFramerate(bool t) {
 		showFramerate = t;
 		displayObjects.FPS.SetActive(showFramerate);
 		SaveState();
@@ -261,24 +285,35 @@ public class Settings : MonoBehaviour {
 	public void SetLinesOuter(bool t) {
 		linesOuter = t;
 		displayObjects.outerLines.SetActive(linesOuter);
+		SetWorldUI.instance.SetUI();
 		SaveState();
 	}
 	public void SetLinesInnerA(bool t) {
 		linesInnerA = t;
 		displayObjects.innerLinesA.SetActive(linesInnerA);
+		SetWorldUI.instance.SetUI();
 		SaveState();
 	}
 	public void SetLinesInnerB(bool t) {
 		linesInnerB= t;
 		displayObjects.innerLinesB.SetActive(linesInnerB);
+		SetWorldUI.instance.SetUI();
 		SaveState();
 	}
 	public void SetRingOuter(bool t) {
 		ringOuter= t;
 		displayObjects.ringOuter.SetActive(ringOuter);
+		SetWorldUI.instance.SetUI();
 		SaveState();
 	}
 
+//----------FEEDBACK--------------------
+	public void SetAnimateTargets(bool t) {
+		animateTargets = t;
+		TrialSequence.instance.animateTargets = animateTargets;
+		SaveState();
+	}
+	
 //----------CHARACTER-------------------	
 	public void SetCharacterVisible_C(bool t) {
 		characterVisible_C = t;
@@ -347,6 +382,7 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("trialType", trialType.ToString());
 		EasySave.Save("trialParadigm", trialParadigm.ToString());
 		EasySave.Save("taskSide", taskSide.ToString());
+		EasySave.Save("sequenceType", sequenceType.ToString());
 		
 		EasySave.Save("actionObservation", actionObservation);
 		EasySave.Save("recordTrajectory", recordTrajectory);
@@ -356,6 +392,13 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("restDuration", restDuration);
 		EasySave.Save("targetDuration", targetDuration);
 		
+		//environment
+		EasySave.Save("environment3D", environment3D);
+			
+		//interface 3D
+		EasySave.Save("interface3D", interface3D);
+		EasySave.Save("renderTexture2D", renderTexture2D);
+
 		//interface
 		EasySave.Save("animateTargets", animateTargets);
 		EasySave.Save("labelsVisible", labelsVisible);
@@ -422,6 +465,15 @@ public class Settings : MonoBehaviour {
 			{
 				taskSide = TaskSide.Right;
 			}
+			
+			string st = EasySave.Load<string>("sequenceType");
+			if (st == "Linear"){
+				sequenceType = SequenceType.Linear;
+			}
+			if (st == "Permutation")
+			{
+				sequenceType = SequenceType.Permutation;
+			}
 
 			actionObservation = EasySave.Load<bool>("actionObservation");
 			recordTrajectory = EasySave.Load<bool>("recordTrajectory");
@@ -431,6 +483,15 @@ public class Settings : MonoBehaviour {
 			restDuration = EasySave.Load<int>("restDuration");
 			targetDuration = EasySave.Load<int>("targetDuration");
 
+			//environment
+			environment3D = EasySave.Load<bool>("environment3D");
+			
+			//interface3D
+			interface3D = EasySave.Load<bool>("interface3D");
+			renderTexture2D = EasySave.Load<bool>("renderTexture2D");
+			
+			Debug.Log(interface3D);
+			
 			//interface
 			animateTargets = EasySave.Load<bool>("animateTargets");
 			labelsVisible = EasySave.Load<bool>("labelsVisible");
@@ -472,6 +533,7 @@ public class Settings : MonoBehaviour {
 			trialType = TrialType.CentreOut;
 			trialParadigm = TrialParadigm.Avatar3D;	
 			taskSide = TaskSide.Left;
+			sequenceType = SequenceType.Permutation;
 
 			actionObservation = false;
 			recordTrajectory = false;
@@ -480,6 +542,13 @@ public class Settings : MonoBehaviour {
 			startDelay = 2;
 			restDuration = 2;
 			targetDuration = 6;
+			
+			//environment 3d
+			environment3D = false;
+			
+			//interface 3d
+			interface3D = false;
+			renderTexture2D = false;
 			
 			//interface
 			animateTargets = false;
@@ -518,6 +587,7 @@ public class Settings : MonoBehaviour {
 		SetTrialType(trialType);
 		SetTrialParadigm(trialParadigm);
 		SetReachTaskSide(taskSide);
+		SetSequenceType(sequenceType);
 
 		SetActionObservation(actionObservation);
 		SetRecordTrajectory(recordTrajectory);
@@ -527,7 +597,13 @@ public class Settings : MonoBehaviour {
 		SetRestDuration(restDuration);
 		SetTargetDuration(targetDuration);
 		
-
+		//Environment 3D
+		Set3DEnvironment(environment3D);
+		
+		//interface 3d
+		SetInterface3D(interface3D);
+		SetRenderTexture2D(renderTexture2D);
+		
 		//interface
 		SetAnimateTargets(animateTargets);
 		SetLabelsVisible(labelsVisible);
@@ -535,7 +611,7 @@ public class Settings : MonoBehaviour {
 		SetDisplayScore(displayScore);
 		SetDisplayStatus(displayStatus);
 		SetDisplayProgress(displayProgress);
-		SetShowFrametrate(showFramerate);
+		SetShowFramerate(showFramerate);
 		SetLinesOuter(linesOuter);
 		SetLinesInnerA(linesInnerA);
 		SetLinesInnerB(linesInnerB);
