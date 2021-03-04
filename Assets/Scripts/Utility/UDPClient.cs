@@ -93,6 +93,8 @@ public class UDPClient : MonoBehaviour
             byte[] data = new byte[1];
             data[0] = input_byte;
 
+            Debug.Log("UDP Send : " + data);
+
             // Send bytes to remote client
             client.Send(data, data.Length, remoteEndPoint);
         }
