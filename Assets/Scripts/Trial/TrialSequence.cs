@@ -203,7 +203,7 @@ public class TrialSequence : MonoBehaviour {
 
     private void SendUDP_byte(int t)
     {
-        UDPClient.instance.UdpSend_byte((byte)t);
+        UDPClient.instance.SendData((byte)t);
         //        Debug.Log("Value to send : " + value);
     }
 

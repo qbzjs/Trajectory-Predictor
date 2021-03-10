@@ -17950,6 +17950,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1026629183}
   - component: {fileID: 1026629184}
+  - component: {fileID: 1026629182}
   m_Layer: 0
   m_Name: UDP Client
   m_TagString: Untagged
@@ -17957,6 +17958,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1026629182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026629181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf2547381980da64abde8cbf71ca5808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1026629183
 Transform:
   m_ObjectHideFlags: 0

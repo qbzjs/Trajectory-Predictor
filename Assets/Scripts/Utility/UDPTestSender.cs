@@ -1,0 +1,48 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UDPTestSender : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            SendUDP_byte(0);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SendUDP_byte(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SendUDP_byte(2);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SendUDP_byte(3);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            SendUDP_byte(4);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            SendUDP_byte(5);
+        }
+
+    }
+    private void SendUDP_byte(int t)
+    {
+        //UDPClient.instance.UdpSend_byte((byte)t);
+        UDPClient.instance.SendData(t.ToString());
+        Debug.Log("Value to send : " + t);
+    }
+}

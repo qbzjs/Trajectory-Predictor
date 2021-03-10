@@ -14,7 +14,11 @@ public class UDPClient : MonoBehaviour
     public int portListen = 5555;
     public int portSend = 4444;
 
-    [Space(10)] private bool receivedFlag = false;
+    private string received = "";
+    
+    private bool receivedFlag = false;
+    
+    [Space(12)]
     public Vector2 xy;
     public Vector2 xyLR;
     public Vector2 xyFR;
@@ -30,15 +34,12 @@ public class UDPClient : MonoBehaviour
 
     //EVENTS/DELAGATES TO SEND DATA ACROSS THE GAME
     public delegate void dataReceivedString(string dataString);
-
     public static event dataReceivedString OnDataReceivedString;
 
     public delegate void dataReceivedDoubles(float LR, float FR, float LF, float TX);
-
     public static event dataReceivedDoubles OnDataReceivedDoubles;
 
     public delegate void dataReceivedXY(Vector2 xy, Vector2 xy_LR, Vector2 xy_FR, Vector2 xy_LF);
-
     public static event dataReceivedXY OnDataReceivedXY;
 
     public void Awake()
@@ -68,30 +69,33 @@ public class UDPClient : MonoBehaviour
     void Update()
     {
         //Check if a data has been recived
-        if (receivedFlag)
-        {
-            if (OnDataReceivedXY != null)
-            {
-                OnDataReceivedXY(xy, xyLR, xyFR, xyLF);
-                //Debug.Log("t1");
-            }
-
-            if (OnDataReceivedDoubles != null)
-            {
-                OnDataReceivedDoubles(LR, FR, LF, TX);
-                //Debug.Log("t2");
-            }
+        // if (receivedFlag)
+        // {
+        //     if (OnDataReceivedXY != null){
+        //         OnDataReceivedXY(xy, xyLR, xyFR, xyLF);
+        //     }
+        //
+        //     if (OnDataReceivedDoubles != null){
+        //         OnDataReceivedDoubles(LR, FR, LF, TX);
+        //     }
+        // }
+        
+        //Check if a message has been received
+        if (received != ""){
+            Debug.Log("UDPClient: message received \'" + received + "\'");
+            //Clear message
+            received = "";
         }
     }
 
     // UDP send: one byte
-    public void UdpSend_byte(byte input_byte)
+    public void SendData(byte inputByte)
     {
         try
         {
             //Prepare byte-data array
             byte[] data = new byte[1];
-            data[0] = input_byte;
+            data[0] = inputByte;
 
             // Send bytes to remote client
             client.Send(data, data.Length, remoteEndPoint);
@@ -101,68 +105,57 @@ public class UDPClient : MonoBehaviour
             Debug.LogError("Error udp send : " + err.Message);
         }
     }
+    
+    //Call this method to send a message from this app to ipSend using portSend
+    public void SendData (string valueToSend)
+    {
+        try {
+            if (valueToSend != "") {
 
+                //Get bytes from string
+                byte[] data = Encoding.UTF8.GetBytes (valueToSend);
+
+                // Send bytes to remote client
+                client.Send (data, data.Length, remoteEndPoint);
+                Debug.Log ("UDPClient: send \'" + valueToSend + "\'");
+                //Clear message
+                valueToSend = "";
+            }
+        } 
+        catch (Exception err) {
+            Debug.LogError ("Error udp send : " + err.Message);
+        }
+    }
     public void ReceiveData()
     {
-        IPEndPoint receiveIP = new IPEndPoint(IPAddress.Any, 3002);
-        while (true)
-        {
-            // bytes: 4x8 = 32bytes (4 Doubles: each 8bytes long)
-            byte[] _w_byteArray =
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        while (true){
+            //----------------------
+            try {
+                // Bytes received
+                IPEndPoint anyIP = new IPEndPoint (IPAddress.Any, 0);
+                byte[] data = client.Receive (ref anyIP);
 
-            try
-            {
-                _w_byteArray = client.Receive(ref receiveIP);
-                //Debug.Log("_w_byteArray.Length:" + _w_byteArray.Length);
+                // Bytes into text
+                string text = "";
+                text = Encoding.UTF8.GetString (data);
+	
+                received = text;		
+       
+            } 
+            catch (Exception err) {
+                Debug.Log ("Error:" + err.ToString ());
             }
-            catch (Exception e)
-            {
-                //Console.WriteLine(e.ToString());
-                Debug.Log("UDP Error (NO DATA RECEIVED) :" + e.ToString());
-            }
 
-            //CONVERT BYTE_ARRAY OF DOUBLES TO FLOATS
-
-            int i = 0;
-            LR = Convert.ToSingle(BitConverter.ToDouble(_w_byteArray, 8 * i));
-            //Debug.Log("LR: " + Convert.ToString(LR));
-
-            i++;
-            FR = Convert.ToSingle(BitConverter.ToDouble(_w_byteArray, 8 * i));
-            //Debug.Log("FR: " + Convert.ToString(FR));
-
-            i++;
-            LF = Convert.ToSingle(BitConverter.ToDouble(_w_byteArray, 8 * i));
-            //Debug.Log("LF: " + Convert.ToString(LF));
-
-            i++;
-            TX = Convert.ToSingle(BitConverter.ToDouble(_w_byteArray, 8 * i));
-            //Debug.Log("TX: " + Convert.ToString(TX));
-
-            //CONVERT AND RETURN XY USING INSTANCED CLASS
-            XY_Conversion xyConversion = new XY_Conversion();
-            xy = xyConversion.ConvertToXY(LR, FR, LF);
-            xyLR = xyConversion.ConvertToXY_LR(LR);
-            xyFR = xyConversion.ConvertToXY_FR(FR);
-            xyLF = xyConversion.ConvertToXY_LF(LF);
-            //Debug.Log("xy.x: " + xy.x);
-            //Debug.Log("xy.y: " + xy.y);
-
-            // DATA RECEIVING DONE
-            receivedFlag = true;
         }
     }
 
     //Exit UDP client
     public void OnDisable()
     {
-        if (receiveThread != null)
-        {
+        if (receiveThread != null){
             receiveThread.Abort();
             receiveThread = null;
         }
-
         client.Close();
         Debug.Log("UDPClient: exit");
     }
