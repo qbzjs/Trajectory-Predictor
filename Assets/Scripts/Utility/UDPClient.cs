@@ -6,13 +6,22 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
+/// <summary>
+/// Ports need reinitialised when changed in settings!!!
+/// Restart unity game
+/// TODO -- MAKE DYNAMIC INITIALISER
+/// 
+/// ip - '127.0.0.1' is for sending data within local machine
+/// ip - '192.168.1.10' example for sending data to machine on local network
+/// </summary>
+/// 
 public class UDPClient : MonoBehaviour
 {
     public static UDPClient instance;
 
-    public string ip = "";
-    public int portListen = 5555;
-    public int portSend = 4444;
+    public string ip = "127.0.0.1";
+    public int portListen = 3002;
+    public int portSend = 3010;
 
     private string received = "";
     
@@ -45,7 +54,9 @@ public class UDPClient : MonoBehaviour
     public void Awake()
     {
         instance = this;
-
+    }
+    public void Start()
+    {
         //Check if the ip address entered is valid. If not, sendMessage will broadcast to all ip addresses 
         IPAddress ip;
         if (IPAddress.TryParse(this.ip, out ip))
