@@ -11,25 +11,44 @@ public class DataWriter : MonoBehaviour
     private string dataString;
     private StringBuilder stringBuilder = new StringBuilder ();
 
-    // private void Start()
-    // {
-    //     Debug.Log(Application.persistentDataPath);
-    // }
+    private bool writeTitle = true;
 
-    public void WriteTrajectoryData(Vector3 p, Vector3 r, string ts, string elapsed, string tag){
-    //    position = "x:"+p.x.ToString()+"y:"+p.y.ToString()+"z"+p.z.ToString();
-    //    duration = "d:"+t.ToString();
-    
-    stringBuilder.Append(ts).Append (",")
-                 .Append(elapsed).Append (",")
-                 .Append(p.x).Append (",")
-                 .Append(p.y).Append (",")
-                 .Append(p.z).Append (",")
-                 .Append(r.x).Append (",")
-                 .Append(r.y).Append (",")
-                 .Append(r.z).Append (",")
-                 .Append(tag).AppendLine ();
-   }
+    public void WriteTrajectoryData(Vector3 p, Vector3 r, Vector3 a, float v, string ts, string elapsed, string tag){
+
+        if (writeTitle){
+            stringBuilder.Append("Joint Tag").Append (",")
+                .Append("TimeStamp").Append (",")
+                .Append("Elapsed Time").Append (",")
+                .Append("Position X").Append (",")
+                .Append("Position Y").Append (",")
+                .Append("Position Z").Append (",")
+                .Append("Rotation X").Append (",")
+                .Append("Rotation y").Append (",")
+                .Append("Rotation z").Append (",")
+                .Append("Acceleration X").Append (",")
+                .Append("Acceleration Y").Append (",")
+                .Append("Acceleration Z").Append (",")
+                .Append("Velocity").AppendLine ();
+            
+            writeTitle = false;
+        }
+        else{
+            stringBuilder.Append(tag).Append (",")
+                .Append(ts).Append (",")
+                .Append(elapsed).Append (",")
+                .Append(p.x).Append (",")
+                .Append(p.y).Append (",")
+                .Append(p.z).Append (",")
+                .Append(r.x).Append (",")
+                .Append(r.y).Append (",")
+                .Append(r.z).Append (",")
+                .Append(a.x).Append (",")
+                .Append(a.y).Append (",")
+                .Append(a.z).Append (",")
+                .Append(v).AppendLine ();
+        }
+
+    }
     public void WriteData(string fileName)
     {
         dataString = stringBuilder.ToString();
@@ -43,6 +62,8 @@ public class DataWriter : MonoBehaviour
         Debug.Log("Data Written - "+path);
         // Debug.Log(dataString);
         stringBuilder.Clear();
+        
+        writeTitle = true;
     }
 
 }

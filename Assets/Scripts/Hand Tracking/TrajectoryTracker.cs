@@ -18,7 +18,12 @@ public class TrajectoryTracker : MonoBehaviour
     public Vector3 jointRotation;
     public float elapsedTime;
     public string timeStamp;
-
+    
+    public float velocity;
+    public Vector3 acceleration;
+    
+    private VelocityAcceleration va;
+        
     private DataWriter dataWriter;
 
     void Awake()
@@ -34,6 +39,9 @@ public class TrajectoryTracker : MonoBehaviour
 
         // dataWriter = gameObject.GetComponent<DataWriter>();
         dataWriter = new DataWriter();
+
+        // va = new VelocityAcceleration();
+        va = gameObject.AddComponent<VelocityAcceleration>();
     }
     
     private void OnEnable(){
@@ -74,8 +82,8 @@ public class TrajectoryTracker : MonoBehaviour
     {
     	jointPosition = joint.transform.position;
         jointRotation = joint.transform.eulerAngles;
-
-
+        acceleration = va.GetAcceleration();
+        velocity = va.GetVelocity();
 
         if(trackTrajectory)
         {
@@ -91,7 +99,7 @@ public class TrajectoryTracker : MonoBehaviour
                 t.Seconds, 
                 t.Milliseconds);
             
-            dataWriter.WriteTrajectoryData(jointPosition,jointRotation,timeStamp, elapsedTime.ToString("f2"), jointTag);
+            dataWriter.WriteTrajectoryData(jointPosition,jointRotation, acceleration, velocity, timeStamp, elapsedTime.ToString("f2"), jointTag);
         }
     }
 }

@@ -489,9 +489,7 @@ public class Settings : MonoBehaviour {
 			//interface3D
 			interface3D = EasySave.Load<bool>("interface3D");
 			renderTexture2D = EasySave.Load<bool>("renderTexture2D");
-			
-			Debug.Log(interface3D);
-			
+
 			//interface
 			animateTargets = EasySave.Load<bool>("animateTargets");
 			labelsVisible = EasySave.Load<bool>("labelsVisible");
