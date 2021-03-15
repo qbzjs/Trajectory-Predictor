@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class UDPTestSender : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public bool active = false;
+
     void Start()
     {
         
@@ -41,8 +42,13 @@ public class UDPTestSender : MonoBehaviour
     }
     private void SendUDP_byte(int t)
     {
-        //UDPClient.instance.UdpSend_byte((byte)t);
-        UDPClient.instance.SendData(t.ToString());
-        Debug.Log("Value to send : " + t);
+        if (active)
+        {
+            
+            //UDPClient.instance.SendData(t.ToString());
+
+            UDPClient.instance.SendData((byte)t);
+            Debug.Log("Value to send : " + t);
+        }
     }
 }
