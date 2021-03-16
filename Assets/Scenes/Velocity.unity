@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -311,10 +311,8 @@ GameObject:
   - component: {fileID: 1289445069}
   - component: {fileID: 1289445068}
   - component: {fileID: 1289445067}
-  - component: {fileID: 1289445066}
-  - component: {fileID: 1289445065}
-  - component: {fileID: 1289445071}
   - component: {fileID: 1289445072}
+  - component: {fileID: 1289445065}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -331,28 +329,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1289445064}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcf4c7d075d9a3b4e877428dfec2f679, type: 3}
+  m_Script: {fileID: 11500000, guid: 543ddbe12367a4899b011d43ef41f357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: {x: 0, y: 0, z: 0}
-  distancemoved: {x: 0, y: 0, z: 0}
-  lastdistancemoved: {x: 0, y: 0, z: 0}
-  last: {x: 0, y: 0, z: 0}
---- !u!114 &1289445066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1289445064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d047312e1b6227e419d84ce07e5a7987, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  v: 0
-  previous: {x: 0, y: 0, z: 0}
-  current: {x: 0, y: 0, z: 0}
+  _enablePositionNoise: 1
+  _enableRotationNoise: 1
+  _positionFrequency: 0.2
+  _rotationFrequency: 0.2
+  _positionAmplitude: 0.5
+  _rotationAmplitude: 10
+  _positionScale: {x: 1, y: 1, z: 1}
+  _rotationScale: {x: 1, y: 1, z: 0}
+  _positionFractalLevel: 3
+  _rotationFractalLevel: 3
 --- !u!65 &1289445067
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -429,20 +418,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1289445071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1289445064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c3c8aa0a4f028c4a8cbc869006b38b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocity: 0
-  acceleration: {x: 0, y: 0, z: 0}
 --- !u!114 &1289445072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -455,5 +430,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 323c3eef617704f4b872e4bfe91a8f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: 0
-  acceleration: {x: 0, y: 0, z: 0}
+  debug: 0

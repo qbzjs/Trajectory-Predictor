@@ -13,10 +13,11 @@ public class DataWriter : MonoBehaviour
 
     private bool writeTitle = true;
 
-    public void WriteTrajectoryData(Vector3 p, Vector3 r, Vector3 a, float v, string ts, string elapsed, string tag){
+    public void WriteTrajectoryData(Vector3 p, Vector3 r, Vector3 a, float aavg, float v, string ts, string elapsed, string tag, string target){
 
         if (writeTitle){
             stringBuilder.Append("Joint Tag").Append (",")
+                .Append("Target Number").Append (",")
                 .Append("TimeStamp").Append (",")
                 .Append("Elapsed Time").Append (",")
                 .Append("Position X").Append (",")
@@ -28,12 +29,14 @@ public class DataWriter : MonoBehaviour
                 .Append("Acceleration X").Append (",")
                 .Append("Acceleration Y").Append (",")
                 .Append("Acceleration Z").Append (",")
+                .Append("Average Acceleration").Append (",")
                 .Append("Velocity").AppendLine ();
             
             writeTitle = false;
         }
         else{
             stringBuilder.Append(tag).Append (",")
+                .Append(target).Append (",")
                 .Append(ts).Append (",")
                 .Append(elapsed).Append (",")
                 .Append(p.x).Append (",")
@@ -45,6 +48,7 @@ public class DataWriter : MonoBehaviour
                 .Append(a.x).Append (",")
                 .Append(a.y).Append (",")
                 .Append(a.z).Append (",")
+                .Append(aavg).Append (",")
                 .Append(v).AppendLine ();
         }
 

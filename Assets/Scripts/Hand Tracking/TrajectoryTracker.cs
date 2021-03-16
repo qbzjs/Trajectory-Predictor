@@ -21,6 +21,9 @@ public class TrajectoryTracker : MonoBehaviour
     
     public float velocity;
     public Vector3 acceleration;
+    public float averageAcceleration;
+
+    public string targetTag;
     
     private VelocityAcceleration va;
         
@@ -42,16 +45,31 @@ public class TrajectoryTracker : MonoBehaviour
 
         // va = new VelocityAcceleration();
         va = gameObject.AddComponent<VelocityAcceleration>();
+
+        targetTag = "";
     }
     
     private void OnEnable(){
         InputManager.OnRecordAction += ToggleTrackingRecord;
+        TrialSequence.OnTargetAction += TrialSequenceOnTargetAction;
+        TrialSequence.OnTargetRestAction += TrialSequenceOnTargetRestAction;
     }
-
     private void OnDisable()
     {
         InputManager.OnRecordAction -= ToggleTrackingRecord;
+        TrialSequence.OnTargetAction -= TrialSequenceOnTargetAction;
+        TrialSequence.OnTargetRestAction -= TrialSequenceOnTargetRestAction;
     }
+    
+    private void TrialSequenceOnTargetRestAction(int targetnumber){
+        targetTag = "rest";
+    }
+
+    private void TrialSequenceOnTargetAction(int targetnumber){
+        
+        targetTag = targetnumber.ToString();
+    }
+
     private void ToggleTrackingRecord(bool t, string id)
     {
         //trackTrajectory = t;
@@ -83,6 +101,7 @@ public class TrajectoryTracker : MonoBehaviour
     	jointPosition = joint.transform.position;
         jointRotation = joint.transform.eulerAngles;
         acceleration = va.GetAcceleration();
+        averageAcceleration = va.GetAccelerationAverage();
         velocity = va.GetVelocity();
 
         if(trackTrajectory)
@@ -93,13 +112,13 @@ public class TrajectoryTracker : MonoBehaviour
             
             TimeSpan t = TimeSpan.FromSeconds( elapsedTime );
 
-            string timeStamp = string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D3}", 
+            timeStamp = string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D3}", 
                 t.Hours, 
                 t.Minutes, 
                 t.Seconds, 
                 t.Milliseconds);
             
-            dataWriter.WriteTrajectoryData(jointPosition,jointRotation, acceleration, velocity, timeStamp, elapsedTime.ToString("f2"), jointTag);
+            dataWriter.WriteTrajectoryData(jointPosition,jointRotation, acceleration, averageAcceleration, velocity, timeStamp, elapsedTime.ToString("f2"), jointTag, targetTag);
         }
     }
 }
