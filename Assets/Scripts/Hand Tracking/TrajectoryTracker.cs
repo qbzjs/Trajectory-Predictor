@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Filters;
 
 public class TrajectoryTracker : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class TrajectoryTracker : MonoBehaviour
     public float averageAcceleration;
 
     public string targetTag;
+    
+    private KalmanFilter m_Filter;
     
     private VelocityAcceleration va;
         
@@ -48,7 +51,11 @@ public class TrajectoryTracker : MonoBehaviour
 
         targetTag = "";
     }
-    
+
+    void Start(){
+        m_Filter = new KalmanFilter();
+        m_Filter.State = 0; //Setting first (non filtered) value to 0 for example;
+    }
     private void OnEnable(){
         InputManager.OnRecordAction += ToggleTrackingRecord;
         TrialSequence.OnTargetAction += TrialSequenceOnTargetAction;
@@ -101,7 +108,8 @@ public class TrajectoryTracker : MonoBehaviour
     	jointPosition = joint.transform.position;
         jointRotation = joint.transform.eulerAngles;
         acceleration = va.GetAcceleration();
-        averageAcceleration = va.GetAccelerationAverage();
+        float avgAcc = va.GetAccelerationAverage();
+        averageAcceleration = KalmanFilter(avgAcc);
         velocity = va.GetVelocity();
 
         if(trackTrajectory)
@@ -120,5 +128,15 @@ public class TrajectoryTracker : MonoBehaviour
             
             dataWriter.WriteTrajectoryData(jointPosition,jointRotation, acceleration, averageAcceleration, velocity, timeStamp, elapsedTime.ToString("f2"), jointTag, targetTag);
         }
+    }
+    
+    private float KalmanFilter(float value) {
+        //you can paste your values here
+
+        float FilteredValue = m_Filter.FilterValue(value); //applying filter
+
+        Debug.Log("TestingFilter: Dirty value = " + value + " Filtered value = " + FilteredValue); //printing output
+
+        return FilteredValue;
     }
 }
