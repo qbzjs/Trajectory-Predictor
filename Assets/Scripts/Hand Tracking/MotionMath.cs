@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VelocityAcceleration : MonoBehaviour
+public class MotionMath : MonoBehaviour
 {
     //velocity
     private float velocity;
@@ -16,6 +16,9 @@ public class VelocityAcceleration : MonoBehaviour
     private Vector3 distancemoved=Vector3.zero;
     private Vector3 lastdistancemoved=Vector3.zero;
     private Vector3 lastPosition;
+
+    //angular
+    private Vector3 angularAcceleration;
 
     public bool debug = false;
 
@@ -30,6 +33,15 @@ public class VelocityAcceleration : MonoBehaviour
         //averageAcceleration = (acceleration.x + acceleration.y + acceleration.z) / 3;
         return (acceleration.x + acceleration.y + acceleration.z) / 3;
     }
+    public Vector3 GetAngularAcceleration()
+    {
+        return angularAcceleration;
+    }
+    public float GetAngularAccelerationAverage()
+    {
+        //averageAcceleration = (acceleration.x + acceleration.y + acceleration.z) / 3;
+        return (angularAcceleration.x + angularAcceleration.y + angularAcceleration.z) / 3;
+    }
 
     void Update(){
         //velocity
@@ -43,8 +55,10 @@ public class VelocityAcceleration : MonoBehaviour
         // lastPosition = transform.position;
 
         
-        Math3D.LinearAcceleration(out acceleration, transform.position,10);
+        Math3D.LinearAcceleration(out acceleration, transform.position,50);
         //averageAcceleration = (acceleration.x + acceleration.y + acceleration.z) / 3;
+
+        Math3D.AngularAcceleration(out angularAcceleration, transform.rotation, 50);
         
         if (debug){
             Debug.Log("V : " + velocity + " : " + " A : " + acceleration);

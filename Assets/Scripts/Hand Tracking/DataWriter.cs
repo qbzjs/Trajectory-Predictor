@@ -13,7 +13,7 @@ public class DataWriter : MonoBehaviour
 
     private bool writeTitle = true;
 
-    public void WriteTrajectoryData(Vector3 p, Vector3 r, Vector3 a, float aavg, float v, string ts, string elapsed, string tag, string target){
+    public void WriteTrajectoryData(Vector3 p, Vector3 r, Vector3 a, Vector3 aS, float aAvg, float aAvgS, float v, float vS, string ts, string elapsed, string tag, string target){
 
         if (writeTitle){
             stringBuilder.Append("Joint Tag").Append (",")
@@ -29,9 +29,14 @@ public class DataWriter : MonoBehaviour
                 .Append("Acceleration X").Append (",")
                 .Append("Acceleration Y").Append (",")
                 .Append("Acceleration Z").Append (",")
+                .Append("Acceleration X (Smooth)").Append(",")
+                .Append("Acceleration Y (Smooth)").Append(",")
+                .Append("Acceleration Z (Smooth)").Append(",")
                 .Append("Average Acceleration").Append (",")
-                .Append("Velocity").AppendLine ();
-            
+                .Append("Average Acceleration (Smooth)").Append(",")
+                .Append("Velocity").Append(",")
+                .Append("Velocity (Smooth)").AppendLine();
+
             writeTitle = false;
         }
         else{
@@ -48,8 +53,13 @@ public class DataWriter : MonoBehaviour
                 .Append(a.x).Append (",")
                 .Append(a.y).Append (",")
                 .Append(a.z).Append (",")
-                .Append(aavg).Append (",")
-                .Append(v).AppendLine ();
+                .Append(aS.x).Append(",")
+                .Append(aS.y).Append(",")
+                .Append(aS.z).Append(",")
+                .Append(aAvg).Append (",")
+                .Append(aAvgS).Append(",")
+                .Append(v).Append(",")
+                .Append(vS).AppendLine ();
         }
 
     }

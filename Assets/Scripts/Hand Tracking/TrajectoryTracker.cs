@@ -8,7 +8,7 @@ public class TrajectoryTracker : MonoBehaviour
 {
     // public static HandPoseTracker instance;
     
-    public bool trackTrajectory = false;
+    public bool recordTrajectory = false;
     
     public Transform joint;
     
@@ -21,14 +21,22 @@ public class TrajectoryTracker : MonoBehaviour
     public string timeStamp;
     
     public float velocity;
+    public float velocitySmooth;
     public Vector3 acceleration;
+    public Vector3 accelerationSmooth;
     public float averageAcceleration;
+    public float averageAccelerationSmooth;
+
+    private Vector3 angularAcceleration;
+    private Vector3 angularAccelerationSmooth;
+    public float averageAngularAcceleration;
+    public float averageAngularAccelerationSmooth;
 
     public string targetTag;
     
     private KalmanFilter m_Filter;
     
-    private VelocityAcceleration va;
+    private MotionMath motion;
         
     private DataWriter dataWriter;
 
@@ -47,7 +55,7 @@ public class TrajectoryTracker : MonoBehaviour
         dataWriter = new DataWriter();
 
         // va = new VelocityAcceleration();
-        va = gameObject.AddComponent<VelocityAcceleration>();
+        motion = gameObject.AddComponent<MotionMath>();
 
         targetTag = "";
     }
@@ -79,22 +87,22 @@ public class TrajectoryTracker : MonoBehaviour
 
     private void ToggleTrackingRecord(bool t, string id)
     {
-        //trackTrajectory = t;
+        //recordTrajectory = t;
 
         if (Settings.instance.recordTrajectory){
-            if (!trackTrajectory)
+            if (!recordTrajectory)
             {
                 Debug.Log("---- Start Trajectory Tracking : " + jointTag);
                 //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
                 dataWriter = new DataWriter();
                 testID = jointTag + "_" + id;
                 elapsedTime = 0;
-                trackTrajectory = true;
+                recordTrajectory = true;
             }
             else
             {
                 Debug.Log("---- Stop Trajectory Tracking : " + jointTag);
-                trackTrajectory = false;
+                recordTrajectory = false;
                 dataWriter.WriteData(testID);
             }
         }
@@ -102,17 +110,26 @@ public class TrajectoryTracker : MonoBehaviour
     }
 
 
-
     void FixedUpdate()
     {
     	jointPosition = joint.transform.position;
         jointRotation = joint.transform.eulerAngles;
-        acceleration = va.GetAcceleration();
-        float avgAcc = va.GetAccelerationAverage();
-        averageAcceleration = KalmanFilter(avgAcc);
-        velocity = va.GetVelocity();
 
-        if(trackTrajectory)
+        acceleration = motion.GetAcceleration();
+        accelerationSmooth = new Vector3(KalmanFilter(acceleration.x), KalmanFilter(acceleration.y), KalmanFilter(acceleration.z));
+        averageAcceleration = motion.GetAccelerationAverage();
+        averageAccelerationSmooth = KalmanFilter(averageAcceleration);
+
+        //not saved in data writer
+        angularAcceleration = motion.GetAngularAcceleration();
+        angularAccelerationSmooth = new Vector3(KalmanFilter(angularAcceleration.x), KalmanFilter(angularAcceleration.y), KalmanFilter(angularAcceleration.z));
+        averageAngularAcceleration = motion.GetAngularAccelerationAverage();
+        averageAngularAccelerationSmooth = KalmanFilter(averageAngularAcceleration);
+
+        velocity = motion.GetVelocity();
+        velocitySmooth = KalmanFilter(velocity);
+
+        if(recordTrajectory)
         {
         	// Debug.Log("POSITION : " + jointPosition + " || " + "ROTATION : " + jointRotation);
         	
@@ -126,12 +143,11 @@ public class TrajectoryTracker : MonoBehaviour
                 t.Seconds, 
                 t.Milliseconds);
             
-            dataWriter.WriteTrajectoryData(jointPosition,jointRotation, acceleration, averageAcceleration, velocity, timeStamp, elapsedTime.ToString("f2"), jointTag, targetTag);
+            dataWriter.WriteTrajectoryData(jointPosition,jointRotation, acceleration, accelerationSmooth, averageAcceleration, averageAccelerationSmooth, velocity, velocitySmooth, timeStamp, elapsedTime.ToString("f2"), jointTag, targetTag);
         }
     }
     
     private float KalmanFilter(float value) {
-        //you can paste your values here
 
         float FilteredValue = m_Filter.FilterValue(value); //applying filter
 
