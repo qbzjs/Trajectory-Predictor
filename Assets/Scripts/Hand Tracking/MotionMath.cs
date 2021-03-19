@@ -31,6 +31,7 @@ public class MotionMath : MonoBehaviour
     }
     public float GetAccelerationAverage(){
         //averageAcceleration = (acceleration.x + acceleration.y + acceleration.z) / 3;
+        acceleration = acceleration * 25;
         return (acceleration.x + acceleration.y + acceleration.z) / 3;
     }
     public Vector3 GetAngularAcceleration()
@@ -55,10 +56,10 @@ public class MotionMath : MonoBehaviour
         // lastPosition = transform.position;
 
         
-        Math3D.LinearAcceleration(out acceleration, transform.position,50);
+        Math3D.LinearAcceleration(out acceleration, transform.position,25);
         //averageAcceleration = (acceleration.x + acceleration.y + acceleration.z) / 3;
 
-        Math3D.AngularAcceleration(out angularAcceleration, transform.rotation, 50);
+        // Math3D.AngularAcceleration(out angularAcceleration, transform.rotation, 50);
         
         if (debug){
             Debug.Log("V : " + velocity + " : " + " A : " + acceleration);

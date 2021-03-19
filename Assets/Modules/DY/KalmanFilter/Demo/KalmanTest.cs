@@ -1,12 +1,11 @@
-﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using System;
 
 
 [ExecuteInEditMode]
-public class DemoKalmanFilter : MonoBehaviour {
-
+public class KalmanTest : MonoBehaviour{
     Material mat;
 
     [SerializeField]
@@ -37,13 +36,13 @@ public class DemoKalmanFilter : MonoBehaviour {
     private void OnValidate() {
         if (m_oldCount != m_CountOfElements) {
             m_oldCount = m_CountOfElements;
-            //enerateTestNumbers();
+            GenerateTestNumbers();
         }
 
     }
 
     private void Update() {
-        //GenerateNewNumbers();
+        GenerateNewNumbers();
     }
 
    
@@ -139,7 +138,8 @@ public class DemoKalmanFilter : MonoBehaviour {
             currentNumberInStep++;
         }
 
-        InsertElement(m_currentStep + UnityEngine.Random.value / 5);
+        //InsertElement(m_currentStep + UnityEngine.Random.value / 5);
+        InsertElement(GetComponent<TrajectoryTracker>().velocity);
         TestFilter();
         OnPostRender();
     }

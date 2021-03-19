@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Filters;
 
+
 public class TrajectoryTracker : MonoBehaviour
 {
     // public static HandPoseTracker instance;
@@ -108,12 +109,15 @@ public class TrajectoryTracker : MonoBehaviour
         }
 
     }
-
+    
 
     void FixedUpdate()
     {
     	jointPosition = joint.transform.position;
         jointRotation = joint.transform.eulerAngles;
+        Vector3 rot = joint.transform.eulerAngles;;
+        EulerLimitExtension eulerLimitExtension = new EulerLimitExtension();
+        jointRotation = eulerLimitExtension.NormaliseAngle(rot);
 
         acceleration = motion.GetAcceleration();
         accelerationSmooth = new Vector3(KalmanFilter(acceleration.x), KalmanFilter(acceleration.y), KalmanFilter(acceleration.z));
@@ -126,8 +130,12 @@ public class TrajectoryTracker : MonoBehaviour
         averageAngularAcceleration = motion.GetAngularAccelerationAverage();
         averageAngularAccelerationSmooth = KalmanFilter(averageAngularAcceleration);
 
+        // velocity = motion.GetVelocity();
+        // velocitySmooth = KalmanFilter(velocity);
+
         velocity = motion.GetVelocity();
-        velocitySmooth = KalmanFilter(velocity);
+        velocitySmooth = Speed;
+        
 
         if(recordTrajectory)
         {
@@ -146,13 +154,64 @@ public class TrajectoryTracker : MonoBehaviour
             dataWriter.WriteTrajectoryData(jointPosition,jointRotation, acceleration, accelerationSmooth, averageAcceleration, averageAccelerationSmooth, velocity, velocitySmooth, timeStamp, elapsedTime.ToString("f2"), jointTag, targetTag);
         }
     }
+
+    [Space(20)]
+    [SerializeField] [Range(0, 4)] public float Q_measurementNoise = 0.07f;// measurement noise
+    [SerializeField] [Range(0, 100)] public float R_EnvironmentNoize = 4.8f; // environment noise
+    [SerializeField] [Range(0, 100)] public float F_facorOfRealValueToPrevious = 1f; // factor of real value to previous real value
+    [SerializeField] [Range(0.1f, 100)] public float H_factorOfMeasuredValue = 1f; // factor of measured value to real value
+    [SerializeField] public float m_StartState;
+    [SerializeField] public float m_Covariance = 0.2f;
+    
     
     private float KalmanFilter(float value) {
+        //var filter = new Filters.KalmanFilter(RealValueToPreviousRealValue: F_facorOfRealValueToPrevious, MeasuredToRealValue: H_factorOfMeasuredValue, mesurementNoize: Q_measurementNoise, environmentNoize: R_EnvironmentNoize);
 
         float FilteredValue = m_Filter.FilterValue(value); //applying filter
+        
+        //float FilteredValue = filter.FilterValue(value);
 
-        Debug.Log("TestingFilter: Dirty value = " + value + " Filtered value = " + FilteredValue); //printing output
+        //KalmanFilterFloat kf = new KalmanFilterFloat();
+        //FilteredValue = kf.Filter(value,Q_measurementNoise,R_EnvironmentNoize);
+        
+
+        //float v = m_Filter.FilterValue(value);
+//        Debug.Log("TestingFilter: Dirty value = " + value + " Filtered value = " + FilteredValue); //printing output
 
         return FilteredValue;
+    }
+
+    private void Update(){
+        StartCoroutine(SpeedReckoner());
+    }
+
+    void OnEnabled() {
+        
+    }
+
+    public float Speed;
+    public float UpdateDelay;
+
+    private IEnumerator SpeedReckoner() {
+
+        YieldInstruction timedWait = new WaitForSeconds(UpdateDelay);
+        Vector3 lastPosition = transform.position;
+        float lastTimestamp = Time.time;
+
+        while (enabled) {
+            yield return timedWait;
+
+            var deltaPosition = (transform.position - lastPosition).magnitude;
+            var deltaTime = Time.time - lastTimestamp;
+
+            if (Mathf.Approximately(deltaPosition, 0f)) // Clean up "near-zero" displacement
+                deltaPosition = 0f;
+
+            Speed = deltaPosition / deltaTime;
+            // Speed = KalmanFilter(Speed);
+
+            lastPosition = transform.position;
+            lastTimestamp = Time.time;
+        }
     }
 }
