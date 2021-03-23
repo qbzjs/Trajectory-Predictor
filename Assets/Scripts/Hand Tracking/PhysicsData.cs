@@ -5,7 +5,7 @@ namespace Unity.Labs.SuperScience.Example
     /// <summary>
     /// Example component that draws data from the physics tracker (or raw integration for comparison)
     /// </summary>
-    public class DrawPhysicsData : MonoBehaviour
+    public class PhysicsData : MonoBehaviour
     {
         /// <summary>
         /// Drawing constants we pass to the gizmo functions
@@ -53,7 +53,8 @@ namespace Unity.Labs.SuperScience.Example
 #pragma warning restore 649
 
         // We have a physicsTracker for getting the smooth data, and hold the last position for doing direct integration
-        PhysicsTracker m_MotionData = new PhysicsTracker();
+        [HideInInspector]
+        public PhysicsTracker m_MotionData = new PhysicsTracker();
         Vector3 m_LastPosition;
 
         void Start ()
@@ -131,9 +132,6 @@ namespace Unity.Labs.SuperScience.Example
 
             // Store the last position so we can integrate it again next frame
             m_LastPosition = m_ToTrack.position;
-
-            Debug.Log("Acc : " + m_MotionData.Acceleration + " Speed : " + m_MotionData.Speed + " Dir : " + m_MotionData.Direction.ToString() + " Vel : " + m_MotionData.Velocity);
-
         }
     }
 }

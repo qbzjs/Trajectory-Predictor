@@ -13,6 +13,83 @@ public class DataWriter : MonoBehaviour
 
     private bool writeTitle = true;
 
+    public void WriteTrajectoryData(string ts, string elapsed, string tag, string target, 
+        Vector3 pos, Vector3 rot, float speed, Vector3 vel, Vector3 acc, float accStr, Vector3 dir,
+        float angSpeed, Vector3 angVel, Vector3 angAcc, float angAccStr, Vector3 angAxis){
+
+    
+        if (writeTitle){
+            stringBuilder.Append("Joint Tag").Append (",")
+                .Append("Target Number").Append (",")
+                .Append("TimeStamp").Append (",")
+                .Append("Elapsed Time").Append (",")
+                .Append("Position X").Append (",")
+                .Append("Position Y").Append (",")
+                .Append("Position Z").Append (",")
+                .Append("Rotation X").Append (",")
+                .Append("Rotation y").Append (",")
+                .Append("Rotation z").Append (",")
+                .Append("Speed").Append (",")
+                .Append("Velocity X").Append (",")
+                .Append("Velocity Y").Append (",")
+                .Append("Velocity Z").Append (",")
+                .Append("Acceleration X").Append (",")
+                .Append("Acceleration Y").Append (",")
+                .Append("Acceleration Z").Append (",")
+                .Append("Acceleration Strength").Append (",")
+                .Append("Direction X").Append (",")
+                .Append("Direction Y").Append (",")
+                .Append("Direction Z").Append (",")
+                .Append("Angular Speed").Append(",")
+                .Append("Angular Velocity X").Append (",")
+                .Append("Angular Velocity Y").Append (",")
+                .Append("Angular Velocity Z").Append (",")
+                .Append("Angular Acceleration X").Append (",")
+                .Append("Angular Acceleration Y").Append (",")
+                .Append("Angular Acceleration Z").Append (",")
+                .Append("Angular Acceleration Strength").Append (",")
+                .Append("Angular Axis X").Append (",")
+                .Append("Angular Axis Y").Append (",")
+                .Append("Angular Axis Z").AppendLine();
+
+            writeTitle = false;
+        }
+        else{
+            stringBuilder.Append(tag).Append (",")
+                .Append(target).Append (",")
+                .Append(ts).Append (",")
+                .Append(elapsed).Append (",")
+                .Append(pos.x).Append (",")
+                .Append(pos.y).Append (",")
+                .Append(pos.z).Append (",")
+                .Append(rot.x).Append (",")
+                .Append(rot.y).Append (",")
+                .Append(rot.z).Append (",")
+                .Append(speed).Append (",")
+                .Append(vel.x).Append (",")
+                .Append(vel.y).Append (",")
+                .Append(vel.z).Append (",")
+                .Append(acc.x).Append (",")
+                .Append(acc.y).Append (",")
+                .Append(acc.z).Append (",")
+                .Append(accStr).Append (",")
+                .Append(dir.x).Append (",")
+                .Append(dir.y).Append (",")
+                .Append(dir.z).Append (",")
+                .Append(angSpeed).Append(",")
+                .Append(angVel.x).Append (",")
+                .Append(angVel.y).Append (",")
+                .Append(angVel.z).Append (",")
+                .Append(angAcc.x).Append (",")
+                .Append(angAcc.y).Append (",")
+                .Append(angAcc.z).Append (",")
+                .Append(angAccStr).Append (",")
+                .Append(angAxis.x).Append (",")
+                .Append(angAxis.y).Append (",")
+                .Append(angAxis.z).AppendLine();
+        }
+    }
+
     public void WriteTrajectoryData(Vector3 p, Vector3 r, Vector3 a, Vector3 aS, float aAvg, float aAvgS, float v, float vS, string ts, string elapsed, string tag, string target){
 
         if (writeTitle){
