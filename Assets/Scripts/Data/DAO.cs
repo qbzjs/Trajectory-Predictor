@@ -7,15 +7,28 @@ public class DAO : MonoBehaviour
     
     public static DAO instance;
 
-    public MotionDataFormat motionData;
+    public MotionDataFormat motionData_LeftHand;
+    public MotionDataFormat motionData_RightHand;
+    public MotionDataFormat motionData_Head;
+
     void Awake(){
         instance = this;
 
     }
 
-    public MotionDataFormat IMUData
+    public MotionDataFormat MotionData_LeftHand
     {
-        get { return motionData; }
-        set { motionData = value; }
+        get { return motionData_LeftHand; }
+        set { motionData_LeftHand = value; }
+    }
+    public MotionDataFormat MotionData_RightHand
+    {
+        get { return motionData_RightHand; }
+        set { motionData_RightHand = value; }
+    }
+    public MotionDataFormat MotionData_Head
+    {
+        get { return motionData_Head; }
+        set { motionData_Head = value; }
     }
 }

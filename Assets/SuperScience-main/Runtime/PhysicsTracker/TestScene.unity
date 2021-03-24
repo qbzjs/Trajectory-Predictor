@@ -401,7 +401,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 631019737}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 480be5a3a71bb8540a6461d72c2157e4, type: 3}
+  m_Script: {fileID: 11500000, guid: fec9337efcfb37b4fae0d1c181909acc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_ToTrack: {fileID: 631019739}
@@ -427,11 +427,11 @@ MonoBehaviour:
   _positionFrequency: 0.2
   _rotationFrequency: 0.2
   _positionAmplitude: 0.5
-  _rotationAmplitude: 10
+  _rotationAmplitude: 1
   _positionScale: {x: 2, y: 2, z: 2}
   _rotationScale: {x: 1, y: 1, z: 1}
-  _positionFractalLevel: 3
-  _rotationFractalLevel: 3
+  _positionFractalLevel: 1
+  _rotationFractalLevel: 2
 --- !u!114 &631019742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,38 +441,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 631019737}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0c9cd4db58ce5442bf7b51581ab51b8, type: 3}
+  m_Script: {fileID: 11500000, guid: 31afe1d9e4cca9443b8b57862ca5e189, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recordTrajectory: 0
-  joint: {fileID: 0}
-  testID: 
-  jointTag: LeftHand
-  targetTag: 
-  jointPosition: {x: 0, y: 0, z: 0}
-  jointRotation: {x: 0, y: 0, z: 0}
-  elapsedTime: 0
-  timeStamp: 
-  velocity: 0
-  velocitySmooth: 0
+  motionObject: {fileID: 631019739}
+  motionTag: 1
+  recordDepreciatedMotion: 1
+  motionData:
+    tag: 
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    speed: 0
+    velocity: {x: 0, y: 0, z: 0}
+    acceleration: {x: 0, y: 0, z: 0}
+    accelerationStrength: 0
+    direction: {x: 0, y: 0, z: 0}
+    angularSpeed: 0
+    angularVelocity: {x: 0, y: 0, z: 0}
+    angularAcceleration: {x: 0, y: 0, z: 0}
+    angularAccelerationStrength: 0
+    angularAxis: {x: 0, y: 0, z: 0}
+  speed: 0
+  speedSmooth: 0
   acceleration: {x: 0, y: 0, z: 0}
   accelerationSmooth: {x: 0, y: 0, z: 0}
   averageAcceleration: 0
   averageAccelerationSmooth: 0
   averageAngularAcceleration: 0
   averageAngularAccelerationSmooth: 0
-  p_speed: 0
-  p_velocity: {x: 0, y: 0, z: 0}
-  p_acceleration: {x: 0, y: 0, z: 0}
-  p_accelerationStrength: 0
-  p_direction: {x: 0, y: 0, z: 0}
-  p_angularSpeed: 0
-  p_angularVelocity: {x: 0, y: 0, z: 0}
-  p_angularAcceleration: {x: 0, y: 0, z: 0}
-  p_angularAccelerationStrength: 0
-  p_angularAxis: {x: 0, y: 0, z: 0}
-  Speed: 0
-  UpdateDelay: 0.5
 --- !u!1 &751860149
 GameObject:
   m_ObjectHideFlags: 0
@@ -674,12 +670,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 480be5a3a71bb8540a6461d72c2157e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ToTrack: {fileID: 1063744512}
-  m_DrawSmoothSpeed: 1
-  m_DrawSmoothAcceleration: 1
-  m_DrawAngularVelocity: 0
-  m_DrawDirectSpeed: 0
-  m_UseDirection: 1
 --- !u!1 &1243400097
 GameObject:
   m_ObjectHideFlags: 0
