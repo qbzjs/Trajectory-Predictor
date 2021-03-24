@@ -17,6 +17,8 @@
 		Right
 	}
 
+	public enum MotionTag{Null, LeftHand, RightHand, Head}
+	
 	public enum TrialParadigm{
 		Avatar3D,
 		Screen2D

@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class DAO : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    
+    public static DAO instance;
+
+    public MotionDataFormat motionData;
+    void Awake(){
+        instance = this;
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public MotionDataFormat IMUData
     {
-        
+        get { return motionData; }
+        set { motionData = value; }
     }
 }

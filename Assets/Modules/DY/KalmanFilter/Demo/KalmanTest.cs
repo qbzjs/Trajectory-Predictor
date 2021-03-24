@@ -139,7 +139,7 @@ public class KalmanTest : MonoBehaviour{
         }
 
         //InsertElement(m_currentStep + UnityEngine.Random.value / 5);
-        InsertElement(GetComponent<TrajectoryTracker>().speed);
+        InsertElement(GetComponent<MotionTracker>().speed);
         TestFilter();
         OnPostRender();
     }

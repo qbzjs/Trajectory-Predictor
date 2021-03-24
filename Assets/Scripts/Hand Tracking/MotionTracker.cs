@@ -5,8 +5,9 @@ using UnityEngine;
 using Filters;
 using Unity.Labs.SuperScience;
 using Unity.Labs.SuperScience.Example;
+using Enums;
 
-public class TrajectoryTracker : MonoBehaviour
+public class MotionTracker : MonoBehaviour
 {
     private KalmanFilter m_Filter;
     private MotionMath motion;
@@ -17,10 +18,11 @@ public class TrajectoryTracker : MonoBehaviour
     
     public bool recordDepreciated = false;
     
-    public Transform joint;
+    public Transform motionObject;
     
     public string testID;
-    public string jointTag = "Joint Name Here";
+    public MotionTag motionTag;
+    public string tag = "Joint Name Here";
     public string targetTag = "Target Tag Here";
 
     public Vector3 jointPosition;
@@ -59,19 +61,20 @@ public class TrajectoryTracker : MonoBehaviour
     public float averageAngularAccelerationSmooth;
     
     void Awake(){
-        if(joint==null){
-    		joint = this.transform;
+        if(motionObject==null){
+    		motionObject = this.transform;
     	}
         
-        if (jointTag == null)
+        if (motionTag == MotionTag.Null)
         {
-            jointTag = transform.name;
+            tag = transform.name;
+        }
+        else{
+            tag = motionTag.ToString();
         }
         
         dataWriter = new DataWriter();
-
-        motion = gameObject.AddComponent<MotionMath>();
-
+        
         targetTag = "";
     }
 
@@ -80,6 +83,7 @@ public class TrajectoryTracker : MonoBehaviour
         m_Filter.State = 0; //Setting first (non filtered) value to 0 for example;
 
         motionData = gameObject.GetComponent<PhysicsData>().m_MotionData;
+        motion = gameObject.AddComponent<MotionMath>();
     }
     private void OnEnable(){
         InputManager.OnRecordAction += ToggleTrackingRecord;
@@ -108,16 +112,16 @@ public class TrajectoryTracker : MonoBehaviour
         if (Settings.instance.recordTrajectory){
             if (!recordTrajectory)
             {
-                Debug.Log("---- Start Trajectory Tracking : " + jointTag);
+                Debug.Log("---- Start Trajectory Tracking : " + tag);
                 //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
                 dataWriter = new DataWriter();
-                testID = jointTag + "_" + id;
+                testID = tag + "_" + id;
                 elapsedTime = 0;
                 recordTrajectory = true;
             }
             else
             {
-                Debug.Log("---- Stop Trajectory Tracking : " + jointTag);
+                Debug.Log("---- Stop Trajectory Tracking : " + tag);
                 recordTrajectory = false;
                 dataWriter.WriteData(testID);
             }
@@ -126,14 +130,7 @@ public class TrajectoryTracker : MonoBehaviour
     }
 
     private void Update(){
-
-
-        //Debug.Log("Acc : " + motionData.Acceleration + " Speed : " + motionData.Speed + " Dir : " + motionData.Direction.ToString() + " Vel : " + motionData.Velocity);
-
-    }
-
-    void FixedUpdate()
-    {
+        
         //POSITION / ROTATION
         GetPositionRotation();
         
@@ -144,8 +141,12 @@ public class TrajectoryTracker : MonoBehaviour
         if (recordDepreciated){
             GetMotion_Depreciated();
         }
+        
+        //Debug.Log("Acc : " + motionData.Acceleration + " Speed : " + motionData.Speed + " Dir : " + motionData.Direction.ToString() + " Vel : " + motionData.Velocity);
+    }
 
-
+    void FixedUpdate()
+    {
         if(recordTrajectory){
             
             elapsedTime += Time.deltaTime;
@@ -157,20 +158,20 @@ public class TrajectoryTracker : MonoBehaviour
                 t.Seconds, 
                 t.Milliseconds);
             
-            dataWriter.WriteTrajectoryData(timeStamp, elapsedTime.ToString("f2"), jointTag, targetTag,jointPosition, jointRotation,
+            dataWriter.WriteTrajectoryData(timeStamp, elapsedTime.ToString("f2"), tag, targetTag,jointPosition, jointRotation,
                 p_speed,p_velocity,p_acceleration,p_accelerationStrength,p_direction,
                 p_angularSpeed,p_angularVelocity,p_angularAcceleration,p_angularAccelerationStrength,p_angularAxis);
 
             if (recordDepreciated){
-                dataWriter.WriteTrajectoryData(jointPosition, jointRotation, acceleration, accelerationSmooth, averageAcceleration, averageAccelerationSmooth, speed, speedSmooth, timeStamp, elapsedTime.ToString("f2"), jointTag, targetTag);
+                dataWriter.WriteTrajectoryData(jointPosition, jointRotation, acceleration, accelerationSmooth, averageAcceleration, averageAccelerationSmooth, speed, speedSmooth, timeStamp, elapsedTime.ToString("f2"), tag, targetTag);
             }
         }
     }
 
     public void GetPositionRotation(){
-        jointPosition = joint.transform.position;
-        jointRotation = joint.transform.eulerAngles;
-        Vector3 rot = joint.transform.eulerAngles;;
+        jointPosition = motionObject.transform.position;
+        jointRotation = motionObject.transform.eulerAngles;
+        Vector3 rot = motionObject.transform.eulerAngles;;
         EulerLimitExtension eulerLimitExtension = new EulerLimitExtension();
         jointRotation = eulerLimitExtension.NormaliseAngle(rot);
     }
