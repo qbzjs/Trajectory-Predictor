@@ -29,7 +29,8 @@ public class TrialSequence : MonoBehaviour {
     public int targetDuration = 6;
 //    [HideInInspector] 
     public int restDuration = 2;
-    
+
+    private bool triggerSent = false;
 
     [Header("SEQUENCE OBJECTS (rest last object)")]
     public GameObject[] target = new GameObject[5];
@@ -71,7 +72,7 @@ public class TrialSequence : MonoBehaviour {
         
         InitialiseSequence();
         Settings.instance.Status = GameStatus.Ready;
-        UI_DisplayText.instance.SetStatus(Settings.instance.Status,"Game Ready");
+        UI_DisplayText.instance.SetStatus(Settings.instance.Status,"Trial Ready");
     }
     public void InitialiseTrial() {
         
@@ -107,23 +108,54 @@ public class TrialSequence : MonoBehaviour {
         UI_DisplayText.instance.SetProgress(sequenceIndex, sequenceOrder.Length);
     }
     
+//     public void StartTrial() {
+//         InitialiseSequence();
+// //        InitialiseTrial(); //initialised from settings
+//         if (!runSequence) {
+//             resting = true;
+//             duration = startDelay;           
+//             sequenceCount = 0;
+//             sequenceIndex = 0;
+//             elapsedTime = 0;
+//             runSequence = true;
+//             Debug.Log("-----TRIAL STARTED-----");
+//             RestTarget();
+//             Settings.instance.Status = GameStatus.Running;
+//             UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Running");
+//         }
+//     }
     public void StartTrial() {
+        InitialiseSequence();
+        if (!runSequence) {
+            resting = true;
+            sequenceCount = 0;
+            sequenceIndex = 0;
+            elapsedTime = 0;
+            Debug.Log("-----TRIAL STARTED-----");
+            Settings.instance.Status = GameStatus.Running;
+            UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Running");
+            
+            Invoke("RunTrial", startDelay);
+        }
+    }
+    public void RunTrial() {
         InitialiseSequence();
 //        InitialiseTrial(); //initialised from settings
         if (!runSequence) {
-            resting = true;
-            duration = startDelay;           
+            resting = false;
+            duration = targetDuration;           
             sequenceCount = 0;
             sequenceIndex = 0;
             elapsedTime = 0;
             runSequence = true;
             Debug.Log("-----TRIAL STARTED-----");
-            RestTarget();
+            SetTarget();
             Settings.instance.Status = GameStatus.Running;
-            UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Game Running");
+            UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Running");
         }
     }
     public void StopTrial() {
+        CancelInvoke();
         runSequence = false;
         sequenceCount = 0;
         sequenceIndex = 0;
@@ -131,7 +163,7 @@ public class TrialSequence : MonoBehaviour {
         RestTarget();
         Debug.Log("-----TRIAL STOPPED----- ");
         Settings.instance.Status = GameStatus.Ready;
-        UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Game Ready");
+        UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Ready");
         UI_DisplayText.instance.SetProgress(sequenceIndex, sequenceOrder.Length);
     }
     void Update()
@@ -161,7 +193,7 @@ public class TrialSequence : MonoBehaviour {
     //------PERMUTATION GENERATION
     private void SetTarget() 
     {
-        Debug.Log("Set Target");
+//        Debug.Log("Set Target");
 
         for (int i = 0; i < target.Length; i++)
         {
@@ -171,9 +203,13 @@ public class TrialSequence : MonoBehaviour {
         int tNumID = sequenceOrder[sequenceIndex];
         int tNum = tNumID+1;
 
-        //SEND VALUE TO UDP
-        SendUDP_byte(tNum);
-        SendUDP_byte(0);
+       // // if (!triggerSent){
+       //      //SEND VALUE TO UDP
+       //      SendUDP_byte(tNum);
+       //      SendUDP_byte(0);
+       //      Debug.Log("trigger sent");
+       //  //    triggerSent = true;
+       //  //}
 
         //3D Target Event
         if (OnTargetAction != null)

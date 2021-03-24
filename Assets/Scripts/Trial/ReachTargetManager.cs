@@ -18,6 +18,8 @@ public class ReachTargetManager : MonoBehaviour{
 
     public bool animateTargets;
 
+    private int currentTrigger;
+
     private TaskSide taskSide = TaskSide.Left;
 
     //send general target action
@@ -73,6 +75,11 @@ public class ReachTargetManager : MonoBehaviour{
         {
             OnTargetAction(reachTarget[targetNumber].transform, taskSide);
         }
+
+        currentTrigger = targetNumber;
+        SendUDP_byte(targetNumber);
+
+        PlayBeep();
     }
     private void TrialSequence_OnTargetRestAction(int targetNumber)
     {
@@ -87,6 +94,11 @@ public class ReachTargetManager : MonoBehaviour{
         {
             OnTargetRestAction(reachTarget[targetNumber].transform, taskSide);
         }
+        
+        // SendUDP_byte(targetNumber+10);
+        SendUDP_byte(currentTrigger+10);
+
+        PlayBeep();
     }
 
     public void SetReachSide(TaskSide side)
@@ -99,5 +111,17 @@ public class ReachTargetManager : MonoBehaviour{
         if (side == TaskSide.Right){
             reachObject.transform.position = positionRight;
         }
+    }
+    
+    private void PlayBeep(){
+        print("AUDIO - Beep");
+        AudioSource a =  reachTarget[currentTrigger].GetComponent<AudioSource>();
+        a.Play();
+    }
+    
+    private void SendUDP_byte(int t)
+    {
+        Debug.Log("Trigger Sent: " + t);
+        UDPClient.instance.SendData((byte)t);
     }
 }
