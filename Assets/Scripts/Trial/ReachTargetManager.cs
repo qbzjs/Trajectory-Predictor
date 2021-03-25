@@ -22,6 +22,8 @@ public class ReachTargetManager : MonoBehaviour{
 
     private TaskSide taskSide = TaskSide.Left;
 
+    public bool oneShotTriggerUDP = false;
+
     //send general target action
     public delegate void TargetAction(Transform target, TaskSide side);
     public static event TargetAction OnTargetAction;
@@ -80,6 +82,12 @@ public class ReachTargetManager : MonoBehaviour{
         SendUDP_byte(targetNumber);
 
         PlayBeep();
+
+        if (oneShotTriggerUDP)
+        {
+            StartCoroutine(TriggerReset());
+        }
+        
     }
     private void TrialSequence_OnTargetRestAction(int targetNumber)
     {
@@ -99,6 +107,17 @@ public class ReachTargetManager : MonoBehaviour{
         SendUDP_byte(currentTrigger+10);
 
         PlayBeep();
+
+        if (oneShotTriggerUDP)
+        {
+            StartCoroutine(TriggerReset());
+        }
+    }
+
+    private IEnumerator TriggerReset()
+    {
+        yield return new WaitForEndOfFrame();
+        SendUDP_byte(0);
     }
 
     public void SetReachSide(TaskSide side)
