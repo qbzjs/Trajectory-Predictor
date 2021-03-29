@@ -11,6 +11,8 @@ public class DAO : MonoBehaviour
     public MotionDataFormat motionData_RightHand;
     public MotionDataFormat motionData_Head;
 
+    public int reachTarget;
+
     void Awake(){
         instance = this;
 
@@ -30,5 +32,12 @@ public class DAO : MonoBehaviour
     {
         get { return motionData_Head; }
         set { motionData_Head = value; }
+    }
+
+    public int ReachTarget
+    {
+        get { return reachTarget; }
+        set { reachTarget = value; }
+
     }
 }

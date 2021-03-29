@@ -15,11 +15,12 @@ public class MotionTracker : MonoBehaviour
     private MotionDataStreaming motionDataStreaming;
     private DataWriter dataWriter;
 
+    public bool recordEnabled;
     [Space(10)]
     public Transform motionObject;
 
     public MotionTag motionTag;
-    private string tag = "Joint Name Here";
+    public string sessionTag = "Joint Name Here";
     private string testID;
     private string targetTag = "Target Tag Here";
 
@@ -70,10 +71,10 @@ public class MotionTracker : MonoBehaviour
         
         if (motionTag == MotionTag.Null)
         {
-            tag = transform.name;
+            sessionTag = transform.name+"_" + sessionTag + "_";
         }
         else{
-            tag = motionTag.ToString();
+            sessionTag = motionTag.ToString() + "_" + sessionTag + "_";
         }
         
         dataWriter = new DataWriter();
@@ -103,11 +104,15 @@ public class MotionTracker : MonoBehaviour
     }
     
     private void TrialSequenceOnTargetRestAction(int targetnumber){
-        targetTag = "rest";
+//        int tNum = targetnumber++;
+//        targetTag = (tNum + 10).ToString();
+//        Debug.Log(tNum + " :  Rest Target Trigger (Kinematic)");
     }
 
     private void TrialSequenceOnTargetAction(int targetnumber){
-        targetTag = targetnumber.ToString();
+//        int tNum = targetnumber++;
+//        targetTag = tNum.ToString();
+//        Debug.Log(tNum + " :  Target Trigger (Kinematic)");
     }
 
     private void ToggleTrackingRecord(bool t, string id)
@@ -115,18 +120,18 @@ public class MotionTracker : MonoBehaviour
         //recordTrajectory = t;
 
         if (Settings.instance.recordTrajectory){
-            if (!recordTrajectory)
+            if (!recordTrajectory && recordEnabled)
             {
-                Debug.Log("---- Start Trajectory Tracking : " + tag);
+                Debug.Log("---- Start Trajectory Tracking : " + sessionTag);
                 //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
                 dataWriter = new DataWriter();
-                testID = tag + "_" + id;
+                testID = sessionTag + "_" + id;
                 elapsedTime = 0;
                 recordTrajectory = true;
             }
             else
             {
-                Debug.Log("---- Stop Trajectory Tracking : " + tag);
+                Debug.Log("---- Stop Trajectory Tracking : " + sessionTag);
                 recordTrajectory = false;
                 dataWriter.WriteData(testID);
             }
@@ -155,7 +160,7 @@ public class MotionTracker : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(recordTrajectory){
+        if(recordTrajectory && recordEnabled){
             
             elapsedTime += Time.deltaTime;
             TimeSpan t = TimeSpan.FromSeconds( elapsedTime );
@@ -165,15 +170,17 @@ public class MotionTracker : MonoBehaviour
                 t.Minutes, 
                 t.Seconds, 
                 t.Milliseconds);
+
+            targetTag = DAO.instance.reachTarget.ToString();
             
-            dataWriter.WriteTrajectoryData(timeStamp, elapsedTime.ToString("f2"), tag, targetTag, position, rotation,
+            dataWriter.WriteTrajectoryData(timeStamp, elapsedTime.ToString("f2"), sessionTag, targetTag, position, rotation,
                 p_speed,p_velocity,p_acceleration,p_accelerationStrength,p_direction,
                 p_angularSpeed,p_angularVelocity,p_angularAcceleration,p_angularAccelerationStrength,p_angularAxis);
 
             //needs seconds recorder
             if (recordDepreciatedMotion)
             {
-                dataWriter.WriteTrajectoryData(position, rotation, acceleration, accelerationSmooth, averageAcceleration, averageAccelerationSmooth, speed, speedSmooth, timeStamp, elapsedTime.ToString("f2"), tag + "(depreciated)", targetTag);
+                dataWriter.WriteTrajectoryData(position, rotation, acceleration, accelerationSmooth, averageAcceleration, averageAccelerationSmooth, speed, speedSmooth, timeStamp, elapsedTime.ToString("f2"), sessionTag + "(depreciated)", targetTag);
             }
         }
     }

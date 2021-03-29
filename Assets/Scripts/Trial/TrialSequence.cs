@@ -265,11 +265,16 @@ public class TrialSequence : MonoBehaviour {
         {
             target[i].GetComponent<Renderer>().material = defaultMaterial;
         }
+
+        TrialControls.instance.SetStop();
+
         yield return new WaitForSeconds(restDuration);
-        
+
+
         Debug.Log("-----SEQUENCE COMPLETED-----");
         Settings.instance.Status = GameStatus.Ready;
         UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Game Complete");
+
 
 //        yield return new WaitForSeconds(targetDuration);
 //        Debug.Log("-----SEQUENCE READY-----");

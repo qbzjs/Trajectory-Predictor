@@ -6,12 +6,17 @@ using Enums;
 
 public class TrialControls : MonoBehaviour
 {
+    public static TrialControls instance;
     public Button playButton;
     public Button stopButton;
 
     private Color initialColour;
     public Color highlightedColour;
 
+    private void Awake()
+    {
+        instance = this;
+    }
     void Start () {
         initialColour = playButton.gameObject.GetComponent<Image>().color;
         //SetStop();
@@ -21,11 +26,23 @@ public class TrialControls : MonoBehaviour
         InputManager.instance.StartTrialSequence();
         InputManager.instance.SetTrajectoryRecording(true);
         SetControls(Settings.instance.Status);
+
+        SendUDP_byte(101);
+        SendUDP_byte(0);
     }
     public void SetStop () {
         InputManager.instance.StopTrialSequence();
         InputManager.instance.SetTrajectoryRecording(false);
         SetControls(Settings.instance.Status);
+
+        SendUDP_byte(102);
+        SendUDP_byte(0);
+    }
+    private void SendUDP_byte(int t)
+    {
+        Debug.Log("Trigger Sent: " + t);
+        UDPClient.instance.SendData((byte)t);
+
     }
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {

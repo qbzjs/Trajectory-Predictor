@@ -18,6 +18,7 @@ public class ReachTargetManager : MonoBehaviour{
 
     public bool animateTargets;
 
+    private int lastTrigger;
     private int currentTrigger;
 
     private TaskSide taskSide = TaskSide.Left;
@@ -59,7 +60,8 @@ public class ReachTargetManager : MonoBehaviour{
 
     private void TrialSequence_OnTargetAction(int targetNumber)
     {
-        Debug.Log(targetNumber +" : " + reachTarget[targetNumber].name.ToString());
+        
+        Debug.Log(targetNumber + 1 + " : " + reachTarget[targetNumber].name.ToString() + " (EEG)");
 
         for(int i=0; i<reachTarget.Length; i++)
         {
@@ -79,9 +81,12 @@ public class ReachTargetManager : MonoBehaviour{
         }
 
         currentTrigger = targetNumber;
-        SendUDP_byte(targetNumber);
 
-        PlayBeep();
+        DAO.instance.ReachTarget = targetNumber + 1;
+        
+        SendUDP_byte(targetNumber + 1);
+
+        PlayBeep(1f);
 
         if (oneShotTriggerUDP)
         {
@@ -91,7 +96,7 @@ public class ReachTargetManager : MonoBehaviour{
     }
     private void TrialSequence_OnTargetRestAction(int targetNumber)
     {
-        Debug.Log(targetNumber + " : " + reachTarget[targetNumber].name.ToString());
+        Debug.Log(targetNumber+1 + " : " + reachTarget[targetNumber].name.ToString() + " (EEG)");
 
         for (int i = 0; i < reachTarget.Length; i++)
         {
@@ -102,11 +107,15 @@ public class ReachTargetManager : MonoBehaviour{
         {
             OnTargetRestAction(reachTarget[targetNumber].transform, taskSide);
         }
-        
-        // SendUDP_byte(targetNumber+10);
-        SendUDP_byte(currentTrigger+10);
 
-        PlayBeep();
+        // SendUDP_byte(targetNumber+10);
+
+        lastTrigger = currentTrigger;
+        lastTrigger++;
+        DAO.instance.ReachTarget = lastTrigger + 10;
+        SendUDP_byte(lastTrigger+10);
+
+        PlayBeep(0.8f);
 
         if (oneShotTriggerUDP)
         {
@@ -132,9 +141,11 @@ public class ReachTargetManager : MonoBehaviour{
         }
     }
     
-    private void PlayBeep(){
-        print("AUDIO - Beep");
-        AudioSource a =  reachTarget[currentTrigger].GetComponent<AudioSource>();
+    private void PlayBeep(float p){
+        AudioSource a = reachTarget[currentTrigger].GetComponent<AudioSource>();
+        a.pitch = p;
+//        print("AUDIO - Beep");
+
         a.Play();
     }
     
