@@ -209,6 +209,7 @@ public class Settings : MonoBehaviour {
 	public void SetStartDelay(int num) {
 		startDelay = num;
 		TrialSequence.instance.startDelay = startDelay;
+		TrialManager.instance.initialWaitPeriod = startDelay;
 		SaveState();
 	}
 	public void SetRestDuration(int num) {
@@ -221,7 +222,12 @@ public class Settings : MonoBehaviour {
 		TrialSequence.instance.targetDuration = targetDuration;
 		SaveState();
 	}
-
+	public void SetInterRunRestPeriod(int num) {
+		//TODO set rest period here..
+		
+		SaveState();
+	}
+	
 //----------INTERFACE----------------	
 
 	public void Set3DEnvironment(bool t){

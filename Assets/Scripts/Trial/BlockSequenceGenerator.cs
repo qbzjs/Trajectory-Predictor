@@ -9,13 +9,13 @@ public class BlockSequenceGenerator : MonoBehaviour
     public int[] sequenceStartTrigger = new int[0];
     public int[] sequenceEndTrigger = new int[0];
 
-    void Awake()
+    void OnEnable()
     {
         GenerateSequence();
     }
 
     
-    void GenerateSequence()
+    public void GenerateSequence()
     {
         sequenceStartTrigger = new int[blockTotal];
         sequenceEndTrigger = new int[blockTotal];
@@ -23,7 +23,20 @@ public class BlockSequenceGenerator : MonoBehaviour
         for (int i=0; i< sequenceStartTrigger.Length; i++)
         {
             sequenceStartTrigger[i] = startingBlock + (1*i);
-            sequenceEndTrigger[i] = sequenceStartTrigger[i] + 1;
+            sequenceEndTrigger[i] = sequenceStartTrigger[i] + 10;
+
+        }
+    }
+    
+    public void GenerateSequence(int total, int startBlock)
+    {
+        sequenceStartTrigger = new int[blockTotal];
+        sequenceEndTrigger = new int[blockTotal];
+
+        for (int i=0; i< sequenceStartTrigger.Length; i++)
+        {
+            sequenceStartTrigger[i] = startingBlock + (1*i);
+            sequenceEndTrigger[i] = sequenceStartTrigger[i] + 10;
 
         }
     }

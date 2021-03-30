@@ -12075,7 +12075,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1062319890}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999987
+  m_Size: 0.99999595
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -15507,7 +15507,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockTotal: 8
+  initialWaitPeriod: 0
+  interBlockRestPeriod: 15
   countdown: 10
+  blockIndex: 0
+  blockSequence: {fileID: 0}
 --- !u!1 &872630988
 GameObject:
   m_ObjectHideFlags: 0
@@ -19771,7 +19775,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0010140613}
+  m_AnchoredPosition: {x: 0, y: 0.000012402821}
   m_SizeDelta: {x: 0, y: 780}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1096512645
@@ -23797,7 +23801,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0010140613}
+  m_AnchoredPosition: {x: 0, y: 0.000012402821}
   m_SizeDelta: {x: 0, y: 780}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1328052750
@@ -33194,7 +33198,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2063804510}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999987
+  m_Size: 0.99999595
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

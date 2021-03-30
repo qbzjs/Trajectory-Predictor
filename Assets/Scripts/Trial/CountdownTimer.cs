@@ -37,6 +37,10 @@ public class CountdownTimer : MonoBehaviour
                 timerDisplay = (int)timer % 60;
                 countdownDisplay.text = timerDisplay.ToString();
             }
+            if (timerDisplay == 0)
+            {
+                countdownDisplay.text = "";
+            }
             if (timer <= 0)
             {
                 countdownDisplay.text = "";

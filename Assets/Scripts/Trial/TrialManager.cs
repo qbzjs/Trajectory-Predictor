@@ -12,15 +12,26 @@ public class TrialManager : MonoBehaviour
 
     public int blockTotal = 8;
 
-    private int initialWaitPeriod;
+    public int initialWaitPeriod;
     public int interBlockRestPeriod = 15;
     public int countdown = 10;
 
     public int blockIndex;
 
+    public BlockSequenceGenerator blockSequence;
+
     private void Awake()
     {
         instance = this;
+
+        blockSequence = new BlockSequenceGenerator();
+        blockSequence.GenerateSequence(blockTotal,101);
+
+        for (int i = 0; i < blockSequence.sequenceStartTrigger.Length; i++){
+            Debug.Log(blockSequence.sequenceStartTrigger[i]);
+            Debug.Log(blockSequence.sequenceEndTrigger[i]);
+        }
+        
     }
 
     void Start()
@@ -67,6 +78,9 @@ public class TrialManager : MonoBehaviour
     }
     private void Countdown()
     {
+        SendUDP_byte(blockSequence.sequenceStartTrigger[blockIndex-1]);
+        SendUDP_byte(0);
+
         CountdownTimer.instance.SetCountdown(countdown+1);
     }
     public void StartBlock()
@@ -77,6 +91,9 @@ public class TrialManager : MonoBehaviour
 
     public void BlockComplete()
     {
+        SendUDP_byte(blockSequence.sequenceEndTrigger[blockIndex-1]);
+        SendUDP_byte(0);
+
         blockIndex++;
         if(blockIndex > blockTotal)
         {
@@ -87,5 +104,11 @@ public class TrialManager : MonoBehaviour
             RunTrial();
         }
         //rest period
+    }
+    
+    private void SendUDP_byte(int t)
+    {
+        Debug.Log("Block Trigger Sent: " + t);
+        UDPClient.instance.SendData((byte)t);
     }
 }

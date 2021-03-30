@@ -27,16 +27,16 @@ public class TrialControls : MonoBehaviour
         InputManager.instance.SetTrajectoryRecording(true);
         SetControls(Settings.instance.Status);
 
-        SendUDP_byte(101);
-        SendUDP_byte(0);
+        //SendUDP_byte(101);
+        //SendUDP_byte(0);
     }
     public void SetStop () {
         InputManager.instance.StopTrialSequence();
         InputManager.instance.SetTrajectoryRecording(false);
         SetControls(Settings.instance.Status);
 
-        SendUDP_byte(102);
-        SendUDP_byte(0);
+        //SendUDP_byte(102);
+        //SendUDP_byte(0);
     }
     private void SendUDP_byte(int t)
     {

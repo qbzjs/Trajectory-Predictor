@@ -20,7 +20,8 @@ public class MotionTracker : MonoBehaviour
     public Transform motionObject;
 
     public MotionTag motionTag;
-    public string sessionTag = "Joint Name Here";
+    public string sessionTag = "Session Name Here";
+    public string fileName = "Name Here";
     private string testID;
     private string targetTag = "Target Tag Here";
 
@@ -69,20 +70,36 @@ public class MotionTracker : MonoBehaviour
     		motionObject = this.transform;
     	}
         
-        if (motionTag == MotionTag.Null)
-        {
-            sessionTag = transform.name+"_" + sessionTag + "_";
-        }
-        else{
-            sessionTag = motionTag.ToString() + "_" + sessionTag + "_";
-        }
+        // if (motionTag == MotionTag.Null)
+        // {
+        //     sessionTag = transform.name+"_" + sessionTag + "_";
+        // }
+        // else{
+        //     sessionTag = motionTag.ToString() + "_" + sessionTag + "_";
+        // }
+
+        
         
         dataWriter = new DataWriter();
         
         targetTag = "";
     }
 
+
     void Start(){
+       // fileName = GenerateFileName();
+        
+        
+        // TrialManager tm = TrialManager.instance;
+        //
+        // if (motionTag == MotionTag.Null)
+        // {
+        //     sessionTag = transform.name+"_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex].ToString();
+        // }
+        // else{
+        //     sessionTag = motionTag.ToString() + "_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex].ToString();
+        // }
+
         m_Filter = new KalmanFilter();
         m_Filter.State = 0; //Setting first (non filtered) value to 0 for example;
 
@@ -90,6 +107,18 @@ public class MotionTracker : MonoBehaviour
         motion_Depc = gameObject.AddComponent<MotionMath>();
 
         motionDataStreaming = new MotionDataStreaming();
+    }
+    private string GenerateFileName(){
+        TrialManager tm = TrialManager.instance;
+        string n = "";
+        if (motionTag == MotionTag.Null)
+        {
+            n = transform.name+"_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
+        }
+        else{
+            n = motionTag.ToString() + "_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
+        }
+        return n;
     }
     private void OnEnable(){
         InputManager.OnRecordAction += ToggleTrackingRecord;
@@ -122,16 +151,17 @@ public class MotionTracker : MonoBehaviour
         if (Settings.instance.recordTrajectory){
             if (!recordTrajectory && recordEnabled)
             {
-                Debug.Log("---- Start Trajectory Tracking : " + sessionTag);
+                Debug.Log("---- Start Trajectory Tracking : " + fileName);
                 //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
                 dataWriter = new DataWriter();
-                testID = sessionTag + "_" + id;
+                fileName = GenerateFileName();
+                testID = fileName + "_" + id;
                 elapsedTime = 0;
                 recordTrajectory = true;
             }
             else
             {
-                Debug.Log("---- Stop Trajectory Tracking : " + sessionTag);
+                Debug.Log("---- Stop Trajectory Tracking : " + fileName);
                 recordTrajectory = false;
                 dataWriter.WriteData(testID);
             }
