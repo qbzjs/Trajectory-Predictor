@@ -46,10 +46,10 @@ public class TrialControls : MonoBehaviour
     }
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            SetPlay();
+//            SetPlay();
         }
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetStop();
+ //           SetStop();
         }
 
   //      SetControls(Settings.instance.Status);

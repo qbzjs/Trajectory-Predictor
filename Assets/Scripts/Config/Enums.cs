@@ -1,5 +1,14 @@
 ﻿namespace Enums
 {
+
+	public enum TrialSequence
+    {
+		InitialWait,
+		Countdown,
+		Block,
+		RestPeriod,
+		EndWait
+    }
 	public enum RigType {AvatarRig, GhostRig}
 	
 	public enum TrialType{
@@ -104,4 +113,5 @@
 		Left,
 		Right
 	}
+
 }

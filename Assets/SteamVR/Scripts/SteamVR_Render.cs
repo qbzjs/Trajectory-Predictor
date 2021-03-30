@@ -461,7 +461,11 @@ namespace Valve.VR
                     //timing.m_nSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(typeof(Compositor_FrameTiming));
                     //vr.compositor.GetFrameTiming(ref timing, 0);
 
-                    Time.fixedDeltaTime = Time.timeScale / vr.hmd_DisplayFrequency;
+                    //DEFAULT SETTING *** Fixed step divides timescal by hmd refresh rate
+                    //Time.fixedDeltaTime = Time.timeScale / vr.hmd_DisplayFrequency;
+
+                    //Set fixed timestep to 50 per second
+                    //Time.fixedDeltaTime = 0.02f;
                 }
             }
         }

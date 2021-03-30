@@ -108,6 +108,17 @@ public class TrialSequence : MonoBehaviour {
         UI_DisplayText.instance.SetProgress(sequenceIndex, sequenceOrder.Length);
     }
     
+    public void Initialise()
+    {
+        InitialiseSequence();
+        resting = true;
+        sequenceCount = 0;
+        sequenceIndex = 0;
+        elapsedTime = 0;
+        Debug.Log("-----TRIAL INITIALISED-----");
+        Settings.instance.Status = GameStatus.Running;
+        UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Running");
+    }
 //     public void StartTrial() {
 //         InitialiseSequence();
 // //        InitialiseTrial(); //initialised from settings
@@ -125,21 +136,22 @@ public class TrialSequence : MonoBehaviour {
 //         }
 //     }
     public void StartTrial() {
-        InitialiseSequence();
+        //InitialiseSequence();
         if (!runSequence) {
-            resting = true;
-            sequenceCount = 0;
-            sequenceIndex = 0;
-            elapsedTime = 0;
+            //resting = true;
+            //sequenceCount = 0;
+            //sequenceIndex = 0;
+            //elapsedTime = 0;
             Debug.Log("-----TRIAL STARTED-----");
-            Settings.instance.Status = GameStatus.Running;
-            UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Running");
-            
-            Invoke("RunTrial", startDelay);
+            //Settings.instance.Status = GameStatus.Running;
+            //UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Running");
+
+            //Invoke("RunTrial", startDelay);  //startdelay now the waiting period
+            RunTrial();
         }
     }
     public void RunTrial() {
-        InitialiseSequence();
+        //InitialiseSequence();
 //        InitialiseTrial(); //initialised from settings
         if (!runSequence) {
             resting = false;
@@ -273,8 +285,9 @@ public class TrialSequence : MonoBehaviour {
 
         Debug.Log("-----SEQUENCE COMPLETED-----");
         Settings.instance.Status = GameStatus.Ready;
-        UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Game Complete");
+        UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Complete");
 
+        TrialManager.instance.BlockComplete();
 
 //        yield return new WaitForSeconds(targetDuration);
 //        Debug.Log("-----SEQUENCE READY-----");

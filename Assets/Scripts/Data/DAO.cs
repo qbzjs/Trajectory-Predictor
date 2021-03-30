@@ -11,6 +11,7 @@ public class DAO : MonoBehaviour
     public MotionDataFormat motionData_RightHand;
     public MotionDataFormat motionData_Head;
 
+    //public int blockSequence
     public int reachTarget;
 
     void Awake(){

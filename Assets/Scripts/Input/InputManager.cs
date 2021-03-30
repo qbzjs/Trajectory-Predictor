@@ -37,11 +37,11 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            SetTrajectoryRecording(true);
+ //           SetTrajectoryRecording(true);
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            SetTrajectoryRecording(false);
+ //           SetTrajectoryRecording(false);
         }
     }
     private void GamePadInput_OnGamePad_A(UserInput b)
