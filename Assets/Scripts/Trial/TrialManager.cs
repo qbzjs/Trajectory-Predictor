@@ -11,13 +11,16 @@ public class TrialManager : MonoBehaviour
     private TrialControls trialControls;
 
     public int blockTotal = 8;
+    public int startingBlock = 101;
 
     public int initialWaitPeriod;
     public int interBlockRestPeriod = 15;
     public int countdown = 10;
 
     public int blockIndex;
+    public int sessionIndex;
 
+    [HideInInspector]
     public BlockSequenceGenerator blockSequence;
 
     private void Awake()
@@ -25,7 +28,7 @@ public class TrialManager : MonoBehaviour
         instance = this;
 
         blockSequence = new BlockSequenceGenerator();
-        blockSequence.GenerateSequence(blockTotal,101);
+        blockSequence.GenerateSequence(blockTotal,startingBlock);
 
         for (int i = 0; i < blockSequence.sequenceStartTrigger.Length; i++){
             Debug.Log(blockSequence.sequenceStartTrigger[i]);
@@ -98,6 +101,8 @@ public class TrialManager : MonoBehaviour
         if(blockIndex > blockTotal)
         {
             Debug.Log("END SESSION!!!");
+            TrialSequence.instance.Reset();
+            blockIndex = 0;
         }
         else
         {

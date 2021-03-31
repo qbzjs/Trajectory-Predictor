@@ -30,8 +30,11 @@ public class BlockSequenceGenerator : MonoBehaviour
     
     public void GenerateSequence(int total, int startBlock)
     {
-        sequenceStartTrigger = new int[blockTotal];
-        sequenceEndTrigger = new int[blockTotal];
+        blockTotal = total;
+        startingBlock = startBlock;
+
+        sequenceStartTrigger = new int[total];
+        sequenceEndTrigger = new int[total];
 
         for (int i=0; i< sequenceStartTrigger.Length; i++)
         {

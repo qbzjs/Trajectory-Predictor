@@ -70,7 +70,7 @@ public class TrialSequence : MonoBehaviour {
             target[i].GetComponent<Renderer>().material = defaultMaterial;
         }
         
-        InitialiseSequence();
+        //InitialiseSequence();
         Settings.instance.Status = GameStatus.Ready;
         UI_DisplayText.instance.SetStatus(Settings.instance.Status,"Trial Ready");
     }
@@ -107,7 +107,23 @@ public class TrialSequence : MonoBehaviour {
         sequenceOrder = CSC_Math.RandPerm_intArray(sequenceOrder);
         UI_DisplayText.instance.SetProgress(sequenceIndex, sequenceOrder.Length);
     }
-    
+
+    public void Reset()
+    {
+        for (int i = 0; i < target.Length; i++)
+        {
+            target[i].GetComponent<Renderer>().material = defaultMaterial;
+        }
+
+        //InitialiseSequence();
+        resting = true;
+        sequenceCount = 0;
+        sequenceIndex = 0;
+        elapsedTime = 0;
+        Settings.instance.Status = GameStatus.Ready;
+        UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Ready");
+        Debug.Log("-----TRIAL INITIALISED-----");
+    }
     public void Initialise()
     {
         InitialiseSequence();
