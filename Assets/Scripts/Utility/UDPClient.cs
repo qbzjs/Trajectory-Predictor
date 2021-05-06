@@ -23,6 +23,10 @@ public class UDPClient : MonoBehaviour
     public int portListen = 3002;
     public int portSend = 3010;
 
+    [Space (10)]
+    public bool debugListen = false;
+
+    [Space(10)]
     private string received = "";
     
     private bool receivedFlag = false;
@@ -90,9 +94,12 @@ public class UDPClient : MonoBehaviour
         //         OnDataReceivedDoubles(LR, FR, LF, TX);
         //     }
         // }
-        
+
+        //Debug.Log(received.ToString());
+
         //Check if a message has been received
-        if (received != ""){
+        if (received != "" && debugListen)
+        {
             Debug.Log("UDPClient: message received \'" + received + "\'");
             //Clear message
             received = "";
@@ -145,7 +152,7 @@ public class UDPClient : MonoBehaviour
             //----------------------
             try {
                 // Bytes received
-                IPEndPoint anyIP = new IPEndPoint (IPAddress.Any, 0);
+                IPEndPoint anyIP = new IPEndPoint (IPAddress.Any, portListen);
                 byte[] data = client.Receive (ref anyIP);
 
                 // Bytes into text
