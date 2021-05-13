@@ -54,9 +54,9 @@ public class SetNumberSettings : MonoBehaviour {
     public void MinusNumber() {
         int n = int.Parse(numberText.text);
         n--;
-        if (n < 0)
+        if (n < min)
         {
-            n = 0;
+            n = min;
         }     
         numberText.text = n.ToString();
         numberText.color = Settings.instance.highlightColour;

@@ -22,13 +22,15 @@ public class TrialSequence : MonoBehaviour {
 //    [HideInInspector] 
     public TrialType trialType = TrialType.CentreOut;
 //    [HideInInspector] 
-    public int repetitions = 15; // num of sequences to run
+    public int repetitions = 25; // num of sequences to run
 //    [HideInInspector] 
-    public int startDelay = 5;
+    public int startDelay = 60;
 //    [HideInInspector] 
-    public int targetDuration = 6;
+    public int targetDuration = 2;
 //    [HideInInspector] 
     public int restDuration = 2;
+
+    public float restDurationRange;
 
     private bool triggerSent = false;
 
@@ -41,7 +43,7 @@ public class TrialSequence : MonoBehaviour {
     
     [Header("DEBUG")]
     public float elapsedTime;
-    public int duration;
+    public float duration;
     public int sequenceIndex = 0;
     public int sequenceCount = 0;
 
@@ -205,7 +207,7 @@ public class TrialSequence : MonoBehaviour {
                 
                 if (!resting) {
                     resting = true;
-                    duration = restDuration;
+                    duration = restDuration + Random.Range(0,2f);
                     RestTarget();
                 }
                 else {
