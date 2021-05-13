@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Enums;
 using SaveSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class Settings : MonoBehaviour {
@@ -24,13 +25,15 @@ public class Settings : MonoBehaviour {
 	public bool recordTrajectory = false;
 	
 	[Range(5, 20)] 
-	public int repetitions = 15; // num of sequences to run
+	public int repetitions = 25; // num of sequences to run
 	[Range(1, 10)] 
-	public int startDelay = 2;
+	public int startDelay = 60;
 	[Range(1, 10)] 
-	public int targetDuration = 6;
+	public int targetDuration = 2;
+	[FormerlySerializedAs("restDuration")] [Range(1, 10)] 
+	public int restDurationMin = 2;
 	[Range(1, 10)] 
-	public int restDuration = 2;
+	public int restDurationMax = 2;
 	
 	[Header("STATUS")] 
 	public GameStatus gameStatus = GameStatus.Ready;
@@ -48,6 +51,7 @@ public class Settings : MonoBehaviour {
 	public bool displayScore = false;
 	public bool displayStatus = true;
 	public bool displayProgress = true;
+	public bool displayCountdown = true;
 	public bool showFramerate = true;
 	public bool linesOuter = true;
 	public bool linesInnerA = false;
@@ -212,9 +216,14 @@ public class Settings : MonoBehaviour {
 		TrialManager.instance.initialWaitPeriod = startDelay;
 		SaveState();
 	}
-	public void SetRestDuration(int num) {
-		restDuration = num;
-		TrialSequence.instance.restDuration = restDuration;
+	public void SetRestDurationMin(int num) {
+		restDurationMin = num;
+		TrialSequence.instance.restDurationMin = restDurationMin;
+		SaveState();
+	}
+	public void SetRestDurationMax(int num) {
+		restDurationMax = num;
+		TrialSequence.instance.restDurationMax = restDurationMax;
 		SaveState();
 	}
 	public void SetTargetDuration(int num) {
@@ -281,6 +290,12 @@ public class Settings : MonoBehaviour {
 		displayProgress = t;
 		displayObjects.progressDisplay.SetActive(displayProgress);
 		reachTaskObjects.progressDisplay.SetActive(displayProgress);
+		SaveState();
+	}
+	public void SetDisplayCountdown(bool t) {
+		displayCountdown = t;
+		displayObjects.countdownDisplay.SetActive(displayCountdown);
+		reachTaskObjects.countdownDisplay.SetActive(displayCountdown);
 		SaveState();
 	}
 	public void SetShowFramerate(bool t) {
@@ -395,7 +410,8 @@ public class Settings : MonoBehaviour {
 
 		EasySave.Save("repetitions", repetitions);
 		EasySave.Save("startDelay", startDelay);
-		EasySave.Save("restDuration", restDuration);
+		EasySave.Save("restDurationMin", restDurationMin);
+		EasySave.Save("restDurationMax", restDurationMax);
 		EasySave.Save("targetDuration", targetDuration);
 		
 		//environment
@@ -412,6 +428,7 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("displayScore", displayScore);
 		EasySave.Save("displayStatus", displayStatus);
 		EasySave.Save("displayProgress", displayProgress);
+		EasySave.Save("displayCountdown", displayCountdown);
 		EasySave.Save("showFramerate", showFramerate);
 		EasySave.Save("linesOuter", linesOuter);
 		EasySave.Save("linesInnerA", linesInnerA);
@@ -486,7 +503,8 @@ public class Settings : MonoBehaviour {
 			
 			repetitions = EasySave.Load<int>("repetitions");
 			startDelay = EasySave.Load<int>("startDelay");
-			restDuration = EasySave.Load<int>("restDuration");
+			restDurationMin = EasySave.Load<int>("restDurationMin");
+			restDurationMax = EasySave.Load<int>("restDurationMax");
 			targetDuration = EasySave.Load<int>("targetDuration");
 
 			//environment
@@ -503,6 +521,7 @@ public class Settings : MonoBehaviour {
 			displayScore = EasySave.Load<bool>("displayScore");
 			displayStatus = EasySave.Load<bool>("displayStatus");
 			displayProgress = EasySave.Load<bool>("displayProgress");
+			displayCountdown = EasySave.Load<bool>("displayCountdown");
 			showFramerate = EasySave.Load<bool>("showFramerate");
 			linesOuter = EasySave.Load<bool>("linesOuter");
 			linesInnerA = EasySave.Load<bool>("linesInnerA");
@@ -542,10 +561,11 @@ public class Settings : MonoBehaviour {
 			actionObservation = false;
 			recordTrajectory = false;
 			
-			repetitions = 15;
-			startDelay = 2;
-			restDuration = 2;
-			targetDuration = 6;
+			repetitions = 25;
+			startDelay = 60;
+			restDurationMin = 2;
+			restDurationMax = 2;
+			targetDuration = 2;
 			
 			//environment 3d
 			environment3D = false;
@@ -561,6 +581,7 @@ public class Settings : MonoBehaviour {
 			displayScore = false;
 			displayStatus = true;
 			displayProgress = true;
+			displayCountdown = true;
 			showFramerate = true;
 			linesOuter = true;
 			linesInnerA = false;
@@ -598,7 +619,8 @@ public class Settings : MonoBehaviour {
 		
 		SetRepetitions(repetitions);
 		SetStartDelay(startDelay);
-		SetRestDuration(restDuration);
+		SetRestDurationMin(restDurationMin);
+		SetRestDurationMax(restDurationMax);
 		SetTargetDuration(targetDuration);
 		
 		//Environment 3D
@@ -615,6 +637,7 @@ public class Settings : MonoBehaviour {
 		SetDisplayScore(displayScore);
 		SetDisplayStatus(displayStatus);
 		SetDisplayProgress(displayProgress);
+		SetDisplayCountdown(displayCountdown);
 		SetShowFramerate(showFramerate);
 		SetLinesOuter(linesOuter);
 		SetLinesInnerA(linesInnerA);

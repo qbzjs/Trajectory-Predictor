@@ -27,8 +27,11 @@ public class SetNumberSettings : MonoBehaviour {
         if (trialSettingValue == TrialSettingsValue.StartDelay) {
             SetNumber(Settings.instance.startDelay);
         }
-        if (trialSettingValue == TrialSettingsValue.RestDuration) {
-            SetNumber(Settings.instance.restDuration);
+        if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
+            SetNumber(Settings.instance.restDurationMin);
+        }
+        if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
+            SetNumber(Settings.instance.restDurationMax);
         }
         if (trialSettingValue == TrialSettingsValue.TargetDuration) {
             SetNumber(Settings.instance.targetDuration);
@@ -80,8 +83,11 @@ public class SetNumberSettings : MonoBehaviour {
         if (trialSettingValue == TrialSettingsValue.StartDelay) {
             Settings.instance.SetStartDelay(v);
         }
-        if (trialSettingValue == TrialSettingsValue.RestDuration) {
-            Settings.instance.SetRestDuration(v);
+        if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
+            Settings.instance.SetRestDurationMin(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
+            Settings.instance.SetRestDurationMax(v);
         }
         if (trialSettingValue == TrialSettingsValue.TargetDuration) {
             Settings.instance.SetTargetDuration(v);

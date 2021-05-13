@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Enums;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -28,9 +29,10 @@ public class TrialSequence : MonoBehaviour {
 //    [HideInInspector] 
     public int targetDuration = 2;
 //    [HideInInspector] 
-    public int restDuration = 2;
+    [FormerlySerializedAs("restDuration")] 
+    public int restDurationMin = 2;
 
-    public float restDurationRange;
+    public float restDurationMax;
 
     private bool triggerSent = false;
 
@@ -207,7 +209,8 @@ public class TrialSequence : MonoBehaviour {
                 
                 if (!resting) {
                     resting = true;
-                    duration = restDuration + Random.Range(0,2f);
+                    if (restDurationMax <= restDurationMin) { duration = restDurationMin; }
+                    duration =  Random.Range(restDurationMin,restDurationMax);
                     RestTarget();
                 }
                 else {
@@ -257,6 +260,7 @@ public class TrialSequence : MonoBehaviour {
         //update display
         UI_DisplayText.instance.SetProgress(sequenceIndex, sequenceOrder.Length);
 
+        //TODO NEEDS TO EXECUTE AFTER REST (THIS IS STOPPIING THE UPDATEON LAST TARGET
         if (sequenceIndex >= sequenceOrder.Length)
         {
             runSequence = false;
@@ -295,10 +299,12 @@ public class TrialSequence : MonoBehaviour {
         {
             target[i].GetComponent<Renderer>().material = defaultMaterial;
         }
-
+        
+        
+        yield return new WaitForSeconds(restDurationMin);
+        
         TrialControls.instance.SetStop();
-
-        yield return new WaitForSeconds(restDuration);
+        
 
 
         Debug.Log("-----SEQUENCE COMPLETED-----");

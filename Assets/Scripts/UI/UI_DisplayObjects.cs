@@ -22,6 +22,7 @@ public class UI_DisplayObjects : MonoBehaviour {
 	public GameObject scoreDisplay;
 	public GameObject statusDisplay;
 	public GameObject progressDisplay;
+	public GameObject countdownDisplay;
 	public GameObject FPS;
 	public GameObject rest;
 	public GameObject outerLines;

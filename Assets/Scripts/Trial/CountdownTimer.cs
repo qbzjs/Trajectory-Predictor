@@ -10,7 +10,8 @@ public class CountdownTimer : MonoBehaviour
 
     public int initialWaitPeriod;
     public int countdown = 10;
-    public TextMeshPro countdownDisplay;
+    public TextMeshPro[] countdownDisplayWorld = new TextMeshPro[0];
+    public TextMeshProUGUI[] countdownDisplayUI = new TextMeshProUGUI[0];
 
     public bool timerEnabled = false;
     public float timer;
@@ -19,7 +20,12 @@ public class CountdownTimer : MonoBehaviour
     void Awake()
     {
         instance = this;
-        countdownDisplay.text = "";
+        for (int i = 0; i < countdownDisplayWorld.Length; i++) {
+            countdownDisplayWorld[i].text = "";
+        }
+        for (int i = 0; i < countdownDisplayUI.Length; i++) {
+            countdownDisplayUI[i].text = "";
+        }
     }
 
     public void SetCountdown(int t)
@@ -35,15 +41,37 @@ public class CountdownTimer : MonoBehaviour
             if (timer <= countdown + 1 && timer >= 0)
             {
                 timerDisplay = (int)timer % 60;
-                countdownDisplay.text = timerDisplay.ToString();
+                for (int i = 0; i < countdownDisplayWorld.Length; i++)
+                {
+                    countdownDisplayWorld[i].text = timerDisplay.ToString();
+                }
+                for (int i = 0; i < countdownDisplayUI.Length; i++)
+                {
+                    countdownDisplayUI[i].text = timerDisplay.ToString();
+                }
             }
             if (timerDisplay == 0)
             {
-                countdownDisplay.text = "";
+                for (int i = 0; i < countdownDisplayWorld.Length; i++)
+                {
+                    countdownDisplayWorld[i].text = "";
+                }
+                for (int i = 0; i < countdownDisplayUI.Length; i++)
+                {
+                    countdownDisplayUI[i].text = "";
+                }
             }
             if (timer <= 0)
             {
-                countdownDisplay.text = "";
+                for (int i = 0; i < countdownDisplayWorld.Length; i++)
+                {
+                    countdownDisplayWorld[i].text = "";
+                }
+                for (int i = 0; i < countdownDisplayUI.Length; i++)
+                {
+                    countdownDisplayUI[i].text = "";
+                }
+
                 TrialManager.instance.StartBlock();
                 timerEnabled = false;
                 timer = 0;

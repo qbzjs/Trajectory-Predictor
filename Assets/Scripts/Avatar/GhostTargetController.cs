@@ -56,7 +56,7 @@ public class GhostTargetController : MonoBehaviour
 		lOffset = rigTargets.leftHandTargetOffset;
 		rOffset = rigTargets.rightHandTargetOffset;
 
-		AO_Period = Settings.instance.restDuration;
+		AO_Period = Settings.instance.restDurationMin;
 	}
 
 	private void OnEnable(){
@@ -74,7 +74,7 @@ public class GhostTargetController : MonoBehaviour
 	private void ReachTargetManager_OnTargetRestAction(Transform tar, TaskSide s){
 		ToggleGhostAvatar(Settings.instance.actionObservation);
 		handActive = false;
-		AO_Period = Settings.instance.restDuration;
+		AO_Period = Settings.instance.restDurationMin;
 		Vector3 t = new Vector3(tar.position.x + offset.x, tar.position.y + offset.y, tar.position.z + offset.z);
 		currentTarget = t;
 		side = s;

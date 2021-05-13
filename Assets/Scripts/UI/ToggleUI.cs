@@ -57,6 +57,9 @@ public class ToggleUI : MonoBehaviour {
 		if (visualInterface == VisualInterface.Progress) {
 			b = Settings.instance.displayProgress;
 		}
+		if (visualInterface == VisualInterface.Countdown) {
+			b = Settings.instance.displayCountdown;
+		}
 		if (visualInterface == VisualInterface.Framerate) {
 			b = Settings.instance.showFramerate;
 		}
@@ -134,6 +137,9 @@ public class ToggleUI : MonoBehaviour {
 		}
 		if (visualInterface == VisualInterface.Progress) {
 			Settings.instance.SetDisplayProgress(toggle.isOn);
+		}
+		if (visualInterface == VisualInterface.Countdown) {
+			Settings.instance.SetDisplayCountdown(toggle.isOn);
 		}
 		if (visualInterface == VisualInterface.Framerate) {
 			Settings.instance.SetShowFramerate(toggle.isOn);

@@ -23,8 +23,9 @@ public class TrialControls : MonoBehaviour
     }
 
     public void SetPlay () {
-        InputManager.instance.StartTrialSequence();
         InputManager.instance.SetTrajectoryRecording(true);
+        InputManager.instance.StartTrialSequence();
+        
         SetControls(Settings.instance.Status);
 
         //SendUDP_byte(101);
@@ -33,6 +34,7 @@ public class TrialControls : MonoBehaviour
     public void SetStop () {
         InputManager.instance.StopTrialSequence();
         InputManager.instance.SetTrajectoryRecording(false);
+        
         SetControls(Settings.instance.Status);
 
         //SendUDP_byte(102);

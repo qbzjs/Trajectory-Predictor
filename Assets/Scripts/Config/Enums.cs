@@ -58,6 +58,7 @@
 		RenderTexture2D,
 		ActionObservation,
 		RecordTrajectory,
+		Countdown,
 		ParticleFX,
 		ColourLerp,
 		Vibration,
@@ -68,7 +69,8 @@
 	public enum TrialSettingsValue{
 		Repetitions,
 		StartDelay,
-		RestDuration,
+		RestDurationMin,
+		RestDurationMax,
 		TargetDuration,
 	}
 	public enum TrialSettings{

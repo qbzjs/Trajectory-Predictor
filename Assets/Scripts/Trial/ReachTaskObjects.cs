@@ -10,6 +10,7 @@ public class ReachTaskObjects : MonoBehaviour
 	public GameObject scoreDisplay;
 	public GameObject statusDisplay;
 	public GameObject progressDisplay;
+	public GameObject countdownDisplay;
 	
 	public GameObject rest;
 	public GameObject outerLines;
