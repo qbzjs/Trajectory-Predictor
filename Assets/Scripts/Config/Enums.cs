@@ -67,8 +67,10 @@
 	}
 
 	public enum TrialSettingsValue{
+		TrialBlocks,
 		Repetitions,
 		StartDelay,
+		InterBlockRestPeriod,
 		RestDurationMin,
 		RestDurationMax,
 		TargetDuration,
@@ -98,7 +100,10 @@
 	}
 
 	public enum GameStatus{
+		Orientation,
+		Preparation,
 		Ready,
+		Countdown,
 		Running,
 		Complete
 	}

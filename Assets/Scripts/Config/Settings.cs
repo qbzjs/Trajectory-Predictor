@@ -24,15 +24,19 @@ public class Settings : MonoBehaviour {
 	public bool actionObservation = false;
 	public bool recordTrajectory = false;
 	
-	[Range(5, 20)] 
+	[Range(1, 9)] 
+	public int trialBlocks = 8; 
+	[Range(1, 50)] 
 	public int repetitions = 25; // num of sequences to run
-	[Range(1, 10)] 
+	[Range(10, 60)] 
 	public int startDelay = 60;
-	[Range(1, 10)] 
+	[Range(2, 10)] 
 	public int targetDuration = 2;
-	[FormerlySerializedAs("restDuration")] [Range(1, 10)] 
+	[Range(10, 60)] 
+	public int interBlockRestPeriod = 2;
+	[Range(2, 10)] 
 	public int restDurationMin = 2;
-	[Range(1, 10)] 
+	[Range(2, 10)] 
 	public int restDurationMax = 2;
 	
 	[Header("STATUS")] 
@@ -204,6 +208,12 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 	
+	public void SetTrialBlocks(int num) {
+		trialBlocks = num;
+		TrialManager.instance.InitialiseTrial(trialBlocks);
+		//TrialSequence.instance.InitialiseSequence();
+		SaveState();
+	}
 	public void SetRepetitions(int num) {
 		repetitions = num;
 		TrialSequence.instance.repetitions = repetitions;
@@ -214,6 +224,12 @@ public class Settings : MonoBehaviour {
 		startDelay = num;
 		TrialSequence.instance.startDelay = startDelay;
 		TrialManager.instance.initialWaitPeriod = startDelay;
+		SaveState();
+	}
+	public void SetInterBlockRestPeriod(int num) {
+		interBlockRestPeriod = num;
+		//TrialSequence.instance.startDelay = startDelay;
+		TrialManager.instance.interBlockRestPeriod = interBlockRestPeriod;
 		SaveState();
 	}
 	public void SetRestDurationMin(int num) {
@@ -288,8 +304,10 @@ public class Settings : MonoBehaviour {
 	}
 	public void SetDisplayProgress(bool t) {
 		displayProgress = t;
-		displayObjects.progressDisplay.SetActive(displayProgress);
-		reachTaskObjects.progressDisplay.SetActive(displayProgress);
+		displayObjects.progressDisplayMovement.SetActive(displayProgress);
+		reachTaskObjects.progressDisplayMovement.SetActive(displayProgress);
+		displayObjects.progressDisplayTrial.SetActive(displayProgress);
+		reachTaskObjects.progressDisplayTrial.SetActive(displayProgress);
 		SaveState();
 	}
 	public void SetDisplayCountdown(bool t) {
@@ -408,8 +426,10 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("actionObservation", actionObservation);
 		EasySave.Save("recordTrajectory", recordTrajectory);
 
+		EasySave.Save("trialBlocks", trialBlocks);
 		EasySave.Save("repetitions", repetitions);
 		EasySave.Save("startDelay", startDelay);
+		EasySave.Save("interBlockRestPeriod", interBlockRestPeriod);
 		EasySave.Save("restDurationMin", restDurationMin);
 		EasySave.Save("restDurationMax", restDurationMax);
 		EasySave.Save("targetDuration", targetDuration);
@@ -501,8 +521,10 @@ public class Settings : MonoBehaviour {
 			actionObservation = EasySave.Load<bool>("actionObservation");
 			recordTrajectory = EasySave.Load<bool>("recordTrajectory");
 			
+			trialBlocks = EasySave.Load<int>("trialBlocks");
 			repetitions = EasySave.Load<int>("repetitions");
 			startDelay = EasySave.Load<int>("startDelay");
+			interBlockRestPeriod = EasySave.Load<int>("interBlockRestPeriod");
 			restDurationMin = EasySave.Load<int>("restDurationMin");
 			restDurationMax = EasySave.Load<int>("restDurationMax");
 			targetDuration = EasySave.Load<int>("targetDuration");
@@ -560,9 +582,11 @@ public class Settings : MonoBehaviour {
 
 			actionObservation = false;
 			recordTrajectory = false;
-			
+
+			trialBlocks = 8;
 			repetitions = 25;
 			startDelay = 60;
+			interBlockRestPeriod = 15;
 			restDurationMin = 2;
 			restDurationMax = 2;
 			targetDuration = 2;
@@ -616,9 +640,11 @@ public class Settings : MonoBehaviour {
 
 		SetActionObservation(actionObservation);
 		SetRecordTrajectory(recordTrajectory);
-		
+
+		SetTrialBlocks(trialBlocks);
 		SetRepetitions(repetitions);
 		SetStartDelay(startDelay);
+		SetInterBlockRestPeriod(interBlockRestPeriod);
 		SetRestDurationMin(restDurationMin);
 		SetRestDurationMax(restDurationMax);
 		SetTargetDuration(targetDuration);

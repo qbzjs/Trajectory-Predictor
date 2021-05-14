@@ -18,6 +18,8 @@ public class TrialSequence : MonoBehaviour {
     private bool runSequence = false;
     public bool resting = false;
     public bool animateTargets;
+
+    public bool sequenceComplete;
     
 //    [Header("SEQUENCE SETTINGS")]
 //    [HideInInspector] 
@@ -76,7 +78,7 @@ public class TrialSequence : MonoBehaviour {
         
         //InitialiseSequence();
         Settings.instance.Status = GameStatus.Ready;
-        UI_DisplayText.instance.SetStatus(Settings.instance.Status,"Trial Ready");
+        UI_DisplayText.instance.SetStatus(Settings.instance.Status,"System Ready");
     }
     public void InitialiseTrial() {
         
@@ -109,7 +111,8 @@ public class TrialSequence : MonoBehaviour {
         int targetCount = target.Length;
         sequenceOrder = CSC_Math.IntArray_from_ElementRepeatNumbers(targetCount, repetitions);
         sequenceOrder = CSC_Math.RandPerm_intArray(sequenceOrder);
-        UI_DisplayText.instance.SetProgress(sequenceIndex, sequenceOrder.Length);
+        UI_DisplayText.instance.SetProgressMovement(sequenceIndex, sequenceOrder.Length);
+        
     }
 
     public void Reset()
@@ -125,7 +128,7 @@ public class TrialSequence : MonoBehaviour {
         sequenceIndex = 0;
         elapsedTime = 0;
         Settings.instance.Status = GameStatus.Ready;
-        UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Ready");
+        UI_DisplayText.instance.SetStatus(Settings.instance.Status, "System Ready");
         Debug.Log("-----TRIAL INITIALISED-----");
     }
     public void Initialise()
@@ -179,6 +182,7 @@ public class TrialSequence : MonoBehaviour {
             sequenceCount = 0;
             sequenceIndex = 0;
             elapsedTime = 0;
+            sequenceComplete = false;
             runSequence = true;
             Debug.Log("-----TRIAL STARTED-----");
             SetTarget();
@@ -192,11 +196,16 @@ public class TrialSequence : MonoBehaviour {
         sequenceCount = 0;
         sequenceIndex = 0;
         elapsedTime = 0;
-        RestTarget();
+        //stops sending an extra rest event at end of sequence
+        if (!sequenceComplete)
+        {
+            RestTarget();
+        }
+        
         Debug.Log("-----TRIAL STOPPED----- ");
         Settings.instance.Status = GameStatus.Ready;
-        UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Ready");
-        UI_DisplayText.instance.SetProgress(sequenceIndex, sequenceOrder.Length);
+        UI_DisplayText.instance.SetStatus(Settings.instance.Status, "System Ready");
+        UI_DisplayText.instance.SetProgressMovement(sequenceIndex, sequenceOrder.Length);
     }
     void Update()
     {
@@ -212,6 +221,13 @@ public class TrialSequence : MonoBehaviour {
                     if (restDurationMax <= restDurationMin) { duration = restDurationMin; }
                     duration =  Random.Range(restDurationMin,restDurationMax);
                     RestTarget();
+                    if (sequenceComplete)
+                    {
+                        runSequence = false;
+                        sequenceIndex = 0;
+                        elapsedTime = 0;
+                        StartCoroutine(CompleteSequence());
+                    }
                 }
                 else {
                     resting = false;
@@ -258,15 +274,16 @@ public class TrialSequence : MonoBehaviour {
         sequenceIndex++;
         
         //update display
-        UI_DisplayText.instance.SetProgress(sequenceIndex, sequenceOrder.Length);
+        UI_DisplayText.instance.SetProgressMovement(sequenceIndex, sequenceOrder.Length);
 
-        //TODO NEEDS TO EXECUTE AFTER REST (THIS IS STOPPIING THE UPDATEON LAST TARGET
+        //TODO NEEDS TO EXECUTE AFTER REST (THIS IS STOPPING THE UPDATEON LAST TARGET
         if (sequenceIndex >= sequenceOrder.Length)
         {
-            runSequence = false;
-            sequenceIndex = 0;
-            elapsedTime = 0;
-            StartCoroutine(CompleteSequence());
+            sequenceComplete = true;
+            // runSequence = false;
+             sequenceIndex = 0;
+            // elapsedTime = 0;
+            // StartCoroutine(CompleteSequence());
         }
     }
 
@@ -300,13 +317,10 @@ public class TrialSequence : MonoBehaviour {
             target[i].GetComponent<Renderer>().material = defaultMaterial;
         }
         
+        TrialControls.instance.SetStop();
         
         yield return new WaitForSeconds(restDurationMin);
         
-        TrialControls.instance.SetStop();
-        
-
-
         Debug.Log("-----SEQUENCE COMPLETED-----");
         Settings.instance.Status = GameStatus.Ready;
         UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Complete");

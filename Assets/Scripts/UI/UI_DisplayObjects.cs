@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class UI_DisplayObjects : MonoBehaviour {
 
@@ -21,7 +22,8 @@ public class UI_DisplayObjects : MonoBehaviour {
 	public GameObject[] labels = new GameObject[3];
 	public GameObject scoreDisplay;
 	public GameObject statusDisplay;
-	public GameObject progressDisplay;
+	public GameObject progressDisplayMovement;
+	public GameObject progressDisplayTrial;
 	public GameObject countdownDisplay;
 	public GameObject FPS;
 	public GameObject rest;
@@ -42,6 +44,6 @@ public class UI_DisplayObjects : MonoBehaviour {
 	// public GameObject audio;
 	// public GameObject spatialAudio;
 
-
+	
 	
 }

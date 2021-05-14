@@ -27,22 +27,41 @@ public class TrialManager : MonoBehaviour
     {
         instance = this;
 
-        blockSequence = new BlockSequenceGenerator();
-        blockSequence.GenerateSequence(blockTotal,startingBlock);
 
-        for (int i = 0; i < blockSequence.sequenceStartTrigger.Length; i++){
-            Debug.Log(blockSequence.sequenceStartTrigger[i]);
-            Debug.Log(blockSequence.sequenceEndTrigger[i]);
-        }
         
     }
 
     void Start()
     {
+        InitialiseTrial();
+    }
+
+    public void InitialiseTrial()
+    {
+        blockTotal = Settings.instance.trialBlocks;
+        SequenceGenerator();
+        
         trialControls = TrialControls.instance;
         initialWaitPeriod = Settings.instance.startDelay;
     }
+    public void InitialiseTrial(int blocks)
+    {
+        blockTotal = blocks;
+        SequenceGenerator();
+        
+        trialControls = TrialControls.instance;
+        initialWaitPeriod = Settings.instance.startDelay;
+    }
+    public void SequenceGenerator()
+    {
+        blockSequence = new BlockSequenceGenerator();
+        blockSequence.GenerateSequence(blockTotal,startingBlock);
 
+        // for (int i = 0; i < blockSequence.sequenceStartTrigger.Length; i++){
+        //     Debug.Log(blockSequence.sequenceStartTrigger[i]);
+        //     Debug.Log(blockSequence.sequenceEndTrigger[i]);
+        // }
+    }
 
     void Update()
     {
@@ -70,13 +89,14 @@ public class TrialManager : MonoBehaviour
             TrialSequence.instance.Initialise();
             blockIndex++;
             Invoke("Countdown", (initialWaitPeriod - 1) - countdown);
+            Settings.instance.Status = GameStatus.Preparation;
+            UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Preparation");
         }
         else
         {
             //blockIndex++; //changed in complete function
             Invoke("Countdown", (interBlockRestPeriod - 1) - countdown);
         }
-
 
     }
     private void Countdown()
@@ -85,6 +105,10 @@ public class TrialManager : MonoBehaviour
         SendUDP_byte(0);
 
         CountdownTimer.instance.SetCountdown(countdown+1);
+        UI_DisplayText.instance.SetProgressTrial(blockIndex, blockTotal);
+        
+        Settings.instance.Status = GameStatus.Countdown;
+        UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Countdown");
     }
     public void StartBlock()
     {
@@ -103,6 +127,10 @@ public class TrialManager : MonoBehaviour
             Debug.Log("END SESSION!!!");
             TrialSequence.instance.Reset();
             blockIndex = 0;
+            UI_DisplayText.instance.SetProgressTrial(blockIndex, blockTotal);
+            
+            Settings.instance.Status = GameStatus.Ready;
+            UI_DisplayText.instance.SetStatus(Settings.instance.Status, "System Ready");
         }
         else
         {

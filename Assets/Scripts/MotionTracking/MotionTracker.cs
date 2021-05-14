@@ -6,6 +6,7 @@ using Filters;
 using Unity.Labs.SuperScience;
 //using Unity.Labs.SuperScience.Example;
 using Enums;
+using TMPro;
 
 public class MotionTracker : MonoBehaviour
 {
@@ -48,6 +49,13 @@ public class MotionTracker : MonoBehaviour
     private Vector3 p_angularAcceleration;
     private float p_angularAccelerationStrength;
     private Vector3 p_angularAxis;
+    
+    [Space(8)]
+    [Range(0.01f, 5f)] 
+    public float motionThreshold = 0.5f;
+    public bool inMotion;
+
+    public TextMeshProUGUI motionDebug;
     
     [Header("MOTION TRACKING ***depreciated")] 
     [Space(10)]
@@ -185,6 +193,19 @@ public class MotionTracker : MonoBehaviour
 
         FormatMotionData();
 
+        inMotion = CheckMotionThreshold();
+
+        if (inMotion)
+        {
+//            Debug.Log(motionTag.ToString() + " : " + " M O V I N G !!!");
+            motionDebug.text = motionTag.ToString() + " : " + " M O V I N G !";
+            motionDebug.color = Color.green;
+        }
+        else
+        {
+            motionDebug.text = motionTag.ToString() + " : " + " S T A T I O N A R Y !";
+            motionDebug.color = Color.grey;
+        }
         //Debug.Log("Acc : " + motionData.Acceleration + " Speed : " + motionData.Speed + " Dir : " + motionData.Direction.ToString() + " Vel : " + motionData.Velocity);
     }
 
@@ -215,6 +236,20 @@ public class MotionTracker : MonoBehaviour
         }
     }
 
+    private bool CheckMotionThreshold()
+    {
+        bool motion;
+        if (motionData.speed>motionThreshold)
+        {
+            motion = true;
+        }
+        else
+        {
+            motion = false;
+        }
+
+        return motion;
+    }
     public void GetPositionRotation(){
         position = motionObject.transform.position;
         rotation = motionObject.transform.eulerAngles;

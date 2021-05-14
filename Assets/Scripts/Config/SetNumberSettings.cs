@@ -21,11 +21,17 @@ public class SetNumberSettings : MonoBehaviour {
     }
 
     private void Initialise() {
+        if (trialSettingValue == TrialSettingsValue.TrialBlocks) {
+            SetNumber(Settings.instance.trialBlocks);
+        }
         if (trialSettingValue == TrialSettingsValue.Repetitions) {
             SetNumber(Settings.instance.repetitions);
         }
         if (trialSettingValue == TrialSettingsValue.StartDelay) {
             SetNumber(Settings.instance.startDelay);
+        }
+        if (trialSettingValue == TrialSettingsValue.InterBlockRestPeriod) {
+            SetNumber(Settings.instance.interBlockRestPeriod);
         }
         if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
             SetNumber(Settings.instance.restDurationMin);
@@ -77,11 +83,17 @@ public class SetNumberSettings : MonoBehaviour {
     }
 
     private void SetValue(int v) {
+        if (trialSettingValue == TrialSettingsValue.TrialBlocks) {
+            Settings.instance.SetTrialBlocks(v);
+        }
         if (trialSettingValue == TrialSettingsValue.Repetitions) {
             Settings.instance.SetRepetitions(v);
         }
         if (trialSettingValue == TrialSettingsValue.StartDelay) {
             Settings.instance.SetStartDelay(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.InterBlockRestPeriod) {
+            Settings.instance.SetInterBlockRestPeriod(v);
         }
         if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
             Settings.instance.SetRestDurationMin(v);
