@@ -26,7 +26,17 @@
 		Right
 	}
 
-	public enum MotionTag{Null, LeftHand, RightHand, Head}
+	public enum MotionTag{
+		Null, 
+		LeftHand, 
+		RightHand, 
+		Head,
+		RightElbow,
+		LeftElbow,
+		RightShoulder,
+		LeftShoulder,
+		Waist
+	}
 	
 	public enum TrialParadigm{
 		Avatar3D,
