@@ -7,6 +7,7 @@ using Unity.Labs.SuperScience;
 //using Unity.Labs.SuperScience.Example;
 using Enums;
 using TMPro;
+using ViveSR.anipal.Eye;
 
 public class MotionTracker : MonoBehaviour
 {
@@ -118,6 +119,7 @@ public class MotionTracker : MonoBehaviour
     }
     private string GenerateFileName(){
         TrialManager tm = TrialManager.instance;
+        sessionTag = Settings.instance.GetSessionInfo();
         string n = "";
         if (motionTag == MotionTag.Null)
         {
@@ -176,7 +178,8 @@ public class MotionTracker : MonoBehaviour
         }
 
     }
-
+    
+    
     private void Update(){
         
         //POSITION / ROTATION
@@ -195,16 +198,19 @@ public class MotionTracker : MonoBehaviour
 
         inMotion = CheckMotionThreshold();
 
-        if (inMotion)
+        if (motionDebug != null)
         {
-//            Debug.Log(motionTag.ToString() + " : " + " M O V I N G !!!");
-            motionDebug.text = motionTag.ToString() + " : " + " M O V I N G !";
-            motionDebug.color = Color.green;
-        }
-        else
-        {
-            motionDebug.text = motionTag.ToString() + " : " + " S T A T I O N A R Y !";
-            motionDebug.color = Color.grey;
+            if (inMotion)
+            {
+//              Debug.Log(motionTag.ToString() + " : " + " M O V I N G !!!");
+                motionDebug.text = motionTag.ToString() + " : " + " M O V I N G !";
+                motionDebug.color = Color.green;
+            }
+            else
+            {
+                motionDebug.text = motionTag.ToString() + " : " + " S T A T I O N A R Y !";
+                motionDebug.color = Color.grey;
+            }
         }
         //Debug.Log("Acc : " + motionData.Acceleration + " Speed : " + motionData.Speed + " Dir : " + motionData.Direction.ToString() + " Vel : " + motionData.Velocity);
     }
@@ -223,8 +229,9 @@ public class MotionTracker : MonoBehaviour
                 t.Milliseconds);
 
             targetTag = DAO.instance.reachTarget.ToString();
-            
-            dataWriter.WriteTrajectoryData(timeStamp, elapsedTime.ToString("f2"), sessionTag, targetTag, position, rotation,
+
+            dataWriter.WriteTrajectoryData(timeStamp, elapsedTime.ToString("f2"), motionTag.ToString(), targetTag,
+                inMotion.ToString(),  motionThreshold,position, rotation,
                 p_speed,p_velocity,p_acceleration,p_accelerationStrength,p_direction,
                 p_angularSpeed,p_angularVelocity,p_angularAcceleration,p_angularAccelerationStrength,p_angularAxis);
 

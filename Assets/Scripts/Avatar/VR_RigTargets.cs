@@ -46,7 +46,7 @@ public class VR_RigTargets : MonoBehaviour
     //TODO feet added later
     public Transform leftFootTarget;
     public Transform rightFootTarget;
-
+    
     void Awake()
     {
         BuildRig();

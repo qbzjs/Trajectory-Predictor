@@ -10,11 +10,12 @@ public class DataWriter : MonoBehaviour
 {
     private string dataString;
     private StringBuilder stringBuilder = new StringBuilder ();
+    private StringBuilder stringBuilderEye = new StringBuilder ();
 
     private bool writeTitle = true;
 
     public void WriteTrajectoryData(string ts, string elapsed, string tag, string target, 
-        Vector3 pos, Vector3 rot, float speed, Vector3 vel, Vector3 acc, float accStr, Vector3 dir,
+        string motion,float motionThreshold, Vector3 pos, Vector3 rot, float speed, Vector3 vel, Vector3 acc, float accStr, Vector3 dir,
         float angSpeed, Vector3 angVel, Vector3 angAcc, float angAccStr, Vector3 angAxis){
 
     
@@ -23,6 +24,8 @@ public class DataWriter : MonoBehaviour
                 .Append("Target Number").Append (",")
                 .Append("TimeStamp").Append (",")
                 .Append("Elapsed Time").Append (",")
+                .Append("Motion Detected").Append (",")
+                .Append("Motion Threshold").Append (",")
                 .Append("Position X").Append (",")
                 .Append("Position Y").Append (",")
                 .Append("Position Z").Append (",")
@@ -59,6 +62,8 @@ public class DataWriter : MonoBehaviour
                 .Append(target).Append (",")
                 .Append(ts).Append (",")
                 .Append(elapsed).Append (",")
+                .Append(motion).Append (",")
+                .Append(motionThreshold).Append (",")
                 .Append(pos.x).Append (",")
                 .Append(pos.y).Append (",")
                 .Append(pos.z).Append (",")
@@ -139,6 +144,48 @@ public class DataWriter : MonoBehaviour
                 .Append(vS).AppendLine ();
         }
 
+    }
+
+    public void WriteEyeData(string ts, string elapsed, string tag, string target,
+    string blinking, float eyeOpennessLeft, float eyeOpennessRight, Vector3 gazeLeft, Vector3 gazeRight,
+    float pupilDiameterLeft, float pupilDiameterRight)
+    {
+        if (writeTitle){
+            stringBuilder.Append("Joint Tag").Append (",")
+                .Append("Target Number").Append (",")
+                .Append("TimeStamp").Append (",")
+                .Append("Elapsed Time").Append (",")
+                .Append("Blinking").Append (",")
+                .Append("Eye Openness Left").Append (",")
+                .Append("Eye Openness Right").Append (",")
+                .Append("Gaze Left X").Append (",")
+                .Append("Gaze Left Y").Append (",")
+                .Append("Gaze Left Z").Append (",")
+                .Append("Gaze Right X").Append (",")
+                .Append("Gaze Right Y").Append (",")
+                .Append("Gaze Right Z").Append (",")
+                .Append("Pupil Diameter Left").Append (",")
+                .Append("Pupil Diameter Right").AppendLine();
+
+            writeTitle = false;
+        }
+        else{
+            stringBuilder.Append(tag).Append (",")
+                .Append(target).Append (",")
+                .Append(ts).Append (",")
+                .Append(elapsed).Append (",")
+                .Append(blinking).Append (",")
+                .Append(eyeOpennessLeft).Append (",")
+                .Append(eyeOpennessRight).Append (",")
+                .Append(gazeLeft.x).Append (",")
+                .Append(gazeLeft.y).Append (",")
+                .Append(gazeLeft.z).Append (",")
+                .Append(gazeRight.x).Append (",")
+                .Append(gazeRight.y).Append (",")
+                .Append(gazeRight.z).Append (",")
+                .Append(pupilDiameterLeft).Append (",")
+                .Append(pupilDiameterRight).AppendLine();
+        }
     }
     public void WriteData(string fileName)
     {

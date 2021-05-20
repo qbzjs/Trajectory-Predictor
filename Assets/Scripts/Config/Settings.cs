@@ -14,6 +14,11 @@ public class Settings : MonoBehaviour {
 	public bool active;
 	//	public GameObject settingsPanel;
 
+	[Header("SESSION SETTINGS")] 
+	public string sessionName = "Session_";
+	//public string blockName = "B1";
+	public int sessionNumber = 1;
+	
 	[Header("SEQUENCE SETTINGS")]
 	public TrialParadigm trialParadigm = TrialParadigm.Avatar3D;
 	public TrialType trialType = TrialType.CentreOut;
@@ -124,6 +129,13 @@ public class Settings : MonoBehaviour {
 		}
 	}
 
+//---------SESSION INFO---------
+	public string GetSessionInfo()
+	{
+		string s = sessionName + sessionNumber.ToString();
+		return s;
+	}
+	
 //---------PORTS----------------
 	public void SetIP(string v) {
 		ip = v;

@@ -35,7 +35,8 @@
 		LeftElbow,
 		RightShoulder,
 		LeftShoulder,
-		Waist
+		Waist,
+		Eyes
 	}
 	
 	public enum TrialParadigm{
