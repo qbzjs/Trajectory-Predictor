@@ -270,7 +270,11 @@ public class Settings : MonoBehaviour {
 	public void Set3DEnvironment(bool t){
 		environment3D = t;
 		//toggle environment here
-		SetVREnvironment.instance.SetEnvironment();
+		if (SetVREnvironment.instance != null)
+		{
+			SetVREnvironment.instance.SetEnvironment();
+		}
+		
 		SaveState();
 	}
 	public void SetInterface3D(bool t){
