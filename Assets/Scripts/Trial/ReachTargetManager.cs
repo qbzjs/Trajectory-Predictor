@@ -6,7 +6,7 @@ using Enums;
 public class ReachTargetManager : MonoBehaviour{
     
     private GameObject reachObject;
-    [Range(0, 1.5f)]
+    [Range(-4f, 4f)]
     public float rightLeftOffset = 0.5f;
     private Vector3 positionLeft;
     private Vector3 positionRight;
@@ -46,11 +46,11 @@ public class ReachTargetManager : MonoBehaviour{
 
     void Awake(){
         reachObject = gameObject;
-        positionLeft = reachObject.transform.position;
+        positionRight = reachObject.transform.position;
         //float x = Mathf.Abs(reachObject.transform.position.x);
-        rightLeftOffset = -rightLeftOffset;
+        //rightLeftOffset = -rightLeftOffset;
         float x = reachObject.transform.position.x + rightLeftOffset;
-        positionRight = new Vector3(x, reachObject.transform.position.y, reachObject.transform.position.z);
+        positionLeft = new Vector3(x, reachObject.transform.position.y, reachObject.transform.position.z);
         
         for (int i = 0; i < reachTarget.Length; i++)
         {
