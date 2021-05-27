@@ -1,0 +1,12 @@
+{
+   "action_manifest_version" : 0,
+   "alias_info" : {},
+   "app_key" : "application.generated.unity.bcitrialmanagervr.exe",
+   "bindings" : {},
+   "category" : "steamvr_input",
+   "controller_type" : "vive_tracker_right_elbow",
+   "description" : "",
+   "name" : "bind1",
+   "options" : {},
+   "simulated_actions" : []
+}

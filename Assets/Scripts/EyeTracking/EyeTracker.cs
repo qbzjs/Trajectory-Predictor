@@ -218,7 +218,7 @@ namespace ViveSR
                         //     p_speed,p_velocity,p_acceleration,p_accelerationStrength,p_direction,
                         //     p_angularSpeed,p_angularVelocity,p_angularAcceleration,p_angularAccelerationStrength,p_angularAxis);
                         
-                        dataWriter.WriteEyeData(timeStamp, elapsedTime.ToString("f2"), sessionTag, targetTag,
+                        dataWriter.WriteEyeData(timeStamp, elapsedTime.ToString("f2"), motionTag.ToString(), targetTag,
                             blinking.ToString(), eyeOpennessLeft, eyeOpennessRight, gazeDirectionLeft, gazeDirectionRight,
                             pupilDiameterLeft, pupilDiameterRight);
                     }
