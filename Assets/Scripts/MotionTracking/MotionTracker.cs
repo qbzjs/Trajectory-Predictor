@@ -62,6 +62,8 @@ public class MotionTracker : MonoBehaviour
     [Space(10)]
     public float speed;
     public float speedSmooth;
+    public Vector3 velocity;
+    public Vector3 previousPos;
     public Vector3 acceleration;
     public Vector3 accelerationSmooth;
     public float averageAcceleration;
@@ -212,7 +214,16 @@ public class MotionTracker : MonoBehaviour
                 motionDebug.color = Color.grey;
             }
         }
+        
+        //depreciated velocity
+        velocity = (motionObject.position - previousPos) / Time.deltaTime;
+       
         //Debug.Log("Acc : " + motionData.Acceleration + " Speed : " + motionData.Speed + " Dir : " + motionData.Direction.ToString() + " Vel : " + motionData.Velocity);
+    }
+
+    void LateUpdate()
+    {
+        previousPos = motionObject.position;
     }
 
     void FixedUpdate()
@@ -232,7 +243,7 @@ public class MotionTracker : MonoBehaviour
 
             dataWriter.WriteTrajectoryData(timeStamp, elapsedTime.ToString("f2"), motionTag.ToString(), targetTag,
                 inMotion.ToString(),  motionThreshold,position, rotation,
-                p_speed,p_velocity,p_acceleration,p_accelerationStrength,p_direction,
+                p_speed,p_velocity, velocity, p_acceleration,p_accelerationStrength,p_direction,
                 p_angularSpeed,p_angularVelocity,p_angularAcceleration,p_angularAccelerationStrength,p_angularAxis);
 
             //needs seconds recorder
@@ -347,6 +358,15 @@ public class MotionTracker : MonoBehaviour
 
     private float UpdateDelay = 1;
 
+    // private Vector3 CalculateVelocity()
+    // {
+    //     Vector3 v = Vector3.zero;
+    //     Vector3 previous;
+    //     velocity = ((transform.position - previous).magnitude) / Time.deltaTime;
+    //     previous = motionObject.position;
+    //     return v;
+    // }
+    
     private IEnumerator SpeedReckoner()
     {
 

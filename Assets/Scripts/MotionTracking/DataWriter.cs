@@ -15,7 +15,7 @@ public class DataWriter : MonoBehaviour
     private bool writeTitle = true;
 
     public void WriteTrajectoryData(string ts, string elapsed, string tag, string target, 
-        string motion,float motionThreshold, Vector3 pos, Vector3 rot, float speed, Vector3 vel, Vector3 acc, float accStr, Vector3 dir,
+        string motion,float motionThreshold, Vector3 pos, Vector3 rot, float speed, Vector3 vel, Vector3 velOrg, Vector3 acc, float accStr, Vector3 dir,
         float angSpeed, Vector3 angVel, Vector3 angAcc, float angAccStr, Vector3 angAxis){
 
     
@@ -36,6 +36,9 @@ public class DataWriter : MonoBehaviour
                 .Append("Velocity X").Append (",")
                 .Append("Velocity Y").Append (",")
                 .Append("Velocity Z").Append (",")
+                .Append("Velocity X (orig)").Append (",")
+                .Append("Velocity Y (orig)").Append (",")
+                .Append("Velocity Z (orig)").Append (",")
                 .Append("Acceleration X").Append (",")
                 .Append("Acceleration Y").Append (",")
                 .Append("Acceleration Z").Append (",")
@@ -74,6 +77,9 @@ public class DataWriter : MonoBehaviour
                 .Append(vel.x).Append (",")
                 .Append(vel.y).Append (",")
                 .Append(vel.z).Append (",")
+                .Append(velOrg.x).Append (",")
+                .Append(velOrg.y).Append (",")
+                .Append(velOrg.z).Append (",")
                 .Append(acc.x).Append (",")
                 .Append(acc.y).Append (",")
                 .Append(acc.z).Append (",")
