@@ -127,14 +127,27 @@ public class TrialManager : MonoBehaviour
         blockIndex++;
         if(blockIndex > blockTotal)
         {
-            Debug.Log("END SESSION!!!");
+            Debug.Log("END RUN!!!");
             runIndex++;  
             TrialSequence.instance.Reset();
             blockIndex = 0;
             UI_DisplayText.instance.SetProgressTrial(blockIndex, blockTotal);
             
-            Settings.instance.Status = GameStatus.Ready;
-            UI_DisplayText.instance.SetStatus(Settings.instance.Status, "System Ready");
+
+
+            if (runIndex <= runTotal)
+            {
+                Settings.instance.Status = GameStatus.Preparation;
+                UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Preparation");
+                Invoke("RunTrial",10f); //todo update invoke time to settings (interrunrestperiod)
+                //TODO Display text for participant 
+            }
+            else
+            {
+                Settings.instance.Status = GameStatus.Ready;
+                UI_DisplayText.instance.SetStatus(Settings.instance.Status, "System Ready - Session Complete");
+                //TODO Display text for participant 
+            }
         }
         else
         {
@@ -142,6 +155,8 @@ public class TrialManager : MonoBehaviour
         }
         //rest period
     }
+    
+    
     
     private void SendUDP_byte(int t)
     {

@@ -76,7 +76,7 @@ public class Settings : MonoBehaviour {
 	[Header("FEEDBACK")]
 	public bool animateTargets = false;
 
-	// string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Trial_" + Settings.instance.sessionNumber.ToString();
+	//string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Trial_" + Settings.instance.sessionNumber.ToString();
 	
 	[Header("CHARACTER")]
 	public CharacterColourType characterColourType = CharacterColourType.Static;
