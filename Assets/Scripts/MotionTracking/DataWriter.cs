@@ -196,20 +196,43 @@ public class DataWriter : MonoBehaviour
     public void WriteData(string fileName)
     {
         dataString = stringBuilder.ToString();
-
-        // need to make the folder create dynamically
-        //string folderName = "TrajectoryData";
-        string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Trial_" + Settings.instance.sessionNumber.ToString() + "_Run_" + TrialManager.instance.blockIndex;
         
-        string folderPath = Application.persistentDataPath + "/" + folderName;
-        System.IO.Directory.CreateDirectory(folderPath);
-        string path = Application.persistentDataPath + "/" + folderName + "/"  + fileName  + ".csv";
+        string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Trial_" + Settings.instance.sessionNumber.ToString();
+        
+        string folderPath = Application.persistentDataPath + "/" + folderName + "/Run_" + TrialManager.instance.runIndex;
+
+        if (!Directory.Exists(folderPath))
+        {
+            System.IO.Directory.CreateDirectory(folderPath);
+        }
+
+        //string path = Application.persistentDataPath + "/" + folderName + "/"  + fileName  + ".csv";
+        string path = folderPath  + "/" + fileName  + ".csv";
+        
         System.IO.File.WriteAllText (path, dataString);
         Debug.Log("Data Written - "+path);
+        
         // Debug.Log(dataString);
         stringBuilder.Clear();
         
         writeTitle = true;
     }
+    // public void WriteData(string fileName)
+    // {
+    //     dataString = stringBuilder.ToString();
+    //
+    //     // need to make the folder create dynamically
+    //     string folderName = "MotionData";
+    //     
+    //     string folderPath = Application.persistentDataPath + "/" + folderName;
+    //     System.IO.Directory.CreateDirectory(folderPath);
+    //     string path = Application.persistentDataPath + "/" + folderName + "/"  + fileName  + ".csv";
+    //     System.IO.File.WriteAllText (path, dataString);
+    //     Debug.Log("Data Written - "+path);
+    //     // Debug.Log(dataString);
+    //     stringBuilder.Clear();
+    //     
+    //     writeTitle = true;
+    // }
 
 }

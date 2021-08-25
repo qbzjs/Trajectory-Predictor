@@ -13,7 +13,7 @@ public class JSONWriter : MonoBehaviour
         
         string output = JsonUtility.ToJson(settingsData,true);
         
-        string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Trial_" + Settings.instance.sessionNumber.ToString();
+        string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Session_" + Settings.instance.sessionNumber.ToString();
         string folderPath = Application.persistentDataPath + "/" + folderName;
         System.IO.Directory.CreateDirectory(folderPath);
         string path = Application.persistentDataPath + "/" + folderName + "/settings.txt";

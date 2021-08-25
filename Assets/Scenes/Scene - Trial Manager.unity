@@ -9329,6 +9329,18 @@ MonoBehaviour:
   active: 0
   sessionName: NMS_
   sessionNumber: 0
+  settingsData:
+    trialType: 
+    paradigm: 
+    handedness: 
+    actionObservation: 0
+    trialBlocks: 0
+    repetitions: 0
+    startDelay: 0
+    interBlockRestPeriod: 0
+    restDurationMin: 0
+    restDurationMax: 0
+    targetDuration: 0
   trialParadigm: 0
   trialType: 2
   taskSide: 0
@@ -14431,7 +14443,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1062319890}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999577
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -18808,13 +18820,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4380fcc12bacbad44967e60e3c208938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockTotal: 2
+  runTotal: 4
+  blockTotal: 4
   startingBlock: 101
   initialWaitPeriod: 10
   interBlockRestPeriod: 15
   countdown: 10
   blockIndex: 0
-  sessionIndex: 0
+  runIndex: 0
   blockSequence: {fileID: 0}
 --- !u!1 &868065807
 GameObject:
@@ -23906,7 +23919,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00002156712}
+  m_AnchoredPosition: {x: 0, y: 0.0009308147}
   m_SizeDelta: {x: 0, y: 780}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1093806242
@@ -28189,7 +28202,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00002156712}
+  m_AnchoredPosition: {x: 0, y: 0.0009308147}
   m_SizeDelta: {x: 0, y: 780}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1328052750
@@ -39440,7 +39453,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2063804510}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999577
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

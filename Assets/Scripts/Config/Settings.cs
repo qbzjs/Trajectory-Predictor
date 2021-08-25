@@ -33,6 +33,8 @@ public class Settings : MonoBehaviour {
 	public bool actionObservation = false;
 	public bool recordTrajectory = false;
 	
+	[Range(1, 8)] 
+	public int runTotal = 4;
 	[Range(1, 9)] 
 	public int trialBlocks = 8; 
 	[Range(1, 50)] 
@@ -74,6 +76,7 @@ public class Settings : MonoBehaviour {
 	[Header("FEEDBACK")]
 	public bool animateTargets = false;
 
+	// string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Trial_" + Settings.instance.sessionNumber.ToString();
 	
 	[Header("CHARACTER")]
 	public CharacterColourType characterColourType = CharacterColourType.Static;

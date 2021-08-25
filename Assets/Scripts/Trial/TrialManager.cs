@@ -10,6 +10,7 @@ public class TrialManager : MonoBehaviour
 
     private TrialControls trialControls;
 
+    public int runTotal = 4;
     public int blockTotal = 8;
     public int startingBlock = 101;
 
@@ -18,7 +19,7 @@ public class TrialManager : MonoBehaviour
     public int countdown = 10;
 
     public int blockIndex;
-    public int sessionIndex;
+    public int runIndex = 1;
 
     [HideInInspector]
     public BlockSequenceGenerator blockSequence;
@@ -38,6 +39,8 @@ public class TrialManager : MonoBehaviour
 
     public void InitialiseTrial()
     {
+        runIndex = 1;
+        runTotal = Settings.instance.runTotal;
         blockTotal = Settings.instance.trialBlocks;
         SequenceGenerator();
         
@@ -79,8 +82,8 @@ public class TrialManager : MonoBehaviour
 
     private void RunTrial()
     {
-
-            InitialWaitPeriod();
+          
+        InitialWaitPeriod();
     }
     private void InitialWaitPeriod()
     {
@@ -125,6 +128,7 @@ public class TrialManager : MonoBehaviour
         if(blockIndex > blockTotal)
         {
             Debug.Log("END SESSION!!!");
+            runIndex++;  
             TrialSequence.instance.Reset();
             blockIndex = 0;
             UI_DisplayText.instance.SetProgressTrial(blockIndex, blockTotal);
