@@ -198,7 +198,9 @@ public class DataWriter : MonoBehaviour
         dataString = stringBuilder.ToString();
 
         // need to make the folder create dynamically
-        string folderName = "TrajectoryData";
+        //string folderName = "TrajectoryData";
+        string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Trial_" + Settings.instance.sessionNumber.ToString() + "_Run_" + TrialManager.instance.blockIndex;
+        
         string folderPath = Application.persistentDataPath + "/" + folderName;
         System.IO.Directory.CreateDirectory(folderPath);
         string path = Application.persistentDataPath + "/" + folderName + "/"  + fileName  + ".csv";

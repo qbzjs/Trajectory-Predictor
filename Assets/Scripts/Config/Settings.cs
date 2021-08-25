@@ -18,7 +18,11 @@ public class Settings : MonoBehaviour {
 	public string sessionName = "Session_";
 	//public string blockName = "B1";
 	public int sessionNumber = 1;
+
+	[Header("SESSION SETTINGS --SAVED TO FILE-- ")]
+	public SettingsDataObject settingsData;
 	
+	[Header("---------SET BY INTERFACE--------------")]
 	[Header("SEQUENCE SETTINGS")]
 	public TrialParadigm trialParadigm = TrialParadigm.Avatar3D;
 	public TrialType trialType = TrialType.CentreOut;
@@ -482,6 +486,22 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("characterSmoothing", characterSmoothing);
 		EasySave.Save("smoothSpeed", smoothSpeed);
 
+		//Save state to settings Data object for writing to file
+		settingsData.trialType = trialType.ToString();
+		settingsData.paradigm = trialParadigm.ToString();
+		settingsData.handedness = taskSide.ToString();
+		settingsData.actionObservation = actionObservation;
+		settingsData.trialBlocks = trialBlocks;
+		settingsData.repetitions = repetitions;
+		settingsData.startDelay = startDelay;
+		settingsData.interBlockRestPeriod = interBlockRestPeriod;
+		settingsData.restDurationMin = restDurationMin;
+		settingsData.restDurationMax = restDurationMax;
+		settingsData.targetDuration = targetDuration;
+
+		JSONWriter jWriter = new JSONWriter();
+		jWriter.OutputSettingsJSON(settingsData);
+		
 //		Debug.Log("Settings Saved!");
 	}
 	private void LoadSave() {
