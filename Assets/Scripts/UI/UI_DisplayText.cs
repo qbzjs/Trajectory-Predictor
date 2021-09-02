@@ -28,10 +28,10 @@ public class UI_DisplayText : MonoBehaviour {
     void Start() {
         scoreDisplay.text = "Score : n/a";
         scoreDisplay_Wrld.text = "Score : n/a";
-        movementProgressDisplay.text = "Movement 0/0";
-        movementProgressDisplay_Wrld.text = "Movement 0/0";
-        trialProgressDisplay.text = "Trial 0/0";
-        trialProgressDisplay_Wrld.text = "Trial 0/0";
+        movementProgressDisplay.text = "Trial 0/0";
+        movementProgressDisplay_Wrld.text = "Trial 0/0";
+        trialProgressDisplay.text = "Block 0/0";
+        trialProgressDisplay_Wrld.text = "Block 0/0";
         SetStatus(GameStatus.Ready, "System Ready");
     }
 
@@ -52,12 +52,12 @@ public class UI_DisplayText : MonoBehaviour {
 //    }
 
     public void SetProgressMovement(int c, int t) {
-        movementProgressDisplay.text = "Movement : " + c.ToString() + " / " + t.ToString();
-        movementProgressDisplay_Wrld.text = "Movement : " + c.ToString() + " / " + t.ToString();
+        movementProgressDisplay.text = "Trial : " + c.ToString() + " / " + t.ToString();
+        movementProgressDisplay_Wrld.text = "Trial : " + c.ToString() + " / " + t.ToString();
     }
     public void SetProgressTrial(int c, int t) {
-        trialProgressDisplay.text = "Trail : " + c.ToString() + " / " + t.ToString();
-        trialProgressDisplay_Wrld.text = "Trail : " + c.ToString() + " / " + t.ToString();
+        trialProgressDisplay.text = "Block : " + c.ToString() + " / " + t.ToString();
+        trialProgressDisplay_Wrld.text = "Block : " + c.ToString() + " / " + t.ToString();
     }
     
     public void SetStatus(GameStatus s, string t) {

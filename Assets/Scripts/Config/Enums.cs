@@ -1,6 +1,13 @@
 ﻿namespace Enums
 {
 
+	public enum SampleRate
+	{
+		Hz50,
+		Hz60,
+		Hz75
+	}
+	
 	public enum TrialSequence
     {
 		InitialWait,

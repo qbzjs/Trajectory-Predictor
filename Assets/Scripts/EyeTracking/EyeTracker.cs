@@ -22,7 +22,9 @@ namespace ViveSR
                 private static EyeData_v2 eyeData = new EyeData_v2();
                 private bool eye_callback_registered = false;
 
-                public static Vector3 gazeDirectionLeft;
+                public EyeDataFormat eyeDataFormat;
+
+                static Vector3 gazeDirectionLeft;
                 static Vector3 gazeDirectionRight;
 
                 static float eyeOpennessLeft;
@@ -35,6 +37,7 @@ namespace ViveSR
                 public TextMeshPro gazeDataDisplay;
                 public TextMeshPro eyeOpennessDisplay;
                 public TextMeshPro pupilDiameterDisplay;
+                
                 private void Start()
                 {
                     if (!SRanipal_Eye_Framework.Instance.EnableEye)
@@ -201,6 +204,8 @@ namespace ViveSR
                 {
                     blinking = CheckBlinkThreshold();
                     
+                    RouteEyeData();
+                    
                     if(recordEyeData && recordEnabled){
             
                         elapsedTime += Time.deltaTime;
@@ -224,6 +229,20 @@ namespace ViveSR
                     }
                 }
 
+                private void RouteEyeData()
+                {
+                    eyeDataFormat.blinking = blinking;
+                    eyeDataFormat.gazeDirectionLeft = gazeDirectionLeft;
+                    eyeDataFormat.gazeDirectionRight = gazeDirectionRight;
+                    eyeDataFormat.eyeOpennessLeft = eyeOpennessLeft;
+                    eyeDataFormat.eyeOpennessRight = eyeOpennessRight;
+                    eyeDataFormat.pupilDiameterLeft = pupilDiameterLeft;
+                    eyeDataFormat.pupilDiameterRight = pupilDiameterRight;
+                    if (DAO.instance != null)
+                    {
+                        DAO.instance.eyeData = eyeDataFormat;
+                    }
+                }
                 private bool CheckBlinkThreshold()
                 {
                     bool blink;

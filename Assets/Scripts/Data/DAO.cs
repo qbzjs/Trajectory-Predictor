@@ -10,6 +10,7 @@ public class DAO : MonoBehaviour
     public MotionDataFormat motionData_LeftHand;
     public MotionDataFormat motionData_RightHand;
     public MotionDataFormat motionData_Head;
+    public EyeDataFormat eyeData;
 
     //public int blockSequence
     public int reachTarget;
@@ -33,6 +34,11 @@ public class DAO : MonoBehaviour
     {
         get { return motionData_Head; }
         set { motionData_Head = value; }
+    }
+    public EyeDataFormat EyeData
+    {
+        get { return eyeData; }
+        set { eyeData = value; }
     }
 
     public int ReachTarget
