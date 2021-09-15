@@ -42,6 +42,12 @@
 		LeftElbow,
 		RightShoulder,
 		LeftShoulder,
+		RightWrist,
+		LeftWrist,
+		RightWrist_Leap,
+		LeftWrist_Leap,
+		LeftPointerFinger_Leap,
+		RightPointerFinger_Leap,
 		Waist,
 		Eyes
 	}
