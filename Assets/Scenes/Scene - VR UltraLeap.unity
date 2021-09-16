@@ -5910,11 +5910,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 545960236753911756, guid: 97123fc91ac659e48b4bff47e77d834d, type: 3}
       propertyPath: ModelPool.Array.data[1].IsEnabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 545960236753911756, guid: 97123fc91ac659e48b4bff47e77d834d, type: 3}
       propertyPath: ModelPool.Array.data[2].IsEnabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 545960236753911756, guid: 97123fc91ac659e48b4bff47e77d834d, type: 3}
       propertyPath: ModelPool.Array.data[3].GroupName
@@ -7067,7 +7067,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1164047313706888, guid: 2857ec373c9c7446f8893b6ad3508b58, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4638322442101724, guid: 2857ec373c9c7446f8893b6ad3508b58, type: 3}
       propertyPath: m_RootOrder
