@@ -154,6 +154,7 @@ namespace UltrahapticsCoreAsset
 
         void OnDrawGizmos()
         {
+            Debug.Log("EMMI YOU SHIT!");
             if (SensationCore.Instance != null && IsConnectedToAnEmitter())
             {
                 Render();
