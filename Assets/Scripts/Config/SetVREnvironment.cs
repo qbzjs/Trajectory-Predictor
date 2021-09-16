@@ -19,6 +19,9 @@ public class SetVREnvironment : MonoBehaviour{
     // Update is called once per frame
     public void SetEnvironment()
     {
-        environment.SetActive(Settings.instance.environment3D);
+        if (Settings.instance)
+        {
+            environment.SetActive(Settings.instance.environment3D);
+        }
     }
 }
