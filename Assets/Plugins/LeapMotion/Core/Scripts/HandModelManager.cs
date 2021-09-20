@@ -281,6 +281,7 @@ namespace Leap.Unity {
         ModelGroup group = ModelPool[i];
         if (group.IsEnabled) {
           HandModelBase model = group.TryGetModel(handChirality, modelType);
+          Debug.Log("HAND ACTIVE!!!");
           if (model != null) {
             handRep.AddModel(model);
             if (!modelToHandRepMapping.ContainsKey(model)) {
@@ -295,7 +296,9 @@ namespace Leap.Unity {
     }
 
     public void RemoveHandRepresentation(HandRepresentation handRepresentation) {
+      Debug.Log(activeHandReps[0]);
       activeHandReps.Remove(handRepresentation);
+      Debug.Log("HAND DISABLED!!!");
     }
 
     #endregion

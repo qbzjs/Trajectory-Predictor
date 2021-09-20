@@ -7,8 +7,8 @@ public class DAO : MonoBehaviour
     
     public static DAO instance;
 
-    public MotionDataFormat motionData_LeftHand;
-    public MotionDataFormat motionData_RightHand;
+    public MotionDataFormat motionDataLeftWrist;
+    public MotionDataFormat motionDataRightWrist;
     public MotionDataFormat motionData_Head;
     public EyeDataFormat eyeData;
 
@@ -20,15 +20,15 @@ public class DAO : MonoBehaviour
 
     }
 
-    public MotionDataFormat MotionData_LeftHand
+    public MotionDataFormat MotionData_LeftWrist
     {
-        get { return motionData_LeftHand; }
-        set { motionData_LeftHand = value; }
+        get { return motionDataLeftWrist; }
+        set { motionDataLeftWrist = value; }
     }
-    public MotionDataFormat MotionData_RightHand
+    public MotionDataFormat MotionData_RightWrist
     {
-        get { return motionData_RightHand; }
-        set { motionData_RightHand = value; }
+        get { return motionDataRightWrist; }
+        set { motionDataRightWrist = value; }
     }
     public MotionDataFormat MotionData_Head
     {
@@ -40,7 +40,14 @@ public class DAO : MonoBehaviour
         get { return eyeData; }
         set { eyeData = value; }
     }
-
+    
+    //TODO Make a hand data getter for selected hand from settings
+    // public MotionDataFormat MotionData_RightWrist
+    // {
+    //     get { return motionDataRightWrist; }
+    //     set { motionDataRightWrist = value; }
+    // }
+    
     public int ReachTarget
     {
         get { return reachTarget; }

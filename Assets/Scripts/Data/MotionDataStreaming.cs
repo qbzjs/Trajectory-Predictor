@@ -31,11 +31,11 @@ public class MotionDataStreaming
                 case MotionTag.Null:
 
                     break;
-                case MotionTag.LeftHand:
-                    motionData = dao.MotionData_Head;
+                case MotionTag.LeftWrist:
+                    motionData = dao.MotionData_LeftWrist;
                     break;
-                case MotionTag.RightHand:
-                    motionData = dao.MotionData_RightHand;
+                case MotionTag.RightWrist:
+                    motionData = dao.MotionData_RightWrist;
                     break;
                 case MotionTag.Head:
                     motionData = dao.MotionData_Head;
@@ -57,11 +57,11 @@ public class MotionDataStreaming
                 case MotionTag.Null:
 
                     break;
-                case MotionTag.LeftHand:
-                    dao.MotionData_LeftHand = data;
+                case MotionTag.LeftWrist:
+                    dao.MotionData_LeftWrist = data;
                     break;
-                case MotionTag.RightHand:
-                    dao.MotionData_RightHand = data;
+                case MotionTag.RightWrist:
+                    dao.MotionData_RightWrist = data;
                     break;
                 case MotionTag.Head:
                     dao.MotionData_Head = data;
