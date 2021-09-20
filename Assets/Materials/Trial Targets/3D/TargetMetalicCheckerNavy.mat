@@ -7,11 +7,11 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NavyGridGloss
+  m_Name: TargetMetalicCheckerNavy
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _EMISSION _EMISSIONMAP _LIGHTMAPPING_DYNAMIC_LIGHTMAPS _LIGHTMAPPING_REALTIME
-    _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A _UVSEC_UV1
-  m_LightmapFlags: 0
+  m_ShaderKeywords: _EMISSIONMAP _LIGHTMAPPING_DYNAMIC_LIGHTMAPS _LIGHTMAPPING_REALTIME
+    _UVSEC_UV1
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -41,7 +41,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 86e4aa9207c9e2740b6ace599d659c05, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8e16cf8bae04aa344af5cccef92d8678, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -72,21 +72,21 @@ Material:
     - _DstBlend: 0
     - _EmissionScaleUI: 2
     - _GlossMapScale: 1
-    - _Glossiness: 0.135
+    - _Glossiness: 1
     - _GlossyReflections: 1
     - _Lightmapping: 1
     - _Metallic: 0.62
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _SmoothnessTextureChannel: 1
+    - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 5.3393354, g: 5.3393354, b: 5.3393354, a: 1.3348337}
+    - _Color: {r: 0.10754121, g: 0.15971625, b: 0.2735849, a: 1}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColorUI: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColorWithMapUI: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.11764706, g: 0.11764706, b: 0.11764706, a: 1}
