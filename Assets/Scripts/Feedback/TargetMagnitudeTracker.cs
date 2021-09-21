@@ -20,6 +20,7 @@ public class TargetMagnitudeTracker : MonoBehaviour
     [Header("Values")] 
     public Transform start;
     public Transform target;
+    [Range(0, 2f)] public float feedbackMultiplier = 1;
     public Vector3 startPoint;
     public Vector3 endPoint;
     public float startToEndDistance;
@@ -61,6 +62,10 @@ public class TargetMagnitudeTracker : MonoBehaviour
         if (percentageToTarget < 0)
         {
             percentageToTarget = 0;
+        }
+        if (percentageToTarget > 100)
+        {
+            percentageToTarget = 100;
         }
 
         feedbackPercentage = percentageToTarget;

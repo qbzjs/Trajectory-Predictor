@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class JSONWriter : MonoBehaviour
+public class JSONWriter
 {
     private SettingsDataObject settingsData;
 

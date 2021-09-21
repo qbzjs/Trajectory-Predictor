@@ -39,11 +39,11 @@ public class SettingsTabNavigation : MonoBehaviour
 
         for (int i = 0; i < panels.Length; i++)
         {
-            panels[i].transform.parent = panelParent.transform;
+            panels[i].transform.SetParent(panelParent.transform);
         }
         for (int i = 0; i < panels.Length; i++)
         {
-            panels[i].transform.parent = panelParent.transform;
+            panels[i].transform.SetParent(panelParent.transform);
 
             LeanTween.moveLocalX(panels[i], offset * i, 0);
             panelPosition[i] = -offset * i;
