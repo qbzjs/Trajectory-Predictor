@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Enums;
-    
+using Leap.Unity;
+
 public class ReachTargetManager : MonoBehaviour{
     
     private GameObject reachObject;
@@ -54,7 +55,8 @@ public class ReachTargetManager : MonoBehaviour{
         
         for (int i = 0; i < reachTarget.Length; i++)
         {
-            reachTarget[i].GetComponent<Renderer>().material = targetDefault;
+            //reachTarget[i].GetComponent<Renderer>().material = targetDefault;
+            reachTarget[i].transform.Find("Target").GetComponent<Renderer>().material = targetDefault;
         }
     }
 
@@ -65,10 +67,12 @@ public class ReachTargetManager : MonoBehaviour{
 
         for(int i=0; i<reachTarget.Length; i++)
         {
-            reachTarget[i].GetComponent<Renderer>().material = targetDefault;
+            //reachTarget[i].GetComponent<Renderer>().material = targetDefault;
+            reachTarget[i].transform.Find("Target").GetComponent<Renderer>().material = targetDefault;
         }
 
-        reachTarget[targetNumber].GetComponent<Renderer>().material = targetHighlight;
+        //reachTarget[targetNumber].GetComponent<Renderer>().material = targetHighlight;
+        reachTarget[targetNumber].transform.Find("Target").GetComponent<Renderer>().material = targetHighlight;
 
         if (animateTargets)
         {
@@ -100,7 +104,8 @@ public class ReachTargetManager : MonoBehaviour{
 
         for (int i = 0; i < reachTarget.Length; i++)
         {
-            reachTarget[i].GetComponent<Renderer>().material = targetDefault;
+            //reachTarget[i].GetComponent<Renderer>().material = targetDefault;
+            reachTarget[i].transform.Find("Target").GetComponent<Renderer>().material = targetDefault;
         }
 
         if (OnTargetRestAction != null)
@@ -142,11 +147,14 @@ public class ReachTargetManager : MonoBehaviour{
     }
     
     private void PlayBeep(float p){
-        AudioSource a = reachTarget[currentTrigger].GetComponent<AudioSource>();
-        a.pitch = p;
+        if (reachTarget[currentTrigger].GetComponent<AudioSource>())
+        {
+            AudioSource a = reachTarget[currentTrigger].GetComponent<AudioSource>();
+            a.pitch = p;
+            a.Play();
+        }
 //        print("AUDIO - Beep");
 
-        a.Play();
     }
     
     private void SendUDP_byte(int t)
