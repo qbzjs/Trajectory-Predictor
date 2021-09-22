@@ -11,7 +11,7 @@ namespace Unity.Labs.SuperScience
         /// Drawing constants we pass to the gizmo functions
         /// </summary>
         const float k_RayScale = 0.5f;
-        const float k_RayEndcap = 0.025f;
+        const float k_RayEndcap = 0.01f;
         const float k_AngularAxisLength = 0.25f;
         const float k_AngularWedgeSize = 0.1f;
         const float k_MinAngularSpeed = 0.05f;

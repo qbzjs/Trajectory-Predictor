@@ -281,7 +281,7 @@ namespace Leap.Unity {
         ModelGroup group = ModelPool[i];
         if (group.IsEnabled) {
           HandModelBase model = group.TryGetModel(handChirality, modelType);
-          Debug.Log("Leap Hand Tracked!!!");
+          //Debug.Log("Leap Hand Tracked!!!");
           if (model != null) {
             handRep.AddModel(model);
             if (!modelToHandRepMapping.ContainsKey(model)) {
@@ -300,7 +300,7 @@ namespace Leap.Unity {
       // Transform t = activeHandReps[0].handModels[0].transform;
       // Debug.Log(t.name);
       activeHandReps.Remove(handRepresentation);
-      Debug.Log("Leap Hand Lost!!!");
+//      Debug.Log("Leap Hand Lost!!!");
     }
 
     #endregion
