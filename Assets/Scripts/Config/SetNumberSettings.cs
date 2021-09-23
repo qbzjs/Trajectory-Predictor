@@ -10,9 +10,12 @@ public class SetNumberSettings : MonoBehaviour {
     public TrialSettingsValue trialSettingValue;
     
     public TextMeshProUGUI numberText;
+    
     public int min = 0;
     public int max = 10;
 
+    private string valueDisplay = "";
+    
     private Color defaultColour;
 
     private void Start() {
@@ -25,49 +28,64 @@ public class SetNumberSettings : MonoBehaviour {
             SetNumber(Settings.instance.trialBlocks);
         }
         if (trialSettingValue == TrialSettingsValue.Repetitions) {
+            valueDisplay = "<size=-10>x";
             SetNumber(Settings.instance.repetitions);
         }
         if (trialSettingValue == TrialSettingsValue.StartDelay) {
+            valueDisplay = "<size=-10>s";
             SetNumber(Settings.instance.startDelay);
+            
         }
         if (trialSettingValue == TrialSettingsValue.InterBlockRestPeriod) {
+            valueDisplay = "<size=-10>s";
             SetNumber(Settings.instance.interBlockRestPeriod);
         }
         if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
+            valueDisplay = "<size=-10>s";
             SetNumber(Settings.instance.restDurationMin);
         }
         if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
+            valueDisplay = "<size=-10>s";
             SetNumber(Settings.instance.restDurationMax);
         }
         if (trialSettingValue == TrialSettingsValue.TargetDuration) {
+            valueDisplay = "<size=-10>s";
             SetNumber(Settings.instance.targetDuration);
         }
     }
     private void SetNumber(int n) {
-        numberText.text = n.ToString();
+        numberText.text = n.ToString() + valueDisplay;
     }
 
     public void PlusNumber() {
-        int n = int.Parse(numberText.text);
+        string t = numberText.text;
+        t = t.Replace("<size=-10>", "");
+        t = t.Replace("s", "");
+        t = t.Replace("x", "");
+        int n = int.Parse(t);
         n++;
         if (n > max)
         {
             n = max;
         }     
-        numberText.text = n.ToString();
+        numberText.text = n.ToString() + valueDisplay;
         numberText.color = Settings.instance.highlightColour;
         SetValue(n);
         StartCoroutine(DefaultColour());
     }
 
     public void MinusNumber() {
-        int n = int.Parse(numberText.text);
+        string t = numberText.text;
+        t = t.Replace("<size=-10>", "");
+        t = t.Replace("s", "");
+        t = t.Replace("x", "");
+        int n = int.Parse(t);
         n--;
         if (n < min)
         {
             n = min;
         }     
-        numberText.text = n.ToString();
+        numberText.text = n.ToString() + valueDisplay;
         numberText.color = Settings.instance.highlightColour;
         SetValue(n);
         StartCoroutine(DefaultColour());
@@ -87,21 +105,27 @@ public class SetNumberSettings : MonoBehaviour {
             Settings.instance.SetTrialBlocks(v);
         }
         if (trialSettingValue == TrialSettingsValue.Repetitions) {
+            valueDisplay = "<size=-10>x";
             Settings.instance.SetRepetitions(v);
         }
         if (trialSettingValue == TrialSettingsValue.StartDelay) {
+            valueDisplay = "<size=-10>s";
             Settings.instance.SetStartDelay(v);
         }
         if (trialSettingValue == TrialSettingsValue.InterBlockRestPeriod) {
+            valueDisplay = "<size=-10>s";
             Settings.instance.SetInterBlockRestPeriod(v);
         }
         if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
+            valueDisplay = "<size=-10>s";
             Settings.instance.SetRestDurationMin(v);
         }
         if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
+            valueDisplay = "<size=-10>s";
             Settings.instance.SetRestDurationMax(v);
         }
         if (trialSettingValue == TrialSettingsValue.TargetDuration) {
+            valueDisplay = "<size=-10>s";
             Settings.instance.SetTargetDuration(v);
         }
     }

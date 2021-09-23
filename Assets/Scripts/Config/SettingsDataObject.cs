@@ -11,6 +11,8 @@ public class SettingsDataObject
     public string handedness;
     public bool actionObservation;
 
+    public string sampleRate;
+    
     public int trialBlocks;
     public int repetitions;
     public int startDelay;
@@ -27,12 +29,13 @@ public class SettingsDataObject
 
 
     public SettingsDataObject(string trialType, string paradigm, string handedness, bool actionObservation,
-        int trialBlocks, int repetitions, int startDelay, int interBlockRestPeriod, int restDurationMin, int restDurationMax, int targetDuration)
+        string sampleRate, int trialBlocks, int repetitions, int startDelay, int interBlockRestPeriod, int restDurationMin, int restDurationMax, int targetDuration)
     {
         this.trialType = trialType;
         this.paradigm = paradigm;
         this.handedness = handedness;
         this.actionObservation = actionObservation;
+        this.sampleRate = sampleRate;
         this.trialBlocks = trialBlocks;
         this.repetitions = repetitions;
         this.startDelay = startDelay;

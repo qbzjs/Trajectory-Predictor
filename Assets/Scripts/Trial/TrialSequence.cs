@@ -29,7 +29,7 @@ public class TrialSequence : MonoBehaviour {
 //    [HideInInspector] 
     public int startDelay = 60;
 //    [HideInInspector] 
-    public int targetDuration = 2;
+    public float targetDuration = 2;
 //    [HideInInspector] 
     [FormerlySerializedAs("restDuration")] 
     public int restDurationMin = 2;
@@ -218,8 +218,14 @@ public class TrialSequence : MonoBehaviour {
                 
                 if (!resting) {
                     resting = true;
-                    if (restDurationMax <= restDurationMin) { duration = restDurationMin; }
-                    duration =  Random.Range(restDurationMin,restDurationMax);
+                    if (restDurationMax <= restDurationMin)
+                    {
+                        duration = restDurationMin;
+                    }
+                    else
+                    {
+                        duration =  Random.Range(restDurationMin,restDurationMax);
+                    }
                     RestTarget();
                     if (sequenceComplete)
                     {

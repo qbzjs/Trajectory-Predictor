@@ -6,8 +6,8 @@
 
 using UnityEngine;
 using System.Collections;
+using UnityEditor;
 using Valve.VR;
-
 
 namespace Valve.VR
 {
@@ -19,6 +19,8 @@ namespace Valve.VR
         public static EVREye eye { get; private set; }
 
         public static SteamVR_Render instance { get { return SteamVR_Behaviour.instance.steamvr_render; } }
+
+        public float sampleRateSteamRender = 0.01666667f;
 
         static private bool isQuitting;
         void OnApplicationQuit()
@@ -467,10 +469,14 @@ namespace Valve.VR
                     //Set fixed timestep to 50 per second
                     //Time.fixedDeltaTime = 0.02f; //50
                     
-                    Time.fixedDeltaTime = 0.01666667f; //60
+                    //Time.fixedDeltaTime = 0.01666667f; //60
                     
                     //Set fixed timestep to 75 per second
                     //Time.fixedDeltaTime = 0.01333f;
+
+                    Time.fixedDeltaTime = sampleRateSteamRender;
+                    
+                    
                 }
             }
         }

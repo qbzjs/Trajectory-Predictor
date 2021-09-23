@@ -120,7 +120,7 @@ public class ReachTargetManager : MonoBehaviour{
         DAO.instance.ReachTarget = lastTrigger + 10;
         SendUDP_byte(lastTrigger+10);
 
-        PlayBeep(0.8f);
+        //PlayBeep(0.8f);
 
         if (oneShotTriggerUDP)
         {

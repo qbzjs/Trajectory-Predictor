@@ -5,7 +5,8 @@
 	{
 		Hz50,
 		Hz60,
-		Hz75
+		Hz75,
+		Hz100
 	}
 	
 	public enum TrialSequence

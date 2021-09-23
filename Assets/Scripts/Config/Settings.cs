@@ -6,6 +6,7 @@ using Enums;
 using SaveSystem;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Valve.VR;
 
 public class Settings : MonoBehaviour {
 
@@ -30,9 +31,10 @@ public class Settings : MonoBehaviour {
 	public SequenceType sequenceType = SequenceType.Permutation;
 
 	[Header("TRIAL SETTINGS")] 
-	public bool actionObservation = false;
 	public bool recordTrajectory = false;
-	
+	public SampleRate sampleRate = SampleRate.Hz60;
+	public bool actionObservation = false;
+
 	[Range(1, 8)] 
 	public int runTotal = 4;
 	[Range(1, 9)] 
@@ -43,6 +45,8 @@ public class Settings : MonoBehaviour {
 	public int startDelay = 60;
 	[Range(2, 10)] 
 	public int targetDuration = 2;
+	[Range(2, 10)] 
+	public float targetDurationGranular = 2f;
 	[Range(10, 60)] 
 	public int interBlockRestPeriod = 2;
 	[Range(2, 10)] 
@@ -123,6 +127,7 @@ public class Settings : MonoBehaviour {
 		displayObjects.trial2D.SetActive(true);
 		displayObjects.trial2D_RenderTexture.SetActive(true);
 		active = true;
+		//ToggleSettings(); // use to start in or out of settings menu
 	}
 
 	public void ToggleSettings() {
@@ -217,13 +222,26 @@ public class Settings : MonoBehaviour {
 		TrialSequence.instance.sequenceType = sequenceType;
 		SaveState();
 	}
-
-	public void SetActionObservation(bool t){
-		actionObservation = t;
-		SaveState();
-	}
 	public void SetRecordTrajectory(bool t){
 		recordTrajectory = t;
+		SaveState();
+	}
+	public void SetSampleRate(SampleRate sr){
+		sampleRate = sr;
+		//SET samplerate in steam VR
+		if (SteamVR.instance != null) {
+			//Debug.Log(SteamVR.instance);
+			switch (sampleRate) {
+				case SampleRate.Hz50 : { SteamVR_Render.instance.sampleRateSteamRender = 0.02f; break; }
+				case SampleRate.Hz60 : { SteamVR_Render.instance.sampleRateSteamRender = 0.01666667f; break; }
+				case SampleRate.Hz75 : { SteamVR_Render.instance.sampleRateSteamRender = 0.01333f; break; }
+				case SampleRate.Hz100 : { SteamVR_Render.instance.sampleRateSteamRender = 0.01f; break; }
+			}
+		}
+		SaveState();
+	}
+	public void SetActionObservation(bool t){
+		actionObservation = t;
 		SaveState();
 	}
 	
@@ -264,6 +282,12 @@ public class Settings : MonoBehaviour {
 	public void SetTargetDuration(int num) {
 		targetDuration = num;
 		TrialSequence.instance.targetDuration = targetDuration;
+		SaveState();
+	}
+	public void SetTargetDurationGranular(float num) {
+		targetDurationGranular = num;
+		//TODO
+		TrialSequence.instance.targetDuration = targetDurationGranular;
 		SaveState();
 	}
 	public void SetInterRunRestPeriod(int num) {
@@ -446,8 +470,9 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("taskSide", taskSide.ToString());
 		EasySave.Save("sequenceType", sequenceType.ToString());
 		
-		EasySave.Save("actionObservation", actionObservation);
 		EasySave.Save("recordTrajectory", recordTrajectory);
+		EasySave.Save("sampleRate", sampleRate.ToString());
+		EasySave.Save("actionObservation", actionObservation);
 
 		EasySave.Save("trialBlocks", trialBlocks);
 		EasySave.Save("repetitions", repetitions);
@@ -456,6 +481,7 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("restDurationMin", restDurationMin);
 		EasySave.Save("restDurationMax", restDurationMax);
 		EasySave.Save("targetDuration", targetDuration);
+		EasySave.Save("targetDurationGranular", targetDurationGranular);
 		
 		//environment
 		EasySave.Save("environment3D", environment3D);
@@ -494,6 +520,7 @@ public class Settings : MonoBehaviour {
 		settingsData.paradigm = trialParadigm.ToString();
 		settingsData.handedness = taskSide.ToString();
 		settingsData.actionObservation = actionObservation;
+		settingsData.sampleRate = sampleRate.ToString();
 		settingsData.trialBlocks = trialBlocks;
 		settingsData.repetitions = repetitions;
 		settingsData.startDelay = startDelay;
@@ -501,6 +528,8 @@ public class Settings : MonoBehaviour {
 		settingsData.restDurationMin = restDurationMin;
 		settingsData.restDurationMax = restDurationMax;
 		settingsData.targetDuration = targetDuration;
+		//TODO
+		//settingsData.targetDuration = targetDurationGranular;
 
 		JSONWriter jWriter = new JSONWriter();
 		jWriter.OutputSettingsJSON(settingsData);
@@ -557,8 +586,15 @@ public class Settings : MonoBehaviour {
 				sequenceType = SequenceType.Permutation;
 			}
 
-			actionObservation = EasySave.Load<bool>("actionObservation");
 			recordTrajectory = EasySave.Load<bool>("recordTrajectory");
+			string sr = EasySave.Load<string>("sampleRate");
+			if (sr == "Hz50") { sampleRate = SampleRate.Hz50; }
+			if (sr == "Hz60") { sampleRate = SampleRate.Hz60; }
+			if (sr == "Hz75") { sampleRate = SampleRate.Hz75; }
+			if (sr == "Hz100") { sampleRate = SampleRate.Hz100; }
+			
+			actionObservation = EasySave.Load<bool>("actionObservation");
+			
 			
 			trialBlocks = EasySave.Load<int>("trialBlocks");
 			repetitions = EasySave.Load<int>("repetitions");
@@ -567,6 +603,7 @@ public class Settings : MonoBehaviour {
 			restDurationMin = EasySave.Load<int>("restDurationMin");
 			restDurationMax = EasySave.Load<int>("restDurationMax");
 			targetDuration = EasySave.Load<int>("targetDuration");
+			targetDurationGranular = EasySave.Load<float>("targetDurationGranular");
 
 			//environment
 			environment3D = EasySave.Load<bool>("environment3D");
@@ -619,8 +656,9 @@ public class Settings : MonoBehaviour {
 			taskSide = TaskSide.Left;
 			sequenceType = SequenceType.Permutation;
 
-			actionObservation = false;
 			recordTrajectory = false;
+			sampleRate = SampleRate.Hz60;
+			actionObservation = false;
 
 			trialBlocks = 8;
 			repetitions = 25;
@@ -629,6 +667,7 @@ public class Settings : MonoBehaviour {
 			restDurationMin = 2;
 			restDurationMax = 2;
 			targetDuration = 2;
+			targetDurationGranular = 2f;
 			
 			//environment 3d
 			environment3D = false;
@@ -677,9 +716,10 @@ public class Settings : MonoBehaviour {
 		SetReachTaskSide(taskSide);
 		SetSequenceType(sequenceType);
 
-		SetActionObservation(actionObservation);
 		SetRecordTrajectory(recordTrajectory);
-
+		SetSampleRate(sampleRate);
+		SetActionObservation(actionObservation);
+		
 		SetTrialBlocks(trialBlocks);
 		SetRepetitions(repetitions);
 		SetStartDelay(startDelay);
@@ -687,6 +727,7 @@ public class Settings : MonoBehaviour {
 		SetRestDurationMin(restDurationMin);
 		SetRestDurationMax(restDurationMax);
 		SetTargetDuration(targetDuration);
+		SetTargetDurationGranular(targetDurationGranular);
 		
 		//Environment 3D
 		Set3DEnvironment(environment3D);
