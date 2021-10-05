@@ -27,9 +27,6 @@ public class TrialManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-
-
-        
     }
 
     void Start()
@@ -108,7 +105,7 @@ public class TrialManager : MonoBehaviour
         SendUDP_byte(0);
 
         CountdownTimer.instance.SetCountdown(countdown+1);
-        UI_DisplayText.instance.SetProgressTrial(blockIndex, blockTotal);
+        UI_DisplayText.instance.SetBlockProgress(blockIndex, blockTotal);
         
         Settings.instance.Status = GameStatus.Countdown;
         UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Countdown");
@@ -131,7 +128,7 @@ public class TrialManager : MonoBehaviour
             runIndex++;  
             TrialSequence.instance.Reset();
             blockIndex = 0;
-            UI_DisplayText.instance.SetProgressTrial(blockIndex, blockTotal);
+            UI_DisplayText.instance.SetBlockProgress(blockIndex, blockTotal);
             
 
 

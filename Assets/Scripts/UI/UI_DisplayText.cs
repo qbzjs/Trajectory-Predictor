@@ -11,10 +11,10 @@ public class UI_DisplayText : MonoBehaviour {
 
     public TextMeshProUGUI statusDisplay;
     public TextMeshPro statusDisplay_Wrld;
-    public TextMeshProUGUI movementProgressDisplay;
-    public TextMeshPro movementProgressDisplay_Wrld;
     public TextMeshProUGUI trialProgressDisplay;
     public TextMeshPro trialProgressDisplay_Wrld;
+    public TextMeshProUGUI blockProgressDisplay;
+    public TextMeshPro blockProgressDisplay_Wrld;
     public TextMeshProUGUI scoreDisplay;
     public TextMeshPro scoreDisplay_Wrld;
 
@@ -27,11 +27,11 @@ public class UI_DisplayText : MonoBehaviour {
 
     void Start() {
         scoreDisplay.text = "Score : n/a";
-        scoreDisplay_Wrld.text = "Score : n/a";
-        movementProgressDisplay.text = "Trial 0/0";
-        movementProgressDisplay_Wrld.text = "Trial 0/0";
-        trialProgressDisplay.text = "Block 0/0";
-        trialProgressDisplay_Wrld.text = "Block 0/0";
+        scoreDisplay_Wrld.text = "Score: n/a";
+        trialProgressDisplay.text = "Trial: 0 / 0";
+        trialProgressDisplay_Wrld.text = "Trial: 0 / 0";
+        blockProgressDisplay.text = "Block: 0 / 0";
+        blockProgressDisplay_Wrld.text = "Block: 0 / 0";
         SetStatus(GameStatus.Ready, "System Ready");
     }
 
@@ -51,13 +51,13 @@ public class UI_DisplayText : MonoBehaviour {
 //        statusDisplay.text = dis;
 //    }
 
-    public void SetProgressMovement(int c, int t) {
-        movementProgressDisplay.text = "Trial : " + c.ToString() + " / " + t.ToString();
-        movementProgressDisplay_Wrld.text = "Trial : " + c.ToString() + " / " + t.ToString();
+    public void SetTrialProgress(int c, int t) {
+        trialProgressDisplay.text = "Trial: " + c.ToString() + " / " + t.ToString();
+        trialProgressDisplay_Wrld.text = "Trial: " + c.ToString() + " / " + t.ToString();
     }
-    public void SetProgressTrial(int c, int t) {
-        trialProgressDisplay.text = "Block : " + c.ToString() + " / " + t.ToString();
-        trialProgressDisplay_Wrld.text = "Block : " + c.ToString() + " / " + t.ToString();
+    public void SetBlockProgress(int c, int t) {
+        blockProgressDisplay.text = "Block: " + c.ToString() + " / " + t.ToString();
+        blockProgressDisplay_Wrld.text = "Block: " + c.ToString() + " / " + t.ToString();
     }
     
     public void SetStatus(GameStatus s, string t) {

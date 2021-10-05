@@ -60,10 +60,10 @@ public class ReachTargetManager : MonoBehaviour{
         }
     }
 
-    private void TrialSequence_OnTargetAction(int targetNumber)
+    private void TrialSequence_OnTargetAction(int targetNumber, TrialEventType eType, float dur)
     {
         
-        Debug.Log(targetNumber + 1 + " : " + reachTarget[targetNumber].name.ToString() + " (EEG)");
+        //Debug.Log(targetNumber + " : " + reachTarget[targetNumber].name.ToString() + " (EEG)");
 
         for(int i=0; i<reachTarget.Length; i++)
         {
@@ -88,19 +88,20 @@ public class ReachTargetManager : MonoBehaviour{
 
         DAO.instance.ReachTarget = targetNumber + 1;
         
-        SendUDP_byte(targetNumber + 1);
-
         PlayBeep(1f);
 
-        if (oneShotTriggerUDP)
+        if (eType == TrialEventType.Target)
         {
-            StartCoroutine(TriggerReset());
+            SendUDP_byte(targetNumber + 1);
+
+            if (oneShotTriggerUDP) {
+                StartCoroutine(TriggerReset());
+            }
         }
-        
     }
-    private void TrialSequence_OnTargetRestAction(int targetNumber)
+    private void TrialSequence_OnTargetRestAction(int targetNumber, TrialEventType eType, float dur)
     {
-        Debug.Log(targetNumber+1 + " : " + reachTarget[targetNumber].name.ToString() + " (EEG)");
+        //Debug.Log(targetNumber + " : " + reachTarget[targetNumber].name.ToString() + " (EEG)");
 
         for (int i = 0; i < reachTarget.Length; i++)
         {
@@ -159,7 +160,7 @@ public class ReachTargetManager : MonoBehaviour{
     
     private void SendUDP_byte(int t)
     {
-        Debug.Log("Trigger Sent: " + t);
+        Debug.Log("UDP Trigger Sent: " + t);
         UDPClient.instance.SendData((byte)t);
     }
     

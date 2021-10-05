@@ -43,13 +43,15 @@ public class Settings : MonoBehaviour {
 	public int repetitions = 25; // num of sequences to run
 	[Range(10, 60)] 
 	public int startDelay = 60;
-	[Range(2, 10)] 
-	public int fixationDuration = 2;
-	[Range(2, 10)] 
-	public int arrowDuration = 2;
-	[Range(2, 10)] 
+	[Range(0, 5)] 
+	public float fixationDuration = 2;
+	[Range(0, 5)] 
+	public float arrowDuration = 2;
+	[Range(1, 10)] 
+	public float observationDuration = 2f; //observation time is the same as target time (ghost hand movement)
+	[Range(1, 10)] 
 	public int targetDuration = 2;
-	[Range(2, 10)] 
+	[Range(1, 10)] 
 	public float targetDurationGranular = 2f;
 	[Range(10, 60)] 
 	public int interBlockRestPeriod = 2;
@@ -273,6 +275,40 @@ public class Settings : MonoBehaviour {
 		TrialManager.instance.interBlockRestPeriod = interBlockRestPeriod;
 		SaveState();
 	}
+	public void SetFixationDuration(float num)
+	{
+		fixationDuration = num;
+		TrialSequence.instance.fixationDuration = fixationDuration;
+		SaveState();
+	}
+	public void SetArrowDuration(float num)
+	{
+		arrowDuration = num;
+		TrialSequence.instance.arrowDuration = arrowDuration;
+		SaveState();
+	}
+	public void SetObservationDuration(float num) {
+		observationDuration = num;
+		//modify the target duration here
+		//TODO 
+		//SetTargetDurationGranular(num);
+		TrialSequence.instance.observationDuration = observationDuration;
+		SaveState();
+	}
+	//target duration is not a granular float - this is from earlier iteration
+	public void SetTargetDuration(int num) {
+		targetDuration = num;
+		TrialSequence.instance.targetDuration = targetDuration;
+		SaveState();
+	}
+	public void SetTargetDurationGranular(float num) {
+		targetDurationGranular = num;
+		//TODO
+		//modify the observation duration here
+		//SetObservationDuration(num);
+		TrialSequence.instance.targetDuration = targetDurationGranular;
+		SaveState();
+	}
 	public void SetRestDurationMin(int num) {
 		restDurationMin = num;
 		TrialSequence.instance.restDurationMin = restDurationMin;
@@ -283,22 +319,11 @@ public class Settings : MonoBehaviour {
 		TrialSequence.instance.restDurationMax = restDurationMax;
 		SaveState();
 	}
-	public void SetTargetDuration(int num) {
-		targetDuration = num;
-		TrialSequence.instance.targetDuration = targetDuration;
-		SaveState();
-	}
-	public void SetTargetDurationGranular(float num) {
-		targetDurationGranular = num;
-		//TODO
-		TrialSequence.instance.targetDuration = targetDurationGranular;
-		SaveState();
-	}
-	public void SetInterRunRestPeriod(int num) {
-		//TODO set rest period here..
-		
-		SaveState();
-	}
+	// public void SetInterRunRestPeriod(int num) {
+	// 	//TODO set rest period here..
+	// 	
+	// 	SaveState();
+	// }
 	
 //----------INTERFACE----------------	
 
@@ -482,6 +507,10 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("repetitions", repetitions);
 		EasySave.Save("startDelay", startDelay);
 		EasySave.Save("interBlockRestPeriod", interBlockRestPeriod);
+		
+		EasySave.Save("fixationDuration", fixationDuration);
+		EasySave.Save("arrowDuration", arrowDuration);
+		EasySave.Save("observationDuration", observationDuration);
 		EasySave.Save("restDurationMin", restDurationMin);
 		EasySave.Save("restDurationMax", restDurationMax);
 		EasySave.Save("targetDuration", targetDuration);
@@ -604,10 +633,15 @@ public class Settings : MonoBehaviour {
 			repetitions = EasySave.Load<int>("repetitions");
 			startDelay = EasySave.Load<int>("startDelay");
 			interBlockRestPeriod = EasySave.Load<int>("interBlockRestPeriod");
-			restDurationMin = EasySave.Load<int>("restDurationMin");
-			restDurationMax = EasySave.Load<int>("restDurationMax");
+
+			
+			fixationDuration = EasySave.Load<float>("fixationDuration");
+			arrowDuration = EasySave.Load<float>("arrowDuration");
+			observationDuration = EasySave.Load<float>("observationDuration");
 			targetDuration = EasySave.Load<int>("targetDuration");
 			targetDurationGranular = EasySave.Load<float>("targetDurationGranular");
+			restDurationMin = EasySave.Load<int>("restDurationMin");
+			restDurationMax = EasySave.Load<int>("restDurationMax");
 
 			//environment
 			environment3D = EasySave.Load<bool>("environment3D");
@@ -668,10 +702,14 @@ public class Settings : MonoBehaviour {
 			repetitions = 25;
 			startDelay = 60;
 			interBlockRestPeriod = 15;
-			restDurationMin = 2;
-			restDurationMax = 2;
+
+			fixationDuration = 2f;
+			arrowDuration = 2f;
+			observationDuration = 2f;
 			targetDuration = 2;
 			targetDurationGranular = 2f;
+			restDurationMin = 2;
+			restDurationMax = 2;
 			
 			//environment 3d
 			environment3D = false;
@@ -728,10 +766,14 @@ public class Settings : MonoBehaviour {
 		SetRepetitions(repetitions);
 		SetStartDelay(startDelay);
 		SetInterBlockRestPeriod(interBlockRestPeriod);
-		SetRestDurationMin(restDurationMin);
-		SetRestDurationMax(restDurationMax);
+
+		SetFixationDuration(fixationDuration);
+		SetArrowDuration(arrowDuration);
+		SetObservationDuration(observationDuration);
 		SetTargetDuration(targetDuration);
 		SetTargetDurationGranular(targetDurationGranular);
+		SetRestDurationMin(restDurationMin);
+		SetRestDurationMax(restDurationMax);
 		
 		//Environment 3D
 		Set3DEnvironment(environment3D);

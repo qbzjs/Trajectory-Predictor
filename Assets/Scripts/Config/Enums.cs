@@ -9,13 +9,13 @@
 		Hz100
 	}
 	
-	public enum TrialSequence
+	public enum TrialEventType
     {
-		InitialWait,
-		Countdown,
-		Block,
-		RestPeriod,
-		EndWait
+		Fixation,
+		Arrow,
+		Target,
+		Observation,
+		Rest
     }
 	public enum RigType {AvatarRig, GhostRig}
 	
@@ -99,6 +99,9 @@
 		RestDurationMin,
 		RestDurationMax,
 		TargetDuration,
+		Fixation,
+		Arrow,
+		Observation
 	}
 	public enum TrialSettings{
 		ActionObservation,

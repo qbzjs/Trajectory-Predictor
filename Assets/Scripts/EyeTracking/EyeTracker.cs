@@ -182,7 +182,7 @@ namespace ViveSR
                     if (Settings.instance.recordTrajectory){
                         if (!recordEyeData && recordEnabled)
                         {
-                            Debug.Log("---- Start Eye Tracking Record : " + fileName);
+                            //Debug.Log("---- Start Eye Tracking Record : " + fileName);
                             //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
                             dataWriter = new DataWriter();
                             fileName = GenerateFileName();
@@ -192,7 +192,7 @@ namespace ViveSR
                         }
                         else
                         {
-                            Debug.Log("---- Stop Eye Tracking Tracking : " + fileName);
+                            //Debug.Log("---- Stop Eye Tracking Tracking : " + fileName);
                             recordEyeData = false;
                             dataWriter.WriteData(testID);
                         }

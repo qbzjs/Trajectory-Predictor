@@ -144,13 +144,15 @@ public class MotionTracker : MonoBehaviour
         TrialSequence.OnTargetRestAction -= TrialSequenceOnTargetRestAction;
     }
     
-    private void TrialSequenceOnTargetRestAction(int targetnumber){
+    private void TrialSequenceOnTargetRestAction(int targetnumber, TrialEventType eType, float dur)
+    {
 //        int tNum = targetnumber++;
 //        targetTag = (tNum + 10).ToString();
 //        Debug.Log(tNum + " :  Rest Target Trigger (Kinematic)");
     }
 
-    private void TrialSequenceOnTargetAction(int targetnumber){
+    private void TrialSequenceOnTargetAction(int targetnumber, TrialEventType eType, float dur)
+    {
 //        int tNum = targetnumber++;
 //        targetTag = tNum.ToString();
 //        Debug.Log(tNum + " :  Target Trigger (Kinematic)");
@@ -163,7 +165,7 @@ public class MotionTracker : MonoBehaviour
         if (Settings.instance.recordTrajectory){
             if (!recordTrajectory && recordEnabled)
             {
-                Debug.Log("---- Start Trajectory Tracking : " + fileName);
+                //Debug.Log("---- Start Trajectory Tracking : " + fileName);
                 //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
                 dataWriter = new DataWriter();
                 fileName = GenerateFileName();
@@ -173,7 +175,7 @@ public class MotionTracker : MonoBehaviour
             }
             else
             {
-                Debug.Log("---- Stop Trajectory Tracking : " + fileName);
+                //Debug.Log("---- Stop Trajectory Tracking : " + fileName);
                 recordTrajectory = false;
                 dataWriter.WriteData(testID);
             }

@@ -3,16 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Enums;
+using UnityEditor;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using TMPro;
 using Random = UnityEngine.Random;
 
 public class TrialSequence : MonoBehaviour {
     
     public static TrialSequence instance;
 
+    public TrialEventType trialEventType;
+    public TextMeshProUGUI sequenceDebugDisplay;
+    
     //TODO - add linear sequence
     public SequenceType sequenceType = SequenceType.Permutation;
+
+    private int tNumID;
     
     //SEQUENCE ACTIVE
     private bool runSequence = false;
@@ -28,17 +35,26 @@ public class TrialSequence : MonoBehaviour {
     public int repetitions = 25; // num of sequences to run
 //    [HideInInspector] 
     public int startDelay = 60;
+    
+    
 //    [HideInInspector] 
-    public float targetDuration = 2;
+    public float fixationDuration = 2f;
+    //    [HideInInspector] 
+    public float arrowDuration = 2f;
+    //    [HideInInspector] 
+    public float observationDuration = 2f;
+    //    [HideInInspector] 
+    public float targetDuration = 2f;
+
 //    [HideInInspector] 
-    [FormerlySerializedAs("restDuration")] 
+    public float restDuration;
     public int restDurationMin = 2;
 
     public float restDurationMax;
 
     private bool triggerSent = false;
 
-    [Header("SEQUENCE OBJECTS (rest last object)")]
+    [Header("SEQUENCE OBJECTS 2D (rest last object)")]
     public GameObject[] target = new GameObject[5];
     private GameObject[] t = new GameObject[5];
     [Space(5)]
@@ -50,13 +66,17 @@ public class TrialSequence : MonoBehaviour {
     public float duration;
     public int sequenceIndex = 0;
     public int sequenceCount = 0;
+    
+    private bool fixationSeq = false;
+    private bool arrowSeq = false;
+    private bool targetSeq = false;
 
     [Space(10)]
     public int[] sequenceOrder = new int[0];
 
-    public delegate void TargetAction(int targetNumber);
+    public delegate void TargetAction(int targetNumber, TrialEventType eType, float dur);
     public static event TargetAction OnTargetAction;
-    public delegate void TargetRestAction(int targetNumber);
+    public delegate void TargetRestAction(int targetNumber, TrialEventType eType, float dur);
     public static event TargetRestAction OnTargetRestAction;
 
     private void OnEnable(){
@@ -111,7 +131,7 @@ public class TrialSequence : MonoBehaviour {
         int targetCount = target.Length;
         sequenceOrder = CSC_Math.IntArray_from_ElementRepeatNumbers(targetCount, repetitions);
         sequenceOrder = CSC_Math.RandPerm_intArray(sequenceOrder);
-        UI_DisplayText.instance.SetProgressMovement(sequenceIndex, sequenceOrder.Length);
+        UI_DisplayText.instance.SetTrialProgress(sequenceIndex, sequenceOrder.Length);
         
     }
 
@@ -142,33 +162,11 @@ public class TrialSequence : MonoBehaviour {
         Settings.instance.Status = GameStatus.Running;
         UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Running");
     }
-//     public void StartTrial() {
-//         InitialiseSequence();
-// //        InitialiseTrial(); //initialised from settings
-//         if (!runSequence) {
-//             resting = true;
-//             duration = startDelay;           
-//             sequenceCount = 0;
-//             sequenceIndex = 0;
-//             elapsedTime = 0;
-//             runSequence = true;
-//             Debug.Log("-----TRIAL STARTED-----");
-//             RestTarget();
-//             Settings.instance.Status = GameStatus.Running;
-//             UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Running");
-//         }
-//     }
+
     public void StartTrial() {
         //InitialiseSequence();
         if (!runSequence) {
-            //resting = true;
-            //sequenceCount = 0;
-            //sequenceIndex = 0;
-            //elapsedTime = 0;
             Debug.Log("-----TRIAL STARTED-----");
-            //Settings.instance.Status = GameStatus.Running;
-            //UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Running");
-
             //Invoke("RunTrial", startDelay);  //startdelay now the waiting period
             RunTrial();
         }
@@ -178,14 +176,18 @@ public class TrialSequence : MonoBehaviour {
 //        InitialiseTrial(); //initialised from settings
         if (!runSequence) {
             resting = false;
-            duration = targetDuration;           
+            // duration = targetDuration;    
+            duration = GetTotalDuration();
             sequenceCount = 0;
             sequenceIndex = 0;
             elapsedTime = 0;
             sequenceComplete = false;
+            elapsedTime = duration;
             runSequence = true;
-            Debug.Log("-----TRIAL STARTED-----");
-            SetTarget();
+            
+            // Debug.Log("-----TRIAL STARTED-----");
+            //SetTarget();
+            //StartCoroutine(SetTargetSequence()); //TRIAL EVENT SEQUENCE
             Settings.instance.Status = GameStatus.Running;
             UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Running");
         }
@@ -199,97 +201,197 @@ public class TrialSequence : MonoBehaviour {
         //stops sending an extra rest event at end of sequence
         if (!sequenceComplete)
         {
-            RestTarget();
+            StartCoroutine(RestTarget());
         }
         
         Debug.Log("-----TRIAL STOPPED----- ");
         Settings.instance.Status = GameStatus.Ready;
         UI_DisplayText.instance.SetStatus(Settings.instance.Status, "System Ready");
-        UI_DisplayText.instance.SetProgressMovement(sequenceIndex, sequenceOrder.Length);
+        UI_DisplayText.instance.SetTrialProgress(sequenceIndex, sequenceOrder.Length);
     }
 
+    // void Update()
+    // {
+    //     if (runSequence && sequenceCount < repetitions)
+    //     {
+    //         elapsedTime += Time.deltaTime;
+    //         if (elapsedTime >= duration)
+    //         {
+    //             elapsedTime = 0; 
+    //             
+    //             if (!resting) {
+    //                 resting = true;
+    //                 if (restDurationMax <= restDurationMin)
+    //                 {
+    //                     duration = restDurationMin;
+    //                 }
+    //                 else
+    //                 {
+    //                     restDuration=  Random.Range(restDurationMin,restDurationMax);
+    //                     duration = restDuration;
+    //                 }
+    //                 StartCoroutine(RestTarget());
+    //                 if (sequenceComplete)
+    //                 {
+    //                     runSequence = false;
+    //                     sequenceIndex = 0;
+    //                     elapsedTime = 0;
+    //                     StartCoroutine(CompleteSequence());
+    //                 }
+    //             }
+    //             else {
+    //                 resting = false;
+    //                 // duration = targetDuration;
+    //                 duration = GetTotalDuration();
+    //                 //SetTarget(); //new trial target started
+    //                 StartCoroutine(SetTargetSequence()); //TRIAL EVENT SEQUENCE
+    //             }
+    //         }
+    //     }
+    // }
 
-    private bool fixationSeq = false;
-    private bool arrowSeq = false;
-    private bool targetSeq = false;
-    
-    void Update()
+    private void Update()
     {
         if (runSequence && sequenceCount < repetitions)
         {
             elapsedTime += Time.deltaTime;
-            if (elapsedTime > duration)
+            if (elapsedTime >= duration)
             {
                 elapsedTime = 0; 
                 
-                if (!resting) {
-                    resting = true;
-                    if (restDurationMax <= restDurationMin)
-                    {
-                        duration = restDurationMin;
-                    }
-                    else
-                    {
-                        duration =  Random.Range(restDurationMin,restDurationMax);
-                    }
-                    RestTarget();
-                    if (sequenceComplete)
-                    {
-                        runSequence = false;
-                        sequenceIndex = 0;
-                        elapsedTime = 0;
-                        StartCoroutine(CompleteSequence());
-                    }
-                }
-                else {
-                    resting = false;
-                    duration = targetDuration;
-                    SetTarget(); //new trial target started
-                }
+                StartCoroutine(SetTargetSequence()); //TRIAL EVENT SEQUENCE
+                
             }
         }
-
     }
 
-    //duration = fixation time + arrow time + target time
+
+    private float GetTotalDuration() {
+        float d = fixationDuration + arrowDuration + observationDuration + targetDuration;
+        if (!Settings.instance.actionObservation) {
+            d = d - observationDuration;
+        }
+        return d;
+    }
+
+    private float GetRestDuration()
+    {
+        float d = Random.Range(restDurationMin,restDurationMax);
+        resting = true;
+        if (restDurationMax <= restDurationMin)
+        {
+            d = restDurationMin;
+        }
+        return d;
+    }
+
+    // //SetTarget() - triggers the target sequence - events are generated in timed stages from here
+    // private IEnumerator TargetSequence(TrialEventType type, float dur)
+    // {
+    //     Debug.Log("EVENT: " + type.ToString() + " - TIMING: " + dur.ToString()); //send fixation event
+    //     
+    //     yield return new WaitForSeconds(dur);
+    // }
+    private IEnumerator SetTargetSequence()
+    {
+        restDuration = GetRestDuration();
+        duration = GetTotalDuration() + restDuration;
+        
+        
+        tNumID = sequenceOrder[sequenceIndex];
+        
+        //update display
+        UI_DisplayText.instance.SetTrialProgress(sequenceIndex+1, sequenceOrder.Length);
+
+        trialEventType = TrialEventType.Fixation;
+        Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + fixationDuration.ToString()); //send fixation event
+        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + fixationDuration.ToString() +"s";
+        SendEvent(tNumID, trialEventType, fixationDuration);
+        yield return new WaitForSeconds(fixationDuration);
+        
+        trialEventType = TrialEventType.Arrow;
+        Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + arrowDuration.ToString()); //send arrow event
+        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + arrowDuration.ToString() +"s";
+        SendEvent(tNumID, trialEventType, arrowDuration);
+        yield return new WaitForSeconds(arrowDuration);
+
+        if (Settings.instance.actionObservation)
+        {
+            trialEventType = TrialEventType.Observation;
+            Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + observationDuration.ToString()); //send observation event
+            sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + observationDuration.ToString()+"s";
+            SendEvent(tNumID, trialEventType, observationDuration);
+            yield return new WaitForSeconds(observationDuration);
+        }
+
+        trialEventType = TrialEventType.Target;
+        Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + targetDuration.ToString()); //send target event
+        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + targetDuration.ToString()+"s";
+        SendEvent(tNumID, trialEventType, targetDuration);
+        yield return new WaitForSeconds(targetDuration);
+
+        
+        
+        trialEventType = TrialEventType.Rest;
+        
+        Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + restDuration.ToString()); //send target event
+        SendEvent(tNumID, trialEventType, restDuration);
+        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + restDuration.ToString()+"s";
+        yield return new WaitForSeconds(restDuration);
+        
+        sequenceIndex++;
+        
+        if (sequenceIndex >= sequenceOrder.Length) {
+            sequenceComplete = true;
+            runSequence = false;
+            StartCoroutine(CompleteSequence());
+            sequenceIndex = 0;
+            elapsedTime = 0;
+        }
+        // if (sequenceComplete)
+        // {
+        //     runSequence = false;
+        //     sequenceIndex = 0;
+        //     elapsedTime = 0;
+        //     StartCoroutine(CompleteSequence());
+        // }
+    }
     
-    //initialise
-    //fixation
-    //arrow
-    //target
-    //reset
-    
-    
-    //------PERMUTATION GENERATION
     private void SetTarget() 
     {
-//      Debug.Log("Set Target");
-
-        for (int i = 0; i < target.Length; i++)
-        {
-            target[i].GetComponent<Renderer>().material = defaultMaterial;
-        }
-
-        int tNumID = sequenceOrder[sequenceIndex];
-        int tNum = tNumID+1;
         
-        //3D Target Event
-        if (OnTargetAction != null)
-        {
-            OnTargetAction(tNumID);
-        }
+        // //For 2D
+        // for (int i = 0; i < target.Length; i++)
+        // {
+        //     target[i].GetComponent<Renderer>().material = defaultMaterial;
+        // }
 
-        //2D Target Highlight
-        target[tNumID].GetComponent<Renderer>().material = highlightedMaterial;
-        if (animateTargets) {
-            target[tNumID].GetComponent<TargetAnimator>().ScaleTarget();
-        }
+        //MOVE TO UPDATE - tNum should be available before event sequence
+        
+        tNumID = sequenceOrder[sequenceIndex];
+
+        // //3D Target Event OLD VERSION **** MOVED TO TARGET SEQUENCE
+        // if (OnTargetAction != null)
+        // {
+        //     //OnTargetAction(tNumID);
+        // }
+
+        //For 2D
+        //TODO - redo 2D once 3D system is working (no priority - additional work)
+        //2D Target Highlight 
+        // target[tNumID].GetComponent<Renderer>().material = highlightedMaterial;
+        // if (animateTargets) {
+        //     target[tNumID].GetComponent<TargetAnimator>().ScaleTarget();
+        // }
+        
+        //next sequence index - this is for next target
+        
         sequenceIndex++;
         
         //update display
-        UI_DisplayText.instance.SetProgressMovement(sequenceIndex, sequenceOrder.Length);
+        UI_DisplayText.instance.SetTrialProgress(sequenceIndex, sequenceOrder.Length);
 
-        //TODO NEEDS TO EXECUTE AFTER REST (THIS IS STOPPING THE UPDATEON LAST TARGET
+        //TODO NEEDS TO EXECUTE AFTER REST (THIS IS STOPPING THE UPDATE ON LAST TARGET - Not sure what this is??? (old note) (possibly fixed by 'CompleteSequence()'
         if (sequenceIndex >= sequenceOrder.Length)
         {
             sequenceComplete = true;
@@ -300,39 +402,67 @@ public class TrialSequence : MonoBehaviour {
         }
     }
 
-
-    private void SendUDP_byte(int t)
+    private void SendEvent(int tNum, TrialEventType eType, float dur)
     {
-        UDPClient.instance.SendData((byte)t);
-        //        Debug.Log("Value to send : " + value);
-    }
-
-    private void RestTarget() {
-        for (int i = 0; i < target.Length; i++)
-        {
-            target[i].GetComponent<Renderer>().material = defaultMaterial;
+        if (eType != TrialEventType.Rest) {
+            if (OnTargetAction != null) {
+                OnTargetAction(tNum,eType,dur);
+            }
         }
+        else {
+            if (OnTargetRestAction != null) {
+                OnTargetRestAction(tNum,eType,dur);
+            }
+        }
+    }
+    
 
-        int tNumID = sequenceOrder[sequenceIndex];
+    // private void SendUDP_byte(int t)
+    // {
+    //     UDPClient.instance.SendData((byte)t);
+    //     //        Debug.Log("Value to send : " + value);
+    // }
 
+    private IEnumerator RestTarget() {
+        
+        //frame delay for tNum to generate
+        yield return new WaitForEndOfFrame();
+
+
+        //FOR 2D
+        // for (int i = 0; i < target.Length; i++)
+        // {
+        //     target[i].GetComponent<Renderer>().material = defaultMaterial;
+        // }
+
+        tNumID = sequenceOrder[sequenceIndex];
+
+        //**** MOVED TO TARGET SEQUENCE
         if (OnTargetRestAction != null)
         {
-            OnTargetRestAction(tNumID);
+            //OnTargetRestAction(tNumID);
         }
+        
+        trialEventType = TrialEventType.Rest;
+        SendEvent(tNumID, trialEventType, restDuration);
 
-        Debug.Log("Rest : " + tNumID);
+        Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + restDuration.ToString()); //send target event
+        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + restDuration.ToString()+"s";
+        
     }
     private IEnumerator CompleteSequence()
     {
         yield return new WaitForSeconds(targetDuration);
-        for (int i = 0; i < target.Length; i++)
-        {
-            target[i].GetComponent<Renderer>().material = defaultMaterial;
-        }
+        
+        //FOR 2D
+        // for (int i = 0; i < target.Length; i++)
+        // {
+        //     target[i].GetComponent<Renderer>().material = defaultMaterial;
+        // }
         
         TrialControls.instance.SetStop();
         
-        yield return new WaitForSeconds(restDurationMin);
+        yield return new WaitForSeconds(restDuration);
         
         Debug.Log("-----SEQUENCE COMPLETED-----");
         Settings.instance.Status = GameStatus.Ready;
@@ -340,10 +470,5 @@ public class TrialSequence : MonoBehaviour {
 
         TrialManager.instance.BlockComplete();
 
-//        yield return new WaitForSeconds(targetDuration);
-//        Debug.Log("-----SEQUENCE READY-----");
-//        Settings.instance.Status = GameStatus.Ready;
-//        UI_DisplayText.instance.SetStatus(Settings.instance.Status);
-//        UI_DisplayText.instance.SetComplete("");
     }
 }

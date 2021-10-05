@@ -24,9 +24,23 @@ public class SetFloatSettings : MonoBehaviour
     }
 
     private void Initialise() {
+        if (trialSettingValue == TrialSettingsValue.Fixation) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.fixationDuration);
+        }
+        if (trialSettingValue == TrialSettingsValue.Arrow) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.arrowDuration);
+        }
+        if (trialSettingValue == TrialSettingsValue.Observation) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.observationDuration);
+            SetNumber(Settings.instance.targetDurationGranular);
+        }
         if (trialSettingValue == TrialSettingsValue.TargetDuration) {
             valueDisplay = "<size=-10>s";
             SetNumber(Settings.instance.targetDurationGranular);
+            SetNumber(Settings.instance.observationDuration);
         }
     }
     private void SetNumber(float n) {
@@ -76,9 +90,23 @@ public class SetFloatSettings : MonoBehaviour
         numberText.color = defaultColour;
     }
     private void SetValue(float v) {
+        if (trialSettingValue == TrialSettingsValue.Fixation) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetFixationDuration(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.Arrow) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetArrowDuration(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.Observation) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetObservationDuration(v);
+            Settings.instance.SetTargetDurationGranular(v);
+        }
         if (trialSettingValue == TrialSettingsValue.TargetDuration) {
             valueDisplay = "<size=-10>s";
             Settings.instance.SetTargetDurationGranular(v);
+            Settings.instance.SetObservationDuration(v);
         }
     }
 }
