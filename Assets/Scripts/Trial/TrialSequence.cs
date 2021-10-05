@@ -207,6 +207,12 @@ public class TrialSequence : MonoBehaviour {
         UI_DisplayText.instance.SetStatus(Settings.instance.Status, "System Ready");
         UI_DisplayText.instance.SetProgressMovement(sequenceIndex, sequenceOrder.Length);
     }
+
+
+    private bool fixationSeq = false;
+    private bool arrowSeq = false;
+    private bool targetSeq = false;
+    
     void Update()
     {
         if (runSequence && sequenceCount < repetitions)
@@ -238,17 +244,26 @@ public class TrialSequence : MonoBehaviour {
                 else {
                     resting = false;
                     duration = targetDuration;
-                    SetTarget();
+                    SetTarget(); //new trial target started
                 }
             }
         }
 
     }
 
+    //duration = fixation time + arrow time + target time
+    
+    //initialise
+    //fixation
+    //arrow
+    //target
+    //reset
+    
+    
     //------PERMUTATION GENERATION
     private void SetTarget() 
     {
-//        Debug.Log("Set Target");
+//      Debug.Log("Set Target");
 
         for (int i = 0; i < target.Length; i++)
         {
@@ -257,15 +272,7 @@ public class TrialSequence : MonoBehaviour {
 
         int tNumID = sequenceOrder[sequenceIndex];
         int tNum = tNumID+1;
-
-       // // if (!triggerSent){
-       //      //SEND VALUE TO UDP
-       //      SendUDP_byte(tNum);
-       //      SendUDP_byte(0);
-       //      Debug.Log("trigger sent");
-       //  //    triggerSent = true;
-       //  //}
-
+        
         //3D Target Event
         if (OnTargetAction != null)
         {

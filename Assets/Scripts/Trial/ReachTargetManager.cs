@@ -162,4 +162,43 @@ public class ReachTargetManager : MonoBehaviour{
         Debug.Log("Trigger Sent: " + t);
         UDPClient.instance.SendData((byte)t);
     }
+    
+    //******temp
+    
+    // void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.Alpha0))
+    //     {
+    //         Debug.Log("target centre");
+    //         SetTarget(0);
+    //     }
+    //     if (Input.GetKeyDown(KeyCode.Alpha1))
+    //     {
+    //         Debug.Log("target left");
+    //         SetTarget(1);
+    //     }
+    //     if (Input.GetKeyDown(KeyCode.Alpha2))
+    //     {
+    //         Debug.Log("target top");
+    //         SetTarget(2);
+    //     }
+    //     if (Input.GetKeyDown(KeyCode.Alpha3))
+    //     {
+    //         Debug.Log("target right");
+    //         SetTarget(3);
+    //     }
+    //     if (Input.GetKeyDown(KeyCode.Alpha4))
+    //     {
+    //         Debug.Log("target bottom");
+    //         SetTarget(4);
+    //     }
+    // }
+    //
+    // public void SetTarget(int tNum)
+    // {
+    //     TargetController controller;
+    //     controller = gameObject.GetComponent<TargetController>();
+    //     controller.Target(tNum);
+    // }
+    
 }

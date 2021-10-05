@@ -44,6 +44,10 @@ public class Settings : MonoBehaviour {
 	[Range(10, 60)] 
 	public int startDelay = 60;
 	[Range(2, 10)] 
+	public int fixationDuration = 2;
+	[Range(2, 10)] 
+	public int arrowDuration = 2;
+	[Range(2, 10)] 
 	public int targetDuration = 2;
 	[Range(2, 10)] 
 	public float targetDurationGranular = 2f;
