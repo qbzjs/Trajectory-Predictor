@@ -23,8 +23,6 @@ public class TrialSequence : MonoBehaviour {
     
     //SEQUENCE ACTIVE
     private bool runSequence = false;
-    public bool resting = false;
-    public bool animateTargets;
 
     public bool sequenceComplete;
     
@@ -65,8 +63,7 @@ public class TrialSequence : MonoBehaviour {
     public float elapsedTime;
     public float duration;
     public int sequenceIndex = 0;
-    public int sequenceCount = 0;
-    
+
     private bool fixationSeq = false;
     private bool arrowSeq = false;
     private bool targetSeq = false;
@@ -91,11 +88,6 @@ public class TrialSequence : MonoBehaviour {
     }
 
     void Start() {
-        for (int i = 0; i < target.Length; i++)
-        {
-            target[i].GetComponent<Renderer>().material = defaultMaterial;
-        }
-        
         //InitialiseSequence();
         Settings.instance.Status = GameStatus.Ready;
         UI_DisplayText.instance.SetStatus(Settings.instance.Status,"System Ready");
@@ -143,8 +135,6 @@ public class TrialSequence : MonoBehaviour {
         }
 
         //InitialiseSequence();
-        resting = true;
-        sequenceCount = 0;
         sequenceIndex = 0;
         elapsedTime = 0;
         Settings.instance.Status = GameStatus.Ready;
@@ -154,8 +144,6 @@ public class TrialSequence : MonoBehaviour {
     public void Initialise()
     {
         InitialiseSequence();
-        resting = true;
-        sequenceCount = 0;
         sequenceIndex = 0;
         elapsedTime = 0;
         Debug.Log("-----TRIAL INITIALISED-----");
@@ -167,27 +155,21 @@ public class TrialSequence : MonoBehaviour {
         //InitialiseSequence();
         if (!runSequence) {
             Debug.Log("-----TRIAL STARTED-----");
-            //Invoke("RunTrial", startDelay);  //startdelay now the waiting period
             RunTrial();
         }
     }
     public void RunTrial() {
-        //InitialiseSequence();
-//        InitialiseTrial(); //initialised from settings
+
         if (!runSequence) {
-            resting = false;
             // duration = targetDuration;    
-            duration = GetTotalDuration();
-            sequenceCount = 0;
+            restDuration = GetRestDuration();
+            duration = GetTotalDuration() + restDuration;
             sequenceIndex = 0;
             elapsedTime = 0;
             sequenceComplete = false;
             elapsedTime = duration;
             runSequence = true;
-            
-            // Debug.Log("-----TRIAL STARTED-----");
-            //SetTarget();
-            //StartCoroutine(SetTargetSequence()); //TRIAL EVENT SEQUENCE
+
             Settings.instance.Status = GameStatus.Running;
             UI_DisplayText.instance.SetStatus(Settings.instance.Status, "Trial Running");
         }
@@ -195,7 +177,6 @@ public class TrialSequence : MonoBehaviour {
     public void StopTrial() {
         CancelInvoke();
         runSequence = false;
-        sequenceCount = 0;
         sequenceIndex = 0;
         elapsedTime = 0;
         //stops sending an extra rest event at end of sequence
@@ -250,22 +231,77 @@ public class TrialSequence : MonoBehaviour {
     //     }
     // }
 
+    
     private void Update()
     {
-        if (runSequence && sequenceCount < repetitions)
+        if (runSequence && sequenceIndex < sequenceOrder.Length)
         {
             elapsedTime += Time.deltaTime;
-            if (elapsedTime >= duration)
-            {
+            if (elapsedTime >= duration ){
                 elapsedTime = 0; 
-                
+                Debug.Log(sequenceIndex + " ---------------------------------------------");
                 StartCoroutine(SetTargetSequence()); //TRIAL EVENT SEQUENCE
-                
             }
         }
+
     }
+    
+    private IEnumerator SetTargetSequence()
+    {
+        restDuration = GetRestDuration();
+        duration = GetTotalDuration() + restDuration;
+        
+        tNumID = sequenceOrder[sequenceIndex];
+        
+        //update display
+        UI_DisplayText.instance.SetTrialProgress(sequenceIndex+1, sequenceOrder.Length);
 
+        trialEventType = TrialEventType.Fixation;
+        //Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + fixationDuration.ToString()); //send fixation event
+        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + fixationDuration.ToString() +"s";
+        SendEvent(tNumID, trialEventType, fixationDuration);
+        yield return new WaitForSeconds(fixationDuration);
+        
+        trialEventType = TrialEventType.Arrow;
+        //Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + arrowDuration.ToString()); //send arrow event
+        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + arrowDuration.ToString() +"s";
+        SendEvent(tNumID, trialEventType, arrowDuration);
+        yield return new WaitForSeconds(arrowDuration);
 
+        if (Settings.instance.actionObservation)
+        {
+            trialEventType = TrialEventType.Observation;
+            //Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + observationDuration.ToString()); //send observation event
+            sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + observationDuration.ToString()+"s";
+            SendEvent(tNumID, trialEventType, observationDuration);
+            yield return new WaitForSeconds(observationDuration);
+        }
+
+        trialEventType = TrialEventType.Target;
+        //Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + targetDuration.ToString()); //send target event
+        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + targetDuration.ToString()+"s";
+        SendEvent(tNumID, trialEventType, targetDuration);
+        yield return new WaitForSeconds(targetDuration);
+
+        
+        trialEventType = TrialEventType.Rest;
+        
+        //Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + restDuration.ToString()); //send target event
+        SendEvent(tNumID, trialEventType, restDuration);
+        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + restDuration.ToString()+"s";
+        yield return new WaitForSeconds(restDuration);
+        
+        sequenceIndex++;
+
+        if (sequenceIndex >= sequenceOrder.Length){
+            sequenceComplete = true;
+            runSequence = false;
+            StartCoroutine(CompleteSequence());
+            sequenceIndex = 0;
+            elapsedTime = 0;
+        }
+        
+    }
     private float GetTotalDuration() {
         float d = fixationDuration + arrowDuration + observationDuration + targetDuration;
         if (!Settings.instance.actionObservation) {
@@ -277,84 +313,11 @@ public class TrialSequence : MonoBehaviour {
     private float GetRestDuration()
     {
         float d = Random.Range(restDurationMin,restDurationMax);
-        resting = true;
         if (restDurationMax <= restDurationMin)
         {
             d = restDurationMin;
         }
         return d;
-    }
-
-    // //SetTarget() - triggers the target sequence - events are generated in timed stages from here
-    // private IEnumerator TargetSequence(TrialEventType type, float dur)
-    // {
-    //     Debug.Log("EVENT: " + type.ToString() + " - TIMING: " + dur.ToString()); //send fixation event
-    //     
-    //     yield return new WaitForSeconds(dur);
-    // }
-    private IEnumerator SetTargetSequence()
-    {
-        restDuration = GetRestDuration();
-        duration = GetTotalDuration() + restDuration;
-        
-        
-        tNumID = sequenceOrder[sequenceIndex];
-        
-        //update display
-        UI_DisplayText.instance.SetTrialProgress(sequenceIndex+1, sequenceOrder.Length);
-
-        trialEventType = TrialEventType.Fixation;
-        Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + fixationDuration.ToString()); //send fixation event
-        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + fixationDuration.ToString() +"s";
-        SendEvent(tNumID, trialEventType, fixationDuration);
-        yield return new WaitForSeconds(fixationDuration);
-        
-        trialEventType = TrialEventType.Arrow;
-        Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + arrowDuration.ToString()); //send arrow event
-        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + arrowDuration.ToString() +"s";
-        SendEvent(tNumID, trialEventType, arrowDuration);
-        yield return new WaitForSeconds(arrowDuration);
-
-        if (Settings.instance.actionObservation)
-        {
-            trialEventType = TrialEventType.Observation;
-            Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + observationDuration.ToString()); //send observation event
-            sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + observationDuration.ToString()+"s";
-            SendEvent(tNumID, trialEventType, observationDuration);
-            yield return new WaitForSeconds(observationDuration);
-        }
-
-        trialEventType = TrialEventType.Target;
-        Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + targetDuration.ToString()); //send target event
-        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + targetDuration.ToString()+"s";
-        SendEvent(tNumID, trialEventType, targetDuration);
-        yield return new WaitForSeconds(targetDuration);
-
-        
-        
-        trialEventType = TrialEventType.Rest;
-        
-        Debug.Log("TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + restDuration.ToString()); //send target event
-        SendEvent(tNumID, trialEventType, restDuration);
-        sequenceDebugDisplay.text = "TARGET: " + tNumID + " - EVENT: " + trialEventType.ToString() + " - TIMING: " + restDuration.ToString()+"s";
-        yield return new WaitForSeconds(restDuration);
-        
-        sequenceIndex++;
-        
-        if (sequenceIndex >= sequenceOrder.Length) {
-            sequenceComplete = true;
-            runSequence = false;
-            StartCoroutine(CompleteSequence());
-            sequenceIndex = 0;
-            elapsedTime = 0;
-        }
-        // if (sequenceComplete)
-        // {
-        //     runSequence = false;
-        //     sequenceIndex = 0;
-        //     elapsedTime = 0;
-        //     StartCoroutine(CompleteSequence());
-        // }
     }
     
     private void SetTarget() 
@@ -453,13 +416,7 @@ public class TrialSequence : MonoBehaviour {
     private IEnumerator CompleteSequence()
     {
         yield return new WaitForSeconds(targetDuration);
-        
-        //FOR 2D
-        // for (int i = 0; i < target.Length; i++)
-        // {
-        //     target[i].GetComponent<Renderer>().material = defaultMaterial;
-        // }
-        
+
         TrialControls.instance.SetStop();
         
         yield return new WaitForSeconds(restDuration);

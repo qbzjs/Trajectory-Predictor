@@ -425,7 +425,8 @@ public class Settings : MonoBehaviour {
 //----------FEEDBACK--------------------
 	public void SetAnimateTargets(bool t) {
 		animateTargets = t;
-		TrialSequence.instance.animateTargets = animateTargets;
+		//this is accessed from settings
+		//TrialSequence.instance.animateTargets = animateTargets;
 		SaveState();
 	}
 	
