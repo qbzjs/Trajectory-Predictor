@@ -29,12 +29,12 @@ public class SetTrialType : MonoBehaviour {
 			fourButton.image.color = initialColour;
 			threeButton.image.color = initialColour;
 		}
-		if (trialType == TrialType.Four_Targets) {
+		if (trialType == TrialType.Vertical) {
 			centreOutButton.image.color = initialColour;
 			threeButton.image.color = initialColour;
 			fourButton.image.color = highlightedColour;
 		}
-		if(trialType == TrialType.Three_Targets){
+		if(trialType == TrialType.Horizontal){
 			threeButton.image.color = highlightedColour;
 			fourButton.image.color = initialColour;
 			centreOutButton.image.color = initialColour;
@@ -51,12 +51,12 @@ public class SetTrialType : MonoBehaviour {
 		threeButton.image.color = initialColour;
 		centreOutButton.image.color = initialColour;
 		fourButton.image.color = highlightedColour;
-		Settings.instance.SetTrialType(TrialType.Four_Targets);
+		Settings.instance.SetTrialType(TrialType.Vertical);
 	}
 	public void SetThree () {
 		threeButton.image.color = highlightedColour;
 		fourButton.image.color = initialColour;
 		centreOutButton.image.color = initialColour;
-		Settings.instance.SetTrialType(TrialType.Three_Targets);
+		Settings.instance.SetTrialType(TrialType.Horizontal);
 	}
 }

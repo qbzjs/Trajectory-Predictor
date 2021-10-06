@@ -20,8 +20,8 @@
 	public enum RigType {AvatarRig, GhostRig}
 	
 	public enum TrialType{
-		Three_Targets,
-		Four_Targets,
+		Horizontal,
+		Vertical,
 		CentreOut
 	}
 
@@ -136,17 +136,9 @@
 		Complete
 	}
 
-	public enum UserInput{
-		GamePad_A,
-		GamePad_B,
-		GamePad_X,
-		GamePad_Y,
-		L_Button,
-		R_Button,
-		Up,
-		Down,
-		Left,
-		Right
+	public enum UserInputType{
+		Start,
+		Stop
 	}
 
 }

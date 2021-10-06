@@ -48,10 +48,10 @@ public class SetNumberSettings : MonoBehaviour {
             valueDisplay = "<size=-10>s";
             SetNumber(Settings.instance.restDurationMax);
         }
-        if (trialSettingValue == TrialSettingsValue.TargetDuration) {
-            valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.targetDuration);
-        }
+        // if (trialSettingValue == TrialSettingsValue.TargetDuration) {
+        //     valueDisplay = "<size=-10>s";
+        //     SetNumber(Settings.instance.targetDuration);
+        // }
     }
     private void SetNumber(int n) {
         numberText.text = n.ToString() + valueDisplay;
@@ -124,9 +124,9 @@ public class SetNumberSettings : MonoBehaviour {
             valueDisplay = "<size=-10>s";
             Settings.instance.SetRestDurationMax(v);
         }
-        if (trialSettingValue == TrialSettingsValue.TargetDuration) {
-            valueDisplay = "<size=-10>s";
-            Settings.instance.SetTargetDuration(v);
-        }
+        // if (trialSettingValue == TrialSettingsValue.TargetDuration) {
+        //     valueDisplay = "<size=-10>s";
+        //     Settings.instance.SetTargetDuration(v);
+        // }
     }
 }

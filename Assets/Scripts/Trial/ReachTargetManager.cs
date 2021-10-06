@@ -34,15 +34,16 @@ public class ReachTargetManager : MonoBehaviour{
     public static event TargetRestAction OnTargetRestAction;
 
 
+    //TODO----------------NEW EVENTS
     private void OnEnable()
     {
-        TrialSequence.OnTargetAction += TrialSequence_OnTargetAction;
-        TrialSequence.OnTargetRestAction += TrialSequence_OnTargetRestAction;
+        // TrialSequence.OnTargetAction += TrialSequence_OnTargetAction;
+        // TrialSequence.OnTargetRestAction += TrialSequence_OnTargetRestAction;
     }
     private void OnDisable()
     {
-        TrialSequence.OnTargetAction -= TrialSequence_OnTargetAction;
-        TrialSequence.OnTargetRestAction -= TrialSequence_OnTargetRestAction;
+        // TrialSequence.OnTargetAction -= TrialSequence_OnTargetAction;
+        // TrialSequence.OnTargetRestAction -= TrialSequence_OnTargetRestAction;
     }
 
     void Awake(){

@@ -7,6 +7,10 @@ public class DAO : MonoBehaviour
     
     public static DAO instance;
 
+    public BlockSequenceGenerator blockSequence;
+    
+    private int startingBlock = 101;
+    
     public MotionDataFormat motionDataLeftWrist;
     public MotionDataFormat motionDataRightWrist;
     public MotionDataFormat motionData_Head;
@@ -20,6 +24,20 @@ public class DAO : MonoBehaviour
 
     }
 
+    public int StartingBlock
+    {
+        get { return startingBlock; }
+        set { startingBlock = value; }
+    }
+    public BlockSequenceGenerator BlockSequence 
+    {
+        get { return blockSequence; }
+        set { blockSequence = value; }
+    }
+    
+    
+    
+    //***** MOTION DATAS *************************************
     public MotionDataFormat MotionData_LeftWrist
     {
         get { return motionDataLeftWrist; }

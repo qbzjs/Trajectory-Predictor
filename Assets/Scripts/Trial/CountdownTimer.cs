@@ -16,6 +16,7 @@ public class CountdownTimer : MonoBehaviour
     public bool timerEnabled = false;
     public float timer;
     public int timerDisplay;
+    public bool timeUp;
 
     void Awake()
     {
@@ -31,6 +32,7 @@ public class CountdownTimer : MonoBehaviour
     public void SetCountdown(int t)
     {
         timer = t;
+        timeUp = false;
         timerEnabled = true;
     }
     void Update()
@@ -71,12 +73,18 @@ public class CountdownTimer : MonoBehaviour
                 {
                     countdownDisplayUI[i].text = "";
                 }
-
-                TrialManager.instance.StartBlock();
+                
                 timerEnabled = false;
                 timer = 0;
+                timeUp = true;
+                BlockManager.instance.StartBlock();
+                //??? generate event
                 //done
             }
         }
+    }
+
+    public bool TimerComplete(){
+        return timeUp;
     }
 }

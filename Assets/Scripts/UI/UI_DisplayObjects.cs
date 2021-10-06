@@ -26,13 +26,16 @@ public class UI_DisplayObjects : MonoBehaviour {
 	public GameObject progressDisplayTrial;
 	public GameObject countdownDisplay;
 	public GameObject FPS;
-	public GameObject rest;
-	public GameObject outerLines;
-	public GameObject innerLinesA;
-	public GameObject innerLinesB;
-	public GameObject ringOuter;
+	
+	//----REDACTED FROM v2
+	// public GameObject rest;
+	// public GameObject outerLines;
+	// public GameObject innerLinesA;
+	// public GameObject innerLinesB;
+	// public GameObject ringOuter;
 
 
+	
 	// public GameObject environment3D;
 	// public GameObject interface3D;
 	// public GameObject renderTexture2D;

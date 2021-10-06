@@ -130,8 +130,11 @@ public class Settings : MonoBehaviour {
 		InitialiseInterface();
 		displayObjects.settingsPanel.SetActive(true);
 		displayObjects.TrialUI.SetActive(true);
-		displayObjects.trial2D.SetActive(true);
-		displayObjects.trial2D_RenderTexture.SetActive(true);
+		
+		//DEPRECIATED from V2 - readd in different context in  later version
+		// displayObjects.trial2D.SetActive(true);
+		// displayObjects.trial2D_RenderTexture.SetActive(true);
+		
 		active = true;
 		//ToggleSettings(); // use to start in or out of settings menu
 	}
@@ -174,42 +177,40 @@ public class Settings : MonoBehaviour {
 
 	public void SetTrialType(TrialType type) {
 		trialType = type;
-		TrialSequence.instance.trialType = trialType;
-		TrialSequence.instance.InitialiseTrial();
-		if (trialType == TrialType.Four_Targets && initialised) {
+
+		if (trialType == TrialType.Vertical && initialised) {
 			restVisible = true;
 			SetRestVisible(restVisible);
-			//			settingsPanel.transform.Find("Rest Toggle").transform.Find("Rest Toggle").GetComponent<Toggle>().isOn = restVisible;
 			displayObjects.settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise();
 		}
-		if (trialType == TrialType.Three_Targets  && initialised) {
+		if (trialType == TrialType.Horizontal  && initialised) {
 			restVisible = false;
 			SetRestVisible(restVisible);
-			displayObjects.settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise();
-//			settingsPanel.transform.Find("Rest Toggle").transform.Find("Rest Toggle").GetComponent<Toggle>().isOn = restVisible;
+			displayObjects.settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise(); 
 		}
 		if (trialType == TrialType.CentreOut && initialised)
 		{
 			restVisible = true;
 			SetRestVisible(restVisible);
 			displayObjects.settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise();
-			//			settingsPanel.transform.Find("Rest Toggle").transform.Find("Rest Toggle").GetComponent<Toggle>().isOn = restVisible;
 		}
 
 		initialised = true;
 		SaveState();
 	}
+	
+	//DEPRECIATED from V2 -  - trial is 3D VR only - readd in different context in  later version
 	public void SetTrialParadigm(TrialParadigm paradigm)
 	{
 		trialParadigm = paradigm;
         //set the 2d trial camera to render on or off
         if (trialParadigm == TrialParadigm.Avatar3D)
         {
-			displayObjects.trialCameraScreen2D.SetActive(false);
+//			displayObjects.trialCameraScreen2D.SetActive(false);
         }
         else
         {
-			displayObjects.trialCameraScreen2D.SetActive(true);
+//			displayObjects.trialCameraScreen2D.SetActive(true);
 		}
 		SaveState();
 	}
@@ -222,10 +223,11 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 	
+	//TODO----------------
 	public void SetSequenceType(SequenceType seqType)
 	{
 		sequenceType = seqType;
-		TrialSequence.instance.sequenceType = sequenceType;
+		// TrialSequence.instance.sequenceType = sequenceType;
 		SaveState();
 	}
 	public void SetRecordTrajectory(bool t){
@@ -253,70 +255,64 @@ public class Settings : MonoBehaviour {
 	
 	public void SetTrialBlocks(int num) {
 		trialBlocks = num;
-		TrialManager.instance.InitialiseTrial(trialBlocks);
+		BlockManager.instance.InitialiseTrial(trialBlocks);
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
 		//TrialSequence.instance.InitialiseSequence();
 		SaveState();
 	}
 	public void SetRepetitions(int num) {
 		repetitions = num;
-		TrialSequence.instance.repetitions = repetitions;
-		TrialSequence.instance.InitialiseSequence();
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.repetitions = repetitions;
+		// TrialSequence.instance.InitialiseSequence();
 		SaveState();
 	}
 	public void SetStartDelay(int num) {
 		startDelay = num;
-		TrialSequence.instance.startDelay = startDelay;
-		TrialManager.instance.initialWaitPeriod = startDelay;
+		BlockManager.instance.initialWaitPeriod = startDelay;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.startDelay = startDelay;
 		SaveState();
 	}
 	public void SetInterBlockRestPeriod(int num) {
 		interBlockRestPeriod = num;
-		//TrialSequence.instance.startDelay = startDelay;
-		TrialManager.instance.interBlockRestPeriod = interBlockRestPeriod;
+		BlockManager.instance.interBlockRestPeriod = interBlockRestPeriod;
 		SaveState();
 	}
-	public void SetFixationDuration(float num)
-	{
+	public void SetFixationDuration(float num){
 		fixationDuration = num;
-		TrialSequence.instance.fixationDuration = fixationDuration;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.fixationDuration = fixationDuration;
 		SaveState();
 	}
-	public void SetArrowDuration(float num)
-	{
+	public void SetArrowDuration(float num){
 		arrowDuration = num;
-		TrialSequence.instance.arrowDuration = arrowDuration;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.arrowDuration = arrowDuration;
 		SaveState();
 	}
 	public void SetObservationDuration(float num) {
 		observationDuration = num;
-		//modify the target duration here
-		//TODO 
-		//SetTargetDurationGranular(num);
-		TrialSequence.instance.observationDuration = observationDuration;
-		SaveState();
-	}
-	//target duration is not a granular float - this is from earlier iteration
-	public void SetTargetDuration(int num) {
-		targetDuration = num;
-		TrialSequence.instance.targetDuration = targetDuration;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.observationDuration = observationDuration;
 		SaveState();
 	}
 	public void SetTargetDurationGranular(float num) {
 		targetDurationGranular = num;
-		//TODO
-		//modify the observation duration here
-		//SetObservationDuration(num);
-		TrialSequence.instance.targetDuration = targetDurationGranular;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.targetDuration = targetDurationGranular;
 		SaveState();
 	}
 	public void SetRestDurationMin(int num) {
 		restDurationMin = num;
-		TrialSequence.instance.restDurationMin = restDurationMin;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.restDurationMin = restDurationMin;
 		SaveState();
 	}
 	public void SetRestDurationMax(int num) {
 		restDurationMax = num;
-		TrialSequence.instance.restDurationMax = restDurationMax;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.restDurationMax = restDurationMax;
 		SaveState();
 	}
 	// public void SetInterRunRestPeriod(int num) {
@@ -343,27 +339,30 @@ public class Settings : MonoBehaviour {
 		SetWorldUI.instance.SetUI();
 		SaveState();
 	}
+	
+	//DEPRECIATED from v2 - readd to later version
 	public void SetRenderTexture2D(bool t){
 		renderTexture2D = t;
 		//toggle environment here
-		SetWorldUI.instance.SetUI();
+//		SetWorldUI.instance.SetUI();
 		SaveState();
 	}
 
+	//DEPRECIATED from v2 - targets are now created one at a time and unlabeled
 	public void SetLabelsVisible(bool t) {
 		labelsVisible = t;
-		for (int i = 0; i < displayObjects.labels.Length; i++) {
-			displayObjects.labels[i].SetActive(labelsVisible);
-		}
-		for (int i = 0; i < reachTaskObjects.labels.Length; i++)
-		{
-			reachTaskObjects.labels[i].SetActive(labelsVisible);
-		}
+		// for (int i = 0; i < displayObjects.labels.Length; i++) {
+		// 	displayObjects.labels[i].SetActive(labelsVisible);
+		// }
+		// for (int i = 0; i < reachTaskObjects.labels.Length; i++)
+		// {
+		// 	reachTaskObjects.labels[i].SetActive(labelsVisible);
+		// }
 		SaveState();
 	}
 	public void SetRestVisible(bool t) {
 		restVisible = t;
-		displayObjects.rest.SetActive(restVisible);
+//		displayObjects.rest.SetActive(restVisible);
 		SaveState();
 	}
 	public void SetDisplayScore(bool t) {
@@ -397,27 +396,29 @@ public class Settings : MonoBehaviour {
 		displayObjects.FPS.SetActive(showFramerate);
 		SaveState();
 	}
+	
+	//DEPRECIATED from v2 - readd in different context to later version
 	public void SetLinesOuter(bool t) {
 		linesOuter = t;
-		displayObjects.outerLines.SetActive(linesOuter);
+//		displayObjects.outerLines.SetActive(linesOuter);
 		SetWorldUI.instance.SetUI();
 		SaveState();
 	}
 	public void SetLinesInnerA(bool t) {
 		linesInnerA = t;
-		displayObjects.innerLinesA.SetActive(linesInnerA);
+//		displayObjects.innerLinesA.SetActive(linesInnerA);
 		SetWorldUI.instance.SetUI();
 		SaveState();
 	}
 	public void SetLinesInnerB(bool t) {
 		linesInnerB= t;
-		displayObjects.innerLinesB.SetActive(linesInnerB);
+//		displayObjects.innerLinesB.SetActive(linesInnerB);
 		SetWorldUI.instance.SetUI();
 		SaveState();
 	}
 	public void SetRingOuter(bool t) {
 		ringOuter= t;
-		displayObjects.ringOuter.SetActive(ringOuter);
+//		displayObjects.ringOuter.SetActive(ringOuter);
 		SetWorldUI.instance.SetUI();
 		SaveState();
 	}
@@ -430,56 +431,57 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 	
-//----------CHARACTER-------------------	
+	
+//----------CHARACTER - DEPRECIATED from V2 - Replace with online BCI -------------------	
 	public void SetCharacterVisible_C(bool t) {
 		characterVisible_C = t;
-		displayObjects.controlCharacter_C.SetActive(characterVisible_C);
+//		displayObjects.controlCharacter_C.SetActive(characterVisible_C);
 		SaveState();
 	}
 	public void SetCharacterVisible_L(bool t) {
 		characterVisible_L = t;
-		displayObjects.controlCharacter_L.SetActive(characterVisible_L);
+//		displayObjects.controlCharacter_L.SetActive(characterVisible_L);
 		SaveState();
 	}
 	public void SetCharacterVisible_T(bool t) {
 		characterVisible_T = t;
-		displayObjects.controlCharacter_T.SetActive(characterVisible_T);
+//		displayObjects.controlCharacter_T.SetActive(characterVisible_T);
 		SaveState();
 	}
 	public void SetCharacterVisible_R(bool t) {
 		characterVisible_R = t;
-		displayObjects.controlCharacter_R.SetActive(characterVisible_R);
+//		displayObjects.controlCharacter_R.SetActive(characterVisible_R);
 		SaveState(); 
 	}
 	public void SetCharacterVisible_B(bool t) {
 		characterVisible_B = t;
-		displayObjects.controlCharacter_B.SetActive(characterVisible_B);
+//		displayObjects.controlCharacter_B.SetActive(characterVisible_B);
 		SaveState();
 	}
 	public void SetCharacterColourType(CharacterColourType type) {
 		characterColourType = type;
-		ControlCharacter.instance.characterColourType = characterColourType;
+//		ControlCharacter.instance.characterColourType = characterColourType;
 		SaveState();
 	}
 	public void SetColourSmoothing(bool t) {
 		colourSmoothing = t;
-		ControlCharacter.instance.smoothColour = colourSmoothing;
+//		ControlCharacter.instance.smoothColour = colourSmoothing;
 		SaveState();
 	}
 	public void SetColourSpeed(int s) {
 		colourSpeed = s;
-		ControlCharacter.instance.colourSpeed = colourSpeed;
+//		ControlCharacter.instance.colourSpeed = colourSpeed;
 		SaveState();
 	}
 	public void SetCharacterSmoothing(bool t) {
 		characterSmoothing = t;
-		ControlCharacter.instance.smoothCharacter = characterSmoothing;
+//		ControlCharacter.instance.smoothCharacter = characterSmoothing;
 		SaveState();
 	}
 	
 	public void SetSmoothSpeed(int s) {
 		smoothSpeed = s;
-		ControlCharacter.instance.smoothSpeed = smoothSpeed;
+//		ControlCharacter.instance.smoothSpeed = smoothSpeed;
 		SaveState();
 	}
 
@@ -584,11 +586,11 @@ public class Settings : MonoBehaviour {
 				trialType = TrialType.CentreOut;
 			}
 			if (tt == "Four_Targets") {
-				trialType = TrialType.Four_Targets;
+				trialType = TrialType.Vertical;
 			}
 			if (tt == "Three_Targets")
 			{
-				trialType = TrialType.Three_Targets;
+				trialType = TrialType.Horizontal;
 			}
 
 			string tp = EasySave.Load<string>("trialParadigm");
@@ -771,7 +773,6 @@ public class Settings : MonoBehaviour {
 		SetFixationDuration(fixationDuration);
 		SetArrowDuration(arrowDuration);
 		SetObservationDuration(observationDuration);
-		SetTargetDuration(targetDuration);
 		SetTargetDurationGranular(targetDurationGranular);
 		SetRestDurationMin(restDurationMin);
 		SetRestDurationMax(restDurationMax);

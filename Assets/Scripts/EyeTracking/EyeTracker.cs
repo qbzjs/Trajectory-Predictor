@@ -130,15 +130,12 @@ namespace ViveSR
                 //*************************************
                 
                 private void OnEnable(){
-                    InputManager.OnRecordAction += ToggleTrackingRecord;
-                    // TrialSequence.OnTargetAction += TrialSequenceOnTargetAction;
-                    // TrialSequence.OnTargetRestAction += TrialSequenceOnTargetRestAction;
+                    //new record event goes here
+                    ///InputManager.OnRecordAction += ToggleTrackingRecord;//depreciated
                 }
-                private void OnDisable()
-                {
-                    InputManager.OnRecordAction -= ToggleTrackingRecord;
-                    // TrialSequence.OnTargetAction -= TrialSequenceOnTargetAction;
-                    // TrialSequence.OnTargetRestAction -= TrialSequenceOnTargetRestAction;
+                private void OnDisable(){
+                    //new record event goes here
+                    //InputManager.OnRecordAction -= ToggleTrackingRecord;//depreciated
                 }
                 
                 private DataWriter dataWriter;
@@ -163,7 +160,7 @@ namespace ViveSR
                 public bool blinking;
                 
                 private string GenerateFileName(){
-                    TrialManager tm = TrialManager.instance;
+                    BlockManager tm = BlockManager.instance;
                     sessionTag = Settings.instance.GetSessionInfo();
                     string n = "";
                     if (motionTag == MotionTag.Null)

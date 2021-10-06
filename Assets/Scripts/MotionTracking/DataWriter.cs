@@ -199,7 +199,7 @@ public class DataWriter : MonoBehaviour
         
         string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Session_" + Settings.instance.sessionNumber.ToString();
         
-        string folderPath = Application.persistentDataPath + "/" + folderName + "/Run_" + TrialManager.instance.runIndex;
+        string folderPath = Application.persistentDataPath + "/" + folderName + "/Run_" + BlockManager.instance.runIndex;
 
         if (!Directory.Exists(folderPath))
         {

@@ -80,17 +80,7 @@ public class MotionTracker : MonoBehaviour
         if(motionObject==null){
     		motionObject = this.transform;
     	}
-        
-        // if (motionTag == MotionTag.Null)
-        // {
-        //     sessionTag = transform.name+"_" + sessionTag + "_";
-        // }
-        // else{
-        //     sessionTag = motionTag.ToString() + "_" + sessionTag + "_";
-        // }
 
-        
-        
         dataWriter = new DataWriter();
         
         targetTag = "";
@@ -98,19 +88,7 @@ public class MotionTracker : MonoBehaviour
 
 
     void Start(){
-       // fileName = GenerateFileName();
         
-        
-        // TrialManager tm = TrialManager.instance;
-        //
-        // if (motionTag == MotionTag.Null)
-        // {
-        //     sessionTag = transform.name+"_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex].ToString();
-        // }
-        // else{
-        //     sessionTag = motionTag.ToString() + "_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex].ToString();
-        // }
-
         m_Filter = new KalmanFilter();
         m_Filter.State = 0; //Setting first (non filtered) value to 0 for example;
 
@@ -119,43 +97,28 @@ public class MotionTracker : MonoBehaviour
 
         motionDataStreaming = new MotionDataStreaming();
     }
+    
+    //TODO - fix file name generator from new 'BlockManager' 
     private string GenerateFileName(){
-        TrialManager tm = TrialManager.instance;
+        //TrialManager tm = TrialManager.instance;
         sessionTag = Settings.instance.GetSessionInfo();
         string n = "";
-        if (motionTag == MotionTag.Null)
-        {
-            n = transform.name+"_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
-        }
-        else{
-            n = motionTag.ToString() + "_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
-        }
+        // if (motionTag == MotionTag.Null)
+        // {
+        //     n = transform.name+"_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
+        // }
+        // else{
+        //     n = motionTag.ToString() + "_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
+        // }
         return n;
     }
+
     private void OnEnable(){
-        InputManager.OnRecordAction += ToggleTrackingRecord;
-        TrialSequence.OnTargetAction += TrialSequenceOnTargetAction;
-        TrialSequence.OnTargetRestAction += TrialSequenceOnTargetRestAction;
-    }
-    private void OnDisable()
-    {
-        InputManager.OnRecordAction -= ToggleTrackingRecord;
-        TrialSequence.OnTargetAction -= TrialSequenceOnTargetAction;
-        TrialSequence.OnTargetRestAction -= TrialSequenceOnTargetRestAction;
-    }
-    
-    private void TrialSequenceOnTargetRestAction(int targetnumber, TrialEventType eType, float dur)
-    {
-//        int tNum = targetnumber++;
-//        targetTag = (tNum + 10).ToString();
-//        Debug.Log(tNum + " :  Rest Target Trigger (Kinematic)");
+        //record event goes here - calls toggletracking record
     }
 
-    private void TrialSequenceOnTargetAction(int targetnumber, TrialEventType eType, float dur)
-    {
-//        int tNum = targetnumber++;
-//        targetTag = tNum.ToString();
-//        Debug.Log(tNum + " :  Target Trigger (Kinematic)");
+    private void OnDisable(){
+        //record event goes here
     }
 
     private void ToggleTrackingRecord(bool t, string id)
