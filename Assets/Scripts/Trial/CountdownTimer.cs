@@ -15,6 +15,7 @@ public class CountdownTimer : MonoBehaviour
 
     public bool timerEnabled = false;
     public float timer;
+    public int maxTimerDisplay = 61; //the number where the countdown timer renders on screen
     public int timerDisplay;
     public bool timeUp;
 
@@ -29,9 +30,10 @@ public class CountdownTimer : MonoBehaviour
         }
     }
 
-    public void SetCountdown(int t)
+    public void SetCountdown(int t, int maxCountdownDisplay)
     {
         timer = t;
+        maxTimerDisplay = maxCountdownDisplay;
         timeUp = false;
         timerEnabled = true;
     }
@@ -40,9 +42,9 @@ public class CountdownTimer : MonoBehaviour
         if (timerEnabled)
         {
             timer -= Time.deltaTime;
-            if (timer <= countdown + 1 && timer >= 0)
+            if (timer <= maxTimerDisplay && timer >= 0) //only show countdown from max of 60
             {
-                timerDisplay = (int)timer % 60;
+                timerDisplay = (int)timer % maxTimerDisplay;
                 for (int i = 0; i < countdownDisplayWorld.Length; i++)
                 {
                     countdownDisplayWorld[i].text = timerDisplay.ToString();
@@ -77,13 +79,16 @@ public class CountdownTimer : MonoBehaviour
                 timerEnabled = false;
                 timer = 0;
                 timeUp = true;
-                BlockManager.instance.StartBlock();
-                //??? generate event
-                //done
+                //done - 
             }
         }
     }
 
+    public void StopTimer(){
+        timerEnabled = false;
+        timer = 0;
+        timeUp = true;
+    }
     public bool TimerComplete(){
         return timeUp;
     }

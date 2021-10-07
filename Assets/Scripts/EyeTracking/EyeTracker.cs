@@ -159,6 +159,7 @@ namespace ViveSR
                 public float blinkThreshold = 0.05f;
                 public bool blinking;
                 
+                //TODO - fix file name generator from new 'BlockManager' 
                 private string GenerateFileName(){
                     BlockManager tm = BlockManager.instance;
                     sessionTag = Settings.instance.GetSessionInfo();

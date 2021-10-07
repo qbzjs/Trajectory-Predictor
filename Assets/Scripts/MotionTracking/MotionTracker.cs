@@ -100,16 +100,16 @@ public class MotionTracker : MonoBehaviour
     
     //TODO - fix file name generator from new 'BlockManager' 
     private string GenerateFileName(){
-        //TrialManager tm = TrialManager.instance;
+        BlockManager tm = BlockManager.instance;
         sessionTag = Settings.instance.GetSessionInfo();
         string n = "";
-        // if (motionTag == MotionTag.Null)
-        // {
-        //     n = transform.name+"_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
-        // }
-        // else{
-        //     n = motionTag.ToString() + "_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
-        // }
+        if (motionTag == MotionTag.Null)
+        {
+            n = transform.name+"_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
+        }
+        else{
+            n = motionTag.ToString() + "_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
+        }
         return n;
     }
 

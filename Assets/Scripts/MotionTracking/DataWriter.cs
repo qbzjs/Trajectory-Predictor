@@ -193,13 +193,14 @@ public class DataWriter : MonoBehaviour
                 .Append(pupilDiameterRight).AppendLine();
         }
     }
+    //TODO - fix naming with new classes---------------------
     public void WriteData(string fileName)
     {
         dataString = stringBuilder.ToString();
         
         string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Session_" + Settings.instance.sessionNumber.ToString();
         
-        string folderPath = Application.persistentDataPath + "/" + folderName + "/Run_" + BlockManager.instance.runIndex;
+        string folderPath = Application.persistentDataPath + "/" + folderName + "/Run_" + RunManager.instance.runIndex;
 
         if (!Directory.Exists(folderPath))
         {

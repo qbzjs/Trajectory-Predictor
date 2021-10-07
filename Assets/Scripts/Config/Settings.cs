@@ -255,7 +255,8 @@ public class Settings : MonoBehaviour {
 	
 	public void SetTrialBlocks(int num) {
 		trialBlocks = num;
-		BlockManager.instance.InitialiseTrial(trialBlocks);
+		//TODO---------------- INITIALISE BLOCK MANAGER
+		//BlockManager.instance.InitialiseTrial(trialBlocks);
 		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
 		//TrialSequence.instance.InitialiseSequence();
 		SaveState();
@@ -269,14 +270,16 @@ public class Settings : MonoBehaviour {
 	}
 	public void SetStartDelay(int num) {
 		startDelay = num;
-		BlockManager.instance.initialWaitPeriod = startDelay;
+		//TODO---------------- INITIALISE BLOCK MANAGER
+		//BlockManager.instance.initialWaitPeriod = startDelay;
 		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
 		// TrialSequence.instance.startDelay = startDelay;
 		SaveState();
 	}
 	public void SetInterBlockRestPeriod(int num) {
 		interBlockRestPeriod = num;
-		BlockManager.instance.interBlockRestPeriod = interBlockRestPeriod;
+		//TODO---------------- INITIALISE BLOCK MANAGER
+		//BlockManager.instance.interBlockRestPeriod = interBlockRestPeriod;
 		SaveState();
 	}
 	public void SetFixationDuration(float num){
