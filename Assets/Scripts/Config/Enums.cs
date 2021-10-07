@@ -138,7 +138,8 @@
 
 	public enum UserInputType{
 		Start,
-		Stop
+		Stop,
+		Sensel
 	}
 
 }
