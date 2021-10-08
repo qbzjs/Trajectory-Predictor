@@ -37,24 +37,26 @@ public class InputManager : MonoBehaviour{
 	#region Inputs
 
 	void Update(){
-		if (Input.GetKeyDown(KeyCode.Space)){
-				
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			StartTrial();
 		}
 
 		if (Input.GetKeyDown(KeyCode.Escape)){
+			
 		}
 	}
 	private void SenselTapOnUserInputAction(UserInputType iType, float x, float y, float f)
 	{
 		Debug.Log("Sensel Input ---> " + "X: " + x + " : " + "Y: " + y + "F: " + f);
-		StartBlock();
+		StartTrial();
 	}
 
 	#endregion
 
 	#region Actions
 
-	public void StartBlock(){
+	public void StartTrial(){
 		Debug.Log("User Pressed Start: Start Event Broadcast");
 		if (OnUserInputAction != null){
 			OnUserInputAction(UserInputType.Start);

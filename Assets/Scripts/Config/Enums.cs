@@ -11,11 +11,16 @@
 	
 	public enum TrialEventType
     {
+	    Null,
+	    PreTrialPhase,
+	    Initialise,
 		Fixation,
 		Arrow,
 		Target,
 		Observation,
-		Rest
+		Rest,
+		Complete,
+		PostTrialPhase
     }
 	public enum RigType {AvatarRig, GhostRig}
 	
@@ -128,11 +133,16 @@
 	}
 
 	public enum GameStatus{
+		Null,
 		Orientation,
 		Preparation,
 		Ready,
 		Countdown,
-		Running,
+		
+		RunningTrials,
+		BlockComplete,
+		RunComplete,
+		GameComplete,
 		Complete
 	}
 

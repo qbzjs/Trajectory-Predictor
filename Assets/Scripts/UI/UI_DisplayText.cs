@@ -80,7 +80,7 @@ public class UI_DisplayText : MonoBehaviour {
                 statusDisplay.color = defaultColour;
                 statusDisplay_Wrld.color = defaultColour;
                 break;
-            case GameStatus.Running :
+            case GameStatus.RunningTrials :
                 statusDisplay.color = defaultColour;
                 statusDisplay_Wrld.color = defaultColour;
                 break;
