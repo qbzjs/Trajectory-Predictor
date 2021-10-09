@@ -13,7 +13,7 @@ public class BlockManager : MonoBehaviour
     private GameManager gameManager;
     private TrialSequencer trialSequencer;
 
-    public GameStatus gameStatus;
+    public GameStatus blockStatus;
 
     const int startingBlock = 101;
 
@@ -46,19 +46,20 @@ public class BlockManager : MonoBehaviour
     }
     //call from settings as well so updates every change
     public void InitialiseBlock(){
-        gameStatus = GameStatus.Ready;
+        blockStatus = GameStatus.Ready;
         blocksComplete = false;
         BlockSequenceGenerator();
-        UpdateBlockStatus(gameStatus,blockTotal,blockIndex);
+        UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
     }
 
     #endregion
 
-    #region UserInput
+    #region User Input
     public void StartTrial(){
-        //TODO add check if block index is finished
-        InitialiseBlock();
-        StartCoroutine(RunTrialSequence());
+        if (blockIndex < blockTotal){
+            InitialiseBlock();
+            StartCoroutine(RunTrialSequence());
+        }
     }
     #endregion
 
@@ -66,8 +67,8 @@ public class BlockManager : MonoBehaviour
     
     private IEnumerator RunTrialSequence(){
         if (useCountdown){
-            gameStatus = GameStatus.Countdown;
-            UpdateBlockStatus(gameStatus,blockTotal,blockIndex);
+            blockStatus = GameStatus.Countdown;
+            UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
             
             CountdownTimer.instance.timeUp = false;
             CountdownTimer.instance.SetCountdown(countdown + 1, maxCountdownDisplay + 1);
@@ -76,23 +77,25 @@ public class BlockManager : MonoBehaviour
             
         }
         
-        gameStatus = GameStatus.RunningTrials;
-        UpdateBlockStatus(gameStatus,blockTotal,blockIndex);
+        blockStatus = GameStatus.RunningTrials;
+        UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
         
         trialSequencer.StartTrialSequence();
         yield return new WaitUntil(() => trialSequencer.sequenceComplete);
-        
 
         yield return new WaitForSeconds(postBlockWaitDuration);
 
         blockIndex++;
         
-        gameStatus = GameStatus.BlockComplete;
-        UpdateBlockStatus(gameStatus,blockTotal,blockIndex);
+        blockStatus = GameStatus.BlockComplete;
+        UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
+        
+        Debug.Log("__BLOCK END ______________________________________________");
 
         if (blockIndex >= blockTotal){
             blocksComplete = true;
-            //all blocks finished in run - tell run manager
+            blockStatus = GameStatus.AllBlocksComplete;
+            UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
             blockIndex = 0;
         }
     }

@@ -17,18 +17,22 @@ public class GameManager : MonoBehaviour
     [Header("Game State")]
     public bool paused = false; //embed this int coroutines to pause trials
 
+    [Range(-0.01f, 0.01f)] 
+    public float gameSpeed = 0;
+    
     public GameStatus gameStatus;
     public GameStatus runStatus;
     public GameStatus blockStatus;
     public TrialEventType trialPhase;
 
     [Header("Game Progression")]
-    public int runTotal;
     public int runIndex;
-    public int blockTotal;
+    public int runTotal;
     public int blockIndex;
-    public int trialTotal;
+    public int blockTotal;
     public int trialIndex;
+    public int trialTotal;
+    
     public int targetNumber;
     
     public float phaseDuration;
@@ -75,10 +79,45 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    #region TrialTracking
+    private void Update(){
+        GameSpeed(gameSpeed); //needs to be input from slider or event
+    }
 
-    public void RunTracker(){
+    #region System Functions
+    //function to reset the timing
+    public void PauseTrials(bool t){
+        paused = t;
+    }
+    public void GameSpeed(float speed){
+        runManager.postRunWaitDuration = runManager.postRunWaitDuration += speed;
         
+        blockManager.postBlockWaitDuration = blockManager.postBlockWaitDuration += speed;
+
+        trialSequencer.preTrialWaitDuration = trialSequencer.preTrialWaitDuration += speed;
+        trialSequencer.fixationDuration = trialSequencer.fixationDuration += speed;
+        trialSequencer.arrowDuration = trialSequencer.arrowDuration += speed;
+        trialSequencer.observationDuration = trialSequencer.observationDuration += speed;
+        trialSequencer.targetDuration = trialSequencer.targetDuration += speed;
+        trialSequencer.restDuration = trialSequencer.restDuration += speed;
+        trialSequencer.restDurationMin = trialSequencer.restDurationMin += speed;
+        trialSequencer.restDurationMax = trialSequencer.restDurationMax += speed;
+        trialSequencer.postTrialWaitDuration = trialSequencer.postTrialWaitDuration += speed;
+    }
+    public void ResetTrials(){
+        runManager.runIndex = 0;
+        blockManager.blockIndex = 0;
+        runManager.runsComplete = false;
+        blockManager.blocksComplete = false;
+    }
+    //function to reset the loaded game (not applicable yet)
+    #endregion
+    
+    #region Trial Tracking
+
+    public void RunTracker(GameStatus status, int total, int index){
+        runStatus = status;
+        runTotal = total;
+        runIndex = index;
     }
     public void BlockTracker(GameStatus status, int total, int index){
         blockStatus = status;

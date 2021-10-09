@@ -12,6 +12,7 @@
 	public enum TrialEventType
     {
 	    Null,
+	    Ready,
 	    PreTrialPhase,
 	    Initialise,
 		Fixation,
@@ -141,7 +142,9 @@
 		
 		RunningTrials,
 		BlockComplete,
+		AllBlocksComplete,
 		RunComplete,
+		AllRunsComplete,
 		GameComplete,
 		Complete
 	}

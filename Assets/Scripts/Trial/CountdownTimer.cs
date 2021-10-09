@@ -41,7 +41,10 @@ public class CountdownTimer : MonoBehaviour
     {
         if (timerEnabled)
         {
-            timer -= Time.deltaTime;
+            if (GameManager.instance.paused == false){
+                timer -= Time.deltaTime;
+            }
+            
             if (timer <= maxTimerDisplay && timer >= 0) //only show countdown from max of 60
             {
                 timerDisplay = (int)timer % maxTimerDisplay;

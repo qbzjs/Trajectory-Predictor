@@ -14,7 +14,7 @@ public class InputManager : MonoBehaviour{
 	
 	public static InputManager instance;
 
-	public bool allowInput = true;
+	public bool inputEnabled = true;
 	public delegate void UserInputAction(UserInputType inputType);
 	public static event UserInputAction OnUserInputAction;
 
@@ -54,18 +54,29 @@ public class InputManager : MonoBehaviour{
 
 	#endregion
 
-	#region Actions
+	#region Input Actions
 
 	public void StartTrial(){
-		Debug.Log("User Pressed Start: Start Event Broadcast");
-		if (OnUserInputAction != null){
-			OnUserInputAction(UserInputType.Start);
+		if (inputEnabled){
+			if (OnUserInputAction != null){
+				OnUserInputAction(UserInputType.Start);
+			}
 		}
 	}
 
-	public void StopBlock(){
-		if (OnUserInputAction != null){
-			OnUserInputAction(UserInputType.Stop);
+	public void StopTrial(){
+		if (inputEnabled){
+			if (OnUserInputAction != null){
+				OnUserInputAction(UserInputType.Stop);
+			}
+		}
+	}
+	
+	public void PauseTrial(){
+		if (inputEnabled){
+			if (OnUserInputAction != null){
+				OnUserInputAction(UserInputType.Stop);
+			}
 		}
 	}
 
