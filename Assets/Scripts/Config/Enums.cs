@@ -28,8 +28,9 @@
 	public enum TrialParadigm{
 		Horizontal,
 		Vertical,
+		Circle,
 		CentreOut,
-		Circle
+		RandomPosition
 	}
 
 	public enum SequenceType{
@@ -42,7 +43,7 @@
 	}
 
 	public enum ParadigmTargetCount{
-		One,Two,Four,Eight,Sixteen
+		One,Two,Three,Four,Eight,Sixteen
 	}
 
 	public enum MotionTag{

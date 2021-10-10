@@ -42,22 +42,22 @@ public class Settings : MonoBehaviour {
 	[Range(0, 60)] 
 	public int visibleCountdown = 5;
 	[Range(10, 60)] 
-	public int interRunRestPeriod = 2;
+	public int interRunRestPeriod = 10;
 
 
 	[Header("TRIAL SETTINGS")] 
 	[Range(-5, 5)]
 	public int trialSpeed = 0;
 	[Range(0, 5)] 
-	public float preTrialWaitPeriod = 1;
+	public float preTrialWaitPeriod = 1f;
 	[Range(0, 5)] 
-	public float fixationDuration = 2;
+	public float fixationDuration = 2f;
 	[Range(0, 5)] 
-	public float arrowDuration = 2;
+	public float arrowDuration = 2f;
 	[Range(1, 10)] 
 	public float observationDuration = 2f; //observation time is the same as target time (ghost hand movement)
 	[Range(1, 10)] 
-	public float targetDuration = 2;
+	public float targetDuration = 2f;
 
 	[Range(2, 10)] 
 	public float restDurationMin = 2;
@@ -575,7 +575,7 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("targetDuration", targetDuration);
 		EasySave.Save("restDurationMin", restDurationMin);
 		EasySave.Save("restDurationMax", restDurationMax);
-		EasySave.Save("targetDuration", postTrialWaitPeriod);
+		EasySave.Save("postTrialWaitPeriod", postTrialWaitPeriod);
 		EasySave.Save("postBlockWaitPeriod", postBlockWaitPeriod);
 		EasySave.Save("postRunWaitPeriod", postRunWaitPeriod);
 		
@@ -666,11 +666,11 @@ public class Settings : MonoBehaviour {
 			if (tp == "Vertical"){
 				trialParadigm = TrialParadigm.Vertical;
 			}
-			if (tp == "CentreOut"){
-				trialParadigm = TrialParadigm.CentreOut;
-			}
 			if (tp == "Circle"){
 				trialParadigm = TrialParadigm.Circle;
+			}
+			if (tp == "CentreOut"){
+				trialParadigm = TrialParadigm.CentreOut;
 			}
 
 			string ptars = EasySave.Load<string>("paradigmTargetCount");
@@ -679,6 +679,9 @@ public class Settings : MonoBehaviour {
 			}
 			if (ptars == "Two"){
 				paradigmTargetCount = ParadigmTargetCount.Two;
+			}
+			if (ptars == "Three"){
+				paradigmTargetCount = ParadigmTargetCount.Three;
 			}
 			if (ptars == "Four"){
 				paradigmTargetCount = ParadigmTargetCount.Four;
@@ -718,7 +721,7 @@ public class Settings : MonoBehaviour {
 			blocksPerRun = EasySave.Load<int>("trialBlocks");
 			preBlockCountdown = EasySave.Load<int>("preBlockCountdown");
 			visibleCountdown = EasySave.Load<int>("visibleCountdown");
-			interRunRestPeriod = EasySave.Load<int>("interBlockRestPeriod");
+			interRunRestPeriod = EasySave.Load<int>("interRunRestPeriod");
 			
 			#endregion
 
@@ -731,9 +734,9 @@ public class Settings : MonoBehaviour {
 			targetDuration = EasySave.Load<float>("targetDuration"); //check float
 			restDurationMin = EasySave.Load<int>("restDurationMin");
 			restDurationMax = EasySave.Load<int>("restDurationMax");
-			postTrialWaitPeriod = EasySave.Load<int>("postTrialWaitPeriod");
-			postBlockWaitPeriod = EasySave.Load<int>("postBlockWaitPeriod");
-			postRunWaitPeriod = EasySave.Load<int>("postRunWaitPeriod");
+			postTrialWaitPeriod = EasySave.Load<float>("postTrialWaitPeriod");
+			postBlockWaitPeriod = EasySave.Load<float>("postBlockWaitPeriod");
+			postRunWaitPeriod = EasySave.Load<float>("postRunWaitPeriod");
 
 			#endregion
 			
