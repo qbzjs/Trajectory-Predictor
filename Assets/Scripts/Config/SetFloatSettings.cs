@@ -10,6 +10,8 @@ public class SetFloatSettings : MonoBehaviour
     public TrialSettingsValue trialSettingValue;
 
     public TextMeshProUGUI numberText;
+   
+    public float increment = 0.1f;
     public int min = 0;
     public int max = 10;
 
@@ -24,6 +26,10 @@ public class SetFloatSettings : MonoBehaviour
     }
 
     private void Initialise() {
+        if (trialSettingValue == TrialSettingsValue.preTrialWaitPeriod) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.preTrialWaitPeriod);
+        }
         if (trialSettingValue == TrialSettingsValue.Fixation) {
             valueDisplay = "<size=-10>s";
             SetNumber(Settings.instance.fixationDuration);
@@ -35,12 +41,32 @@ public class SetFloatSettings : MonoBehaviour
         if (trialSettingValue == TrialSettingsValue.Observation) {
             valueDisplay = "<size=-10>s";
             SetNumber(Settings.instance.observationDuration);
-            SetNumber(Settings.instance.targetDurationGranular);
+            SetNumber(Settings.instance.targetDuration);
         }
         if (trialSettingValue == TrialSettingsValue.TargetDuration) {
             valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.targetDurationGranular);
+            SetNumber(Settings.instance.targetDuration);
             SetNumber(Settings.instance.observationDuration);
+        }
+        if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.restDurationMin);
+        }
+        if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.restDurationMax);
+        }
+        if (trialSettingValue == TrialSettingsValue.PostTrialWaitPeriod) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.postTrialWaitPeriod);
+        }
+        if (trialSettingValue == TrialSettingsValue.PostBlockWaitPeriod) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.postBlockWaitPeriod);
+        }
+        if (trialSettingValue == TrialSettingsValue.PostRunWaitPeriod) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.postRunWaitPeriod);
         }
     }
     private void SetNumber(float n) {
@@ -53,7 +79,7 @@ public class SetFloatSettings : MonoBehaviour
         t = t.Replace("s", "");
         t = t.Replace("x", "");
         float n = float.Parse(t);
-        n = n + 0.1f;
+        n = n + increment;
         if (n > max)
         {
             n = max;
@@ -70,7 +96,7 @@ public class SetFloatSettings : MonoBehaviour
         t = t.Replace("s", "");
         t = t.Replace("x", "");
         float n = float.Parse(t);
-        n = n - 0.1f;
+        n = n - increment;
         if (n < min)
         {
             n = min;
@@ -90,6 +116,10 @@ public class SetFloatSettings : MonoBehaviour
         numberText.color = defaultColour;
     }
     private void SetValue(float v) {
+        if (trialSettingValue == TrialSettingsValue.preTrialWaitPeriod) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetPreTrialWaitDuration(v);
+        }
         if (trialSettingValue == TrialSettingsValue.Fixation) {
             valueDisplay = "<size=-10>s";
             Settings.instance.SetFixationDuration(v);
@@ -101,12 +131,32 @@ public class SetFloatSettings : MonoBehaviour
         if (trialSettingValue == TrialSettingsValue.Observation) {
             valueDisplay = "<size=-10>s";
             Settings.instance.SetObservationDuration(v);
-            Settings.instance.SetTargetDurationGranular(v);
+            Settings.instance.SetTargetDuration(v);
         }
         if (trialSettingValue == TrialSettingsValue.TargetDuration) {
             valueDisplay = "<size=-10>s";
-            Settings.instance.SetTargetDurationGranular(v);
+            Settings.instance.SetTargetDuration(v);
             Settings.instance.SetObservationDuration(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetRestDurationMin(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetRestDurationMax(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.PostTrialWaitPeriod) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetPostTrialWaitDuration(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.PostBlockWaitPeriod) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetPostBlockWaitDuration(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.PostRunWaitPeriod) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetPostRunWaitDuration(v);
         }
     }
 }

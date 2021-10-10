@@ -1,30 +1,20 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using Enums;
 using Enums;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 /// <summary>
-/// selects the paradigm in the UI
+/// sets positions and location for the reach target paradigm
 /// </summary>
+public class ParadigmSetter : MonoBehaviour {
 
-public class SetTrialParadigm : MonoBehaviour
-{
 	public TrialParadigm paradigm;
 
-	public TextMeshProUGUI paradigmTextUI;
-	public Button fourButton;
-	public Button threeButton;
 
 	private Color initialColour;
 	public Color highlightedColour;
 	
 	void Start () {
-		// initialColour = centreOutButton.image.color;
 		Initialise();
 	}
 

@@ -13,36 +13,43 @@ public class Settings : MonoBehaviour {
 	public static Settings instance;
 
 	public bool active;
-	//	public GameObject settingsPanel;
-
-	[Header("SESSION SETTINGS")] 
-	public string sessionName = "Session_";
-	//public string blockName = "B1";
-	public int sessionNumber = 1;
 
 	[Header("SESSION SETTINGS --SAVED TO FILE-- ")]
 	public SettingsDataObject settingsData;
 	
+	[Header("USER SESSION SETTINGS")] 
+	public string sessionName = "Session_";
+	public int sessionNumber = 1;
+	
+	[Header("PARADIGM SETTINGS")]
 	[Header("---------SET BY INTERFACE--------------")]
-	[Header("SEQUENCE SETTINGS")]
-	public TrialParadigm trialParadigm = TrialParadigm.Avatar3D;
-	public TrialType trialType = TrialType.CentreOut;
-	public TaskSide taskSide = TaskSide.Left;
+	// public TrialParadigm trialParadigm = TrialParadigm.Avatar3D;
+	public TrialParadigm trialParadigm = TrialParadigm.Horizontal;
+	public ParadigmTargetCount paradigmTargetCount = ParadigmTargetCount.Two;
+	[Range(1, 50)] 
+	public int repetitions = 5; // num of sequences to run
 	public SequenceType sequenceType = SequenceType.Permutation;
+	public Handedness handedness = Handedness.Left;
+
+	[Header("SESSION SETTINGS")] 
+	[Header("---------SET BY INTERFACE--------------")]
+	[Range(1, 8)] 
+	public int sessionRuns = 2;
+	[Range(1, 9)] 
+	public int blocksPerRun = 4;
+	[Range(0, 120)] 
+	public int preBlockCountdown = 10;
+	[Range(0, 60)] 
+	public int visibleCountdown = 5;
+	[Range(10, 60)] 
+	public int interRunRestPeriod = 2;
+
 
 	[Header("TRIAL SETTINGS")] 
-	public bool recordTrajectory = false;
-	public SampleRate sampleRate = SampleRate.Hz60;
-	public bool actionObservation = false;
-
-	[Range(1, 8)] 
-	public int runTotal = 4;
-	[Range(1, 9)] 
-	public int trialBlocks = 8; 
-	[Range(1, 50)] 
-	public int repetitions = 25; // num of sequences to run
-	[Range(10, 60)] 
-	public int startDelay = 60;
+	[Range(-5, 5)]
+	public int trialSpeed = 0;
+	[Range(0, 5)] 
+	public float preTrialWaitPeriod = 1;
 	[Range(0, 5)] 
 	public float fixationDuration = 2;
 	[Range(0, 5)] 
@@ -50,15 +57,26 @@ public class Settings : MonoBehaviour {
 	[Range(1, 10)] 
 	public float observationDuration = 2f; //observation time is the same as target time (ghost hand movement)
 	[Range(1, 10)] 
-	public int targetDuration = 2;
-	[Range(1, 10)] 
-	public float targetDurationGranular = 2f;
-	[Range(10, 60)] 
-	public int interBlockRestPeriod = 2;
+	public float targetDuration = 2;
+
 	[Range(2, 10)] 
-	public int restDurationMin = 2;
+	public float restDurationMin = 2;
 	[Range(2, 10)] 
-	public int restDurationMax = 2;
+	public float restDurationMax = 2;
+	
+	[Range(0, 5)] 
+	public float postTrialWaitPeriod = 1;
+	[Range(0, 5)] 
+	public float postBlockWaitPeriod = 1;
+	[Range(0, 5)] 
+	public float postRunWaitPeriod = 1;
+	
+	[Header("ADDITIONAL SETTINGS")] 
+	public bool actionObservation = false;
+	public bool recordMotionData = false;
+	public SampleRate sampleRate = SampleRate.Hz60;
+
+	
 	
 	[Header("STATUS")] 
 	public GameStatus gameStatus = GameStatus.Ready;
@@ -118,6 +136,7 @@ public class Settings : MonoBehaviour {
 	private bool initialised = false;
 
 	void Awake () {
+		// EasySave.Delete<int>("targetDuration");
 		instance = this;
 		displayObjects = GetComponent<UI_DisplayObjects>();
 		reachTaskObjects = GetComponent<ReachTaskObjects>();
@@ -138,7 +157,12 @@ public class Settings : MonoBehaviour {
 		active = true;
 		//ToggleSettings(); // use to start in or out of settings menu
 	}
-
+	
+	public GameStatus Status {
+		get { return gameStatus;}
+		set { gameStatus = value;}
+	}
+	
 	public void ToggleSettings() {
 		if (active) {
 			displayObjects.settingsPanel.SetActive(false);
@@ -173,65 +197,58 @@ public class Settings : MonoBehaviour {
 		UDPClient.instance.portSend = portSend;
 		SaveState();
 	}
-//---------TRIAL----------------	
 
-	public void SetTrialType(TrialType type) {
-		trialType = type;
+	#region Paradigm Setup
 
-		if (trialType == TrialType.Vertical && initialised) {
-			restVisible = true;
-			SetRestVisible(restVisible);
-			displayObjects.settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise();
-		}
-		if (trialType == TrialType.Horizontal  && initialised) {
-			restVisible = false;
-			SetRestVisible(restVisible);
-			displayObjects.settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise(); 
-		}
-		if (trialType == TrialType.CentreOut && initialised)
-		{
-			restVisible = true;
-			SetRestVisible(restVisible);
-			displayObjects.settingsPanel.transform.Find("Interface Objects/Rest Toggle").GetComponent<ToggleUI>().Initialise();
-		}
-
-		initialised = true;
-		SaveState();
-	}
-	
-	//DEPRECIATED from V2 -  - trial is 3D VR only - readd in different context in  later version
-	public void SetTrialParadigm(TrialParadigm paradigm)
-	{
+	public void SetTrialParadigm(TrialParadigm paradigm){
 		trialParadigm = paradigm;
-        //set the 2d trial camera to render on or off
-        if (trialParadigm == TrialParadigm.Avatar3D)
-        {
-//			displayObjects.trialCameraScreen2D.SetActive(false);
-        }
-        else
-        {
-//			displayObjects.trialCameraScreen2D.SetActive(true);
-		}
+
 		SaveState();
 	}
 
-	public void SetReachTaskSide(TaskSide side)
-	{
-		taskSide = side;
-		//contact 3d target manager
-		reachTaskObjects.reachTaskObject.GetComponent<ReachTargetManager>().SetReachSide(taskSide);
+	public void SetParadigmTargetCount(ParadigmTargetCount tCount){
+		paradigmTargetCount = tCount;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.repetitions = repetitions;
+		// TrialSequence.instance.InitialiseSequence();
 		SaveState();
 	}
-	
+
+	public void SetRepetitions(int num){
+		repetitions = num;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.repetitions = repetitions;
+		// TrialSequence.instance.InitialiseSequence();
+		SaveState();
+	}
+
+	public void UpdateTrialsPerBlock(){
+	}
+
 	//TODO----------------
-	public void SetSequenceType(SequenceType seqType)
-	{
+	public void SetSequenceType(SequenceType seqType){
 		sequenceType = seqType;
 		// TrialSequence.instance.sequenceType = sequenceType;
 		SaveState();
 	}
+
+	public void SetHandedness(Handedness side){
+		handedness = side;
+		//contact 3d target manager
+		reachTaskObjects.reachTaskObject.GetComponent<ReachTargetManager>().SetReachSide(handedness);
+		SaveState();
+	}
+
+	#endregion
+
+
+	#region Additional Settings
+	public void SetActionObservation(bool t){
+		actionObservation = t;
+		SaveState();
+	}
 	public void SetRecordTrajectory(bool t){
-		recordTrajectory = t;
+		recordMotionData = t;
 		SaveState();
 	}
 	public void SetSampleRate(SampleRate sr){
@@ -245,41 +262,57 @@ public class Settings : MonoBehaviour {
 				case SampleRate.Hz75 : { SteamVR_Render.instance.sampleRateSteamRender = 0.01333f; break; }
 				case SampleRate.Hz100 : { SteamVR_Render.instance.sampleRateSteamRender = 0.01f; break; }
 			}
+			//TODO - change sample rate in unity settings as well for non vr
 		}
 		SaveState();
 	}
-	public void SetActionObservation(bool t){
-		actionObservation = t;
-		SaveState();
-	}
-	
-	public void SetTrialBlocks(int num) {
-		trialBlocks = num;
+	#endregion
+
+	#region Session Settings
+
+	public void SetRuns(int num) {
+		sessionRuns = num;
 		//TODO---------------- INITIALISE BLOCK MANAGER
 		//BlockManager.instance.InitialiseTrial(trialBlocks);
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		//TrialSequence.instance.InitialiseSequence();
 		SaveState();
 	}
-	public void SetRepetitions(int num) {
-		repetitions = num;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.repetitions = repetitions;
-		// TrialSequence.instance.InitialiseSequence();
+	public void SetBlocksPerRun(int num) {
+		blocksPerRun = num;
+		//TODO---------------- INITIALISE BLOCK MANAGER
+		//BlockManager.instance.InitialiseTrial(trialBlocks);
 		SaveState();
 	}
-	public void SetStartDelay(int num) {
-		startDelay = num;
+	public void SetBlockCountdown(int num) {
+		preBlockCountdown = num;
 		//TODO---------------- INITIALISE BLOCK MANAGER
 		//BlockManager.instance.initialWaitPeriod = startDelay;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.startDelay = startDelay;
 		SaveState();
 	}
-	public void SetInterBlockRestPeriod(int num) {
-		interBlockRestPeriod = num;
+	public void SetVisibleCountdown(int num) {
+		visibleCountdown = num;
+		//TODO---------------- INITIALISE BLOCK MANAGER
+		//BlockManager.instance.initialWaitPeriod = startDelay;
+		SaveState();
+	}
+	public void SetInterRunRestPeriod(int num) {
+		interRunRestPeriod = num;
 		//TODO---------------- INITIALISE BLOCK MANAGER
 		//BlockManager.instance.interBlockRestPeriod = interBlockRestPeriod;
+		SaveState();
+	}
+
+	#endregion
+
+
+	#region Trial Timings
+
+	public void SetTrialSpeed(int s){
+		trialSpeed = s;
+	}
+	public void SetPreTrialWaitDuration(float num){
+		preTrialWaitPeriod = num;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.fixationDuration = fixationDuration;
 		SaveState();
 	}
 	public void SetFixationDuration(float num){
@@ -300,31 +333,46 @@ public class Settings : MonoBehaviour {
 		// TrialSequence.instance.observationDuration = observationDuration;
 		SaveState();
 	}
-	public void SetTargetDurationGranular(float num) {
-		targetDurationGranular = num;
+	public void SetTargetDuration(float num) {
+		targetDuration = num;
 		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
 		// TrialSequence.instance.targetDuration = targetDurationGranular;
 		SaveState();
 	}
-	public void SetRestDurationMin(int num) {
+	public void SetRestDurationMin(float num) {
 		restDurationMin = num;
 		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
 		// TrialSequence.instance.restDurationMin = restDurationMin;
 		SaveState();
 	}
-	public void SetRestDurationMax(int num) {
+	public void SetRestDurationMax(float num) {
 		restDurationMax = num;
 		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
 		// TrialSequence.instance.restDurationMax = restDurationMax;
 		SaveState();
 	}
-	// public void SetInterRunRestPeriod(int num) {
-	// 	//TODO set rest period here..
-	// 	
-	// 	SaveState();
-	// }
-	
-//----------INTERFACE----------------	
+	public void SetPostTrialWaitDuration(float num) {
+		postTrialWaitPeriod = num;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.restDurationMax = restDurationMax;
+		SaveState();
+	}
+	public void SetPostBlockWaitDuration(float num) {
+		postBlockWaitPeriod = num;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.restDurationMax = restDurationMax;
+		SaveState();
+	}
+	public void SetPostRunWaitDuration(float num) {
+		postRunWaitPeriod = num;
+		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
+		// TrialSequence.instance.restDurationMax = restDurationMax;
+		SaveState();
+	}
+	#endregion
+
+
+	#region Interface
 
 	public void Set3DEnvironment(bool t){
 		environment3D = t;
@@ -426,16 +474,23 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 
-//----------FEEDBACK--------------------
+	#endregion
+
+
+	#region Feedback
+
 	public void SetAnimateTargets(bool t) {
 		animateTargets = t;
 		//this is accessed from settings
 		//TrialSequence.instance.animateTargets = animateTargets;
 		SaveState();
 	}
+
+	#endregion
+
 	
+	#region Character (Depreciated)
 	
-//----------CHARACTER - DEPRECIATED from V2 - Replace with online BCI -------------------	
 	public void SetCharacterVisible_C(bool t) {
 		characterVisible_C = t;
 //		displayObjects.controlCharacter_C.SetActive(characterVisible_C);
@@ -488,11 +543,11 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 
-	public GameStatus Status {
-		get { return gameStatus;}
-		set { gameStatus = value;}
-	}
-//----INITIALISE  - SAVE & LOAD--------	
+	#endregion
+
+
+
+	#region Save & Load
 
 	private void SaveState() {
 		//ports
@@ -500,28 +555,35 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("portListen", portListen);
 		EasySave.Save("portSend", portSend);
 		//trial
-		EasySave.Save("trialType", trialType.ToString());
+		// EasySave.Save("trialType", trialType.ToString());
 		EasySave.Save("trialParadigm", trialParadigm.ToString());
-		EasySave.Save("taskSide", taskSide.ToString());
-		EasySave.Save("sequenceType", sequenceType.ToString());
-		
-		EasySave.Save("recordTrajectory", recordTrajectory);
-		EasySave.Save("sampleRate", sampleRate.ToString());
-		EasySave.Save("actionObservation", actionObservation);
-
-		EasySave.Save("trialBlocks", trialBlocks);
+		EasySave.Save("paradigmTargetCount", paradigmTargetCount.ToString());
 		EasySave.Save("repetitions", repetitions);
-		EasySave.Save("startDelay", startDelay);
-		EasySave.Save("interBlockRestPeriod", interBlockRestPeriod);
+		EasySave.Save("sequenceType", sequenceType.ToString());
+		EasySave.Save("handedness", handedness.ToString());
+
+		EasySave.Save("sessionRuns", sessionRuns);
+		EasySave.Save("trialBlocks", blocksPerRun);
+		EasySave.Save("preBlockCountdown", preBlockCountdown);
+		EasySave.Save("visibleCountdown", visibleCountdown);
+		EasySave.Save("interRunRestPeriod", interRunRestPeriod);
 		
+		EasySave.Save("preTrialWaitPeriod", preTrialWaitPeriod);
 		EasySave.Save("fixationDuration", fixationDuration);
 		EasySave.Save("arrowDuration", arrowDuration);
 		EasySave.Save("observationDuration", observationDuration);
+		EasySave.Save("targetDuration", targetDuration);
 		EasySave.Save("restDurationMin", restDurationMin);
 		EasySave.Save("restDurationMax", restDurationMax);
-		EasySave.Save("targetDuration", targetDuration);
-		EasySave.Save("targetDurationGranular", targetDurationGranular);
+		EasySave.Save("targetDuration", postTrialWaitPeriod);
+		EasySave.Save("postBlockWaitPeriod", postBlockWaitPeriod);
+		EasySave.Save("postRunWaitPeriod", postRunWaitPeriod);
 		
+		EasySave.Save("recordTrajectory", recordMotionData);
+		EasySave.Save("sampleRate", sampleRate.ToString());
+		EasySave.Save("actionObservation", actionObservation);
+		
+
 		//environment
 		EasySave.Save("environment3D", environment3D);
 			
@@ -554,21 +616,34 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("characterSmoothing", characterSmoothing);
 		EasySave.Save("smoothSpeed", smoothSpeed);
 
+		#region JSON Session Data Save
 		//Save state to settings Data object for writing to file
-		settingsData.trialType = trialType.ToString();
-		settingsData.paradigm = trialParadigm.ToString();
-		settingsData.handedness = taskSide.ToString();
+		// settingsData.trialType = trialType.ToString();
+		settingsData.trialParadigm = trialParadigm.ToString();
+		settingsData.targetCount = paradigmTargetCount.ToString();
+		settingsData.repetitions = repetitions;
+		settingsData.handedness = handedness.ToString();
+
+		settingsData.runs = sessionRuns;
+		settingsData.blocksPerRun = blocksPerRun;
+		settingsData.preBlockCountdown = preBlockCountdown;
+		settingsData.visibleCountdown = visibleCountdown;
+		settingsData.interRunRestPeriod = interRunRestPeriod;
+		
+		settingsData.preTrialWaitPeriod = preTrialWaitPeriod;
+		settingsData.fixationDuration = fixationDuration;
+		settingsData.arrowDuration = arrowDuration;
+		settingsData.observationDuration = observationDuration;
+		settingsData.targetDuration = targetDuration;
+		settingsData.restPeriodMin = restDurationMin;
+		settingsData.postTrialWaitPeriod = postTrialWaitPeriod;
+		settingsData.postBlockWaitPeriod = postBlockWaitPeriod;
+		settingsData.postRunWaitPeriod = postRunWaitPeriod;
+
 		settingsData.actionObservation = actionObservation;
 		settingsData.sampleRate = sampleRate.ToString();
-		settingsData.trialBlocks = trialBlocks;
-		settingsData.repetitions = repetitions;
-		settingsData.startDelay = startDelay;
-		settingsData.interBlockRestPeriod = interBlockRestPeriod;
-		settingsData.restDurationMin = restDurationMin;
-		settingsData.restDurationMax = restDurationMax;
-		settingsData.targetDuration = targetDuration;
-		//TODO
-		//settingsData.targetDuration = targetDurationGranular;
+		#endregion
+
 
 		JSONWriter jWriter = new JSONWriter();
 		jWriter.OutputSettingsJSON(settingsData);
@@ -581,40 +656,41 @@ public class Settings : MonoBehaviour {
 			ip = EasySave.Load<string>("ip");
 			portListen = EasySave.Load<int>("portListen");
 			portSend = EasySave.Load<int>("portSend");
-			
-			//trial
-			string tt = EasySave.Load<string>("trialType");
-			if (tt == "CentreOut")
-			{
-				trialType = TrialType.CentreOut;
-			}
-			if (tt == "Four_Targets") {
-				trialType = TrialType.Vertical;
-			}
-			if (tt == "Three_Targets")
-			{
-				trialType = TrialType.Horizontal;
-			}
+
+			#region paradigm data load
 
 			string tp = EasySave.Load<string>("trialParadigm");
-			if (tp == "Avatar3D")
-			{
-				trialParadigm = TrialParadigm.Avatar3D;
+			if (tp == "Horizontal"){
+				trialParadigm = TrialParadigm.Horizontal;
 			}
-			if (tp == "Screen2D")
-			{
-				trialParadigm = TrialParadigm.Screen2D;
+			if (tp == "Vertical"){
+				trialParadigm = TrialParadigm.Vertical;
+			}
+			if (tp == "CentreOut"){
+				trialParadigm = TrialParadigm.CentreOut;
+			}
+			if (tp == "Circle"){
+				trialParadigm = TrialParadigm.Circle;
 			}
 
-			string ts = EasySave.Load<string>("taskSide");
-			if (ts == "Left")
-			{
-				taskSide = TaskSide.Left;
+			string ptars = EasySave.Load<string>("paradigmTargetCount");
+			if (ptars == "One"){
+				paradigmTargetCount = ParadigmTargetCount.One;
 			}
-			if (ts == "Right")
-			{
-				taskSide = TaskSide.Right;
+			if (ptars == "Two"){
+				paradigmTargetCount = ParadigmTargetCount.Two;
 			}
+			if (ptars == "Four"){
+				paradigmTargetCount = ParadigmTargetCount.Four;
+			}
+			if (ptars == "Eight"){
+				paradigmTargetCount = ParadigmTargetCount.Eight;
+			}
+			if (ptars == "Sixteen"){
+				paradigmTargetCount = ParadigmTargetCount.Sixteen;
+			}
+			
+			repetitions = EasySave.Load<int>("repetitions");
 			
 			string st = EasySave.Load<string>("sequenceType");
 			if (st == "Linear"){
@@ -624,31 +700,58 @@ public class Settings : MonoBehaviour {
 			{
 				sequenceType = SequenceType.Permutation;
 			}
+			string hand = EasySave.Load<string>("handedness");
+			if (hand == "Left")
+			{
+				handedness = Handedness.Left;
+			}
+			if (hand == "Right")
+			{
+				handedness = Handedness.Right;
+			}
 
-			recordTrajectory = EasySave.Load<bool>("recordTrajectory");
+			#endregion
+
+			#region Session data load
+
+			sessionRuns = EasySave.Load<int>("sessionRuns");
+			blocksPerRun = EasySave.Load<int>("trialBlocks");
+			preBlockCountdown = EasySave.Load<int>("preBlockCountdown");
+			visibleCountdown = EasySave.Load<int>("visibleCountdown");
+			interRunRestPeriod = EasySave.Load<int>("interBlockRestPeriod");
+			
+			#endregion
+
+			#region trial data load
+
+			preTrialWaitPeriod = EasySave.Load<float>("fixationDuration");
+			fixationDuration = EasySave.Load<float>("fixationDuration");
+			arrowDuration = EasySave.Load<float>("arrowDuration");
+			observationDuration = EasySave.Load<float>("observationDuration");
+			targetDuration = EasySave.Load<float>("targetDuration"); //check float
+			restDurationMin = EasySave.Load<int>("restDurationMin");
+			restDurationMax = EasySave.Load<int>("restDurationMax");
+			postTrialWaitPeriod = EasySave.Load<int>("postTrialWaitPeriod");
+			postBlockWaitPeriod = EasySave.Load<int>("postBlockWaitPeriod");
+			postRunWaitPeriod = EasySave.Load<int>("postRunWaitPeriod");
+
+			#endregion
+			
+			#region additional setting data load
+
+			recordMotionData = EasySave.Load<bool>("recordTrajectory");
 			string sr = EasySave.Load<string>("sampleRate");
 			if (sr == "Hz50") { sampleRate = SampleRate.Hz50; }
 			if (sr == "Hz60") { sampleRate = SampleRate.Hz60; }
 			if (sr == "Hz75") { sampleRate = SampleRate.Hz75; }
 			if (sr == "Hz100") { sampleRate = SampleRate.Hz100; }
-			
+						
 			actionObservation = EasySave.Load<bool>("actionObservation");
-			
-			
-			trialBlocks = EasySave.Load<int>("trialBlocks");
-			repetitions = EasySave.Load<int>("repetitions");
-			startDelay = EasySave.Load<int>("startDelay");
-			interBlockRestPeriod = EasySave.Load<int>("interBlockRestPeriod");
+
+			#endregion
 
 			
-			fixationDuration = EasySave.Load<float>("fixationDuration");
-			arrowDuration = EasySave.Load<float>("arrowDuration");
-			observationDuration = EasySave.Load<float>("observationDuration");
-			targetDuration = EasySave.Load<int>("targetDuration");
-			targetDurationGranular = EasySave.Load<float>("targetDurationGranular");
-			restDurationMin = EasySave.Load<int>("restDurationMin");
-			restDurationMax = EasySave.Load<int>("restDurationMax");
-
+			
 			//environment
 			environment3D = EasySave.Load<bool>("environment3D");
 			
@@ -693,29 +796,42 @@ public class Settings : MonoBehaviour {
 			ip = "127.0.0.1";
 			portListen = 3002;
 			portSend = 3010;
-			
-			//trial
-			trialType = TrialType.CentreOut;
-			trialParadigm = TrialParadigm.Avatar3D;	
-			taskSide = TaskSide.Left;
+
+			#region paradigm
+			// trialType = TrialType.CentreOut;
+			trialParadigm = TrialParadigm.Horizontal;
+			paradigmTargetCount = ParadigmTargetCount.Two;
+			repetitions = 10;
 			sequenceType = SequenceType.Permutation;
+			handedness = Handedness.Right;
+			#endregion
 
-			recordTrajectory = false;
-			sampleRate = SampleRate.Hz60;
-			actionObservation = false;
-
-			trialBlocks = 8;
-			repetitions = 25;
-			startDelay = 60;
-			interBlockRestPeriod = 15;
-
+			#region session
+			sessionRuns = 2;
+			blocksPerRun = 4;
+			preBlockCountdown = 10;
+			visibleCountdown = 5;
+			interRunRestPeriod = 15;
+			#endregion
+			
+			#region trial
+			preTrialWaitPeriod = 1f;
 			fixationDuration = 2f;
 			arrowDuration = 2f;
 			observationDuration = 2f;
-			targetDuration = 2;
-			targetDurationGranular = 2f;
-			restDurationMin = 2;
-			restDurationMax = 2;
+			targetDuration = 2f;
+			restDurationMin = 2f;
+			restDurationMax = 4f;
+			postTrialWaitPeriod = 1f;
+			postBlockWaitPeriod = 1f;
+			postRunWaitPeriod = 1f;
+			#endregion
+
+			#region additional
+			recordMotionData = false;
+			sampleRate = SampleRate.Hz60;
+			actionObservation = false;
+			#endregion
 			
 			//environment 3d
 			environment3D = false;
@@ -757,28 +873,42 @@ public class Settings : MonoBehaviour {
 		SetIP(ip);
 		SetListen(portListen);
 		SetSend(portSend);
-		
-		//trial
-		SetTrialType(trialType);
+
+		#region paradigm
 		SetTrialParadigm(trialParadigm);
-		SetReachTaskSide(taskSide);
-		SetSequenceType(sequenceType);
-
-		SetRecordTrajectory(recordTrajectory);
-		SetSampleRate(sampleRate);
-		SetActionObservation(actionObservation);
-		
-		SetTrialBlocks(trialBlocks);
+		SetParadigmTargetCount(paradigmTargetCount);
 		SetRepetitions(repetitions);
-		SetStartDelay(startDelay);
-		SetInterBlockRestPeriod(interBlockRestPeriod);
+		SetSequenceType(sequenceType);
+		SetHandedness(handedness);
+		#endregion
 
+		#region session
+		SetRuns(sessionRuns);
+		SetBlocksPerRun(blocksPerRun);
+		SetBlockCountdown(preBlockCountdown);
+		SetVisibleCountdown(visibleCountdown);
+		SetInterRunRestPeriod(interRunRestPeriod);
+		#endregion
+
+		#region trial
+		SetPreTrialWaitDuration(preTrialWaitPeriod);
 		SetFixationDuration(fixationDuration);
 		SetArrowDuration(arrowDuration);
 		SetObservationDuration(observationDuration);
-		SetTargetDurationGranular(targetDurationGranular);
+		SetTargetDuration(targetDuration);
 		SetRestDurationMin(restDurationMin);
 		SetRestDurationMax(restDurationMax);
+		SetPostTrialWaitDuration(postTrialWaitPeriod);
+		SetPostBlockWaitDuration(postBlockWaitPeriod);
+		SetPostRunWaitDuration(postRunWaitPeriod);
+		#endregion
+
+		#region additional
+		SetRecordTrajectory(recordMotionData);
+		SetSampleRate(sampleRate);
+		SetActionObservation(actionObservation);
+		#endregion
+		
 		
 		//Environment 3D
 		Set3DEnvironment(environment3D);
@@ -813,4 +943,8 @@ public class Settings : MonoBehaviour {
 		SetCharacterSmoothing(characterSmoothing);
 		SetSmoothSpeed(smoothSpeed);
 	}
+
+	#endregion
+
+	
 }

@@ -6,42 +6,60 @@ using UnityEngine;
 public class SettingsDataObject 
 {
 
-    public string trialType;
-    public string paradigm;
-    public string handedness;
-    public bool actionObservation;
-
-    public string sampleRate;
-    
-    public int trialBlocks;
+    public string trialParadigm;
+    public string targetCount;
     public int repetitions;
-    public int startDelay;
-    public int interBlockRestPeriod;
-    public int restDurationMin;
-    public int restDurationMax;
-    public int targetDuration;
+    public string handedness;
 
+    public int runs;
+    public int blocksPerRun;
+    public int preBlockCountdown;
+    public int visibleCountdown;
+    public int interRunRestPeriod;
+    
+    public float preTrialWaitPeriod;
+    public float fixationDuration;
+    public float arrowDuration;
+    public float observationDuration;
+    public float targetDuration;
+    public float restPeriodMin;
+    public float restPeriodMax;
+    public float postTrialWaitPeriod;
+    public float postBlockWaitPeriod;
+    public float postRunWaitPeriod;
+
+    public bool actionObservation;
+    public string sampleRate;
 
     //TODO - POSSIBLY IN ANOTHER CLASS
     //public int[] sequence;
     //public float[] timeSigniture / time sequence (target times
+    
 
-
-
-    public SettingsDataObject(string trialType, string paradigm, string handedness, bool actionObservation,
-        string sampleRate, int trialBlocks, int repetitions, int startDelay, int interBlockRestPeriod, int restDurationMin, int restDurationMax, int targetDuration)
+    public SettingsDataObject(string trialParadigm, string targets, int repetitions, string handedness, 
+        int runs,int blocksPerRun,int preBlockCountdown,int visibleCountdown,int interRunRestPeriod,
+        float preTrialWaitPeriod,float fixationDuration,float arrowDuration,float observationDuration,
+        float targetDuration,float restPeriodMin,float restPeriodMax,
+        float postTrialWaitPeriod,float postBlockWaitPeriod,float postRunWaitPeriod, 
+        bool actionObservation, string sampleRate)
     {
-        this.trialType = trialType;
-        this.paradigm = paradigm;
+        this.trialParadigm = trialParadigm;
+        this.targetCount = targets;
+        this.repetitions = repetitions;
         this.handedness = handedness;
+
+        this.preTrialWaitPeriod = preTrialWaitPeriod;
+        this.fixationDuration = fixationDuration;
+        this.arrowDuration = arrowDuration;
+        this.observationDuration = observationDuration;
+        this.targetDuration = targetDuration;
+        this.restPeriodMin = restPeriodMin;
+        this.restPeriodMax = restPeriodMax;
+        this.postTrialWaitPeriod = postTrialWaitPeriod;
+        this.postBlockWaitPeriod = postBlockWaitPeriod;
+        this.postRunWaitPeriod = postRunWaitPeriod;
+        
         this.actionObservation = actionObservation;
         this.sampleRate = sampleRate;
-        this.trialBlocks = trialBlocks;
-        this.repetitions = repetitions;
-        this.startDelay = startDelay;
-        this.interBlockRestPeriod = interBlockRestPeriod;
-        this.restDurationMin = restDurationMin;
-        this.restDurationMax = restDurationMax;
-        this.targetDuration = targetDuration;
     }
 }

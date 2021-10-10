@@ -25,19 +25,24 @@
     }
 	public enum RigType {AvatarRig, GhostRig}
 	
-	public enum TrialType{
+	public enum TrialParadigm{
 		Horizontal,
 		Vertical,
-		CentreOut
+		CentreOut,
+		Circle
 	}
 
 	public enum SequenceType{
 		Linear,
 		Permutation
 	}
-	public enum TaskSide{
+	public enum Handedness{
 		Left,
 		Right
+	}
+
+	public enum ParadigmTargetCount{
+		One,Two,Four,Eight,Sixteen
 	}
 
 	public enum MotionTag{
@@ -59,10 +64,10 @@
 		Eyes
 	}
 	
-	public enum TrialParadigm{
-		Avatar3D,
-		Screen2D
-	}
+	// public enum TrialParadigm{
+	// 	Avatar3D,
+	// 	Screen2D
+	// }
 
 	public enum CharacterColourType{
 		Dynamic,
@@ -98,16 +103,22 @@
 	}
 
 	public enum TrialSettingsValue{
+		Runs,
 		TrialBlocks,
 		Repetitions,
-		StartDelay,
-		InterBlockRestPeriod,
-		RestDurationMin,
-		RestDurationMax,
+		Countdown,
+		visibleCountdown,
+		InterRunRestPeriod,
+		preTrialWaitPeriod,
 		TargetDuration,
 		Fixation,
 		Arrow,
-		Observation
+		Observation,
+		RestDurationMin,
+		RestDurationMax,
+		PostTrialWaitPeriod,
+		PostBlockWaitPeriod,
+		PostRunWaitPeriod
 	}
 	public enum TrialSettings{
 		ActionObservation,

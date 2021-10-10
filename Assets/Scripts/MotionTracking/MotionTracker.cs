@@ -125,7 +125,7 @@ public class MotionTracker : MonoBehaviour
     {
         //recordTrajectory = t;
 
-        if (Settings.instance.recordTrajectory){
+        if (Settings.instance.recordMotionData){
             if (!recordTrajectory && recordEnabled)
             {
                 //Debug.Log("---- Start Trajectory Tracking : " + fileName);

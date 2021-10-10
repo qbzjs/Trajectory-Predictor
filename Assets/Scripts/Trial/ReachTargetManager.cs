@@ -22,15 +22,15 @@ public class ReachTargetManager : MonoBehaviour{
     private int lastTrigger;
     private int currentTrigger;
 
-    private TaskSide taskSide = TaskSide.Left;
+    private Handedness _handedness = Handedness.Left;
 
     public bool oneShotTriggerUDP = false;
 
     //send general target action
-    public delegate void TargetAction(Transform target, TaskSide side);
+    public delegate void TargetAction(Transform target, Handedness side);
     public static event TargetAction OnTargetAction;
     //send to ghost target controller - move arm to target - target null move arm back
-    public delegate void TargetRestAction(Transform target, TaskSide side);
+    public delegate void TargetRestAction(Transform target, Handedness side);
     public static event TargetRestAction OnTargetRestAction;
 
 
@@ -82,7 +82,7 @@ public class ReachTargetManager : MonoBehaviour{
 
         if (OnTargetAction != null)
         {
-            OnTargetAction(reachTarget[targetNumber].transform, taskSide);
+            OnTargetAction(reachTarget[targetNumber].transform, _handedness);
         }
 
         currentTrigger = targetNumber;
@@ -112,7 +112,7 @@ public class ReachTargetManager : MonoBehaviour{
 
         if (OnTargetRestAction != null)
         {
-            OnTargetRestAction(reachTarget[targetNumber].transform, taskSide);
+            OnTargetRestAction(reachTarget[targetNumber].transform, _handedness);
         }
 
         // SendUDP_byte(targetNumber+10);
@@ -136,14 +136,14 @@ public class ReachTargetManager : MonoBehaviour{
         SendUDP_byte(0);
     }
 
-    public void SetReachSide(TaskSide side)
+    public void SetReachSide(Handedness side)
     {
-        taskSide = side;
-        if (side == TaskSide.Left){
+        _handedness = side;
+        if (side == Handedness.Left){
             reachObject.transform.position = positionLeft;
         }
 
-        if (side == TaskSide.Right){
+        if (side == Handedness.Right){
             reachObject.transform.position = positionRight;
         }
     }

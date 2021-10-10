@@ -177,7 +177,7 @@ namespace ViveSR
                 {
                     //recordTrajectory = t;
 
-                    if (Settings.instance.recordTrajectory){
+                    if (Settings.instance.recordMotionData){
                         if (!recordEyeData && recordEnabled)
                         {
                             //Debug.Log("---- Start Eye Tracking Record : " + fileName);
