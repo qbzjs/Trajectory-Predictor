@@ -26,6 +26,10 @@ public class Settings : MonoBehaviour {
 	// public TrialParadigm trialParadigm = TrialParadigm.Avatar3D;
 	public TrialParadigm trialParadigm = TrialParadigm.Horizontal;
 	public ParadigmTargetCount paradigmTargetCount = ParadigmTargetCount.Two;
+	public int numberOfTargets = 2; //ready only
+	public int trialsPerBlock = 0; //ready only
+	public int trialsPerRun = 0; //ready only
+	public int trialsPerSession = 0; //ready only
 	[Range(1, 50)] 
 	public int repetitions = 5; // num of sequences to run
 	public SequenceType sequenceType = SequenceType.Permutation;
@@ -132,6 +136,10 @@ public class Settings : MonoBehaviour {
 	//Object pools
 	private UI_DisplayObjects displayObjects;
 	private ReachTaskObjects reachTaskObjects;
+	
+	//events
+	public delegate void SettingsUpdate();
+	public static event SettingsUpdate OnSettingsUpdate; //used to inform classes when a settings update happens (ex.sessiontotals in UI)
 
 	private bool initialised = false;
 
@@ -174,6 +182,8 @@ public class Settings : MonoBehaviour {
 		}
 	}
 
+
+
 //---------SESSION INFO---------
 	public string GetSessionInfo()
 	{
@@ -181,6 +191,19 @@ public class Settings : MonoBehaviour {
 		return s;
 	}
 	
+	//metrics
+	private void UpdateSessionTotals(){
+		trialsPerBlock = numberOfTargets * repetitions;
+		trialsPerRun = trialsPerBlock * blocksPerRun;
+		trialsPerSession = trialsPerRun * sessionRuns;
+		UpdateSettingsEvent();
+	}
+
+	public void UpdateSettingsEvent(){
+		if (OnSettingsUpdate != null){
+			OnSettingsUpdate();
+		}
+	}
 //---------PORTS----------------
 	public void SetIP(string v) {
 		ip = v;
@@ -208,6 +231,15 @@ public class Settings : MonoBehaviour {
 
 	public void SetParadigmTargetCount(ParadigmTargetCount tCount){
 		paradigmTargetCount = tCount;
+		switch (paradigmTargetCount){
+			case ParadigmTargetCount.One: { numberOfTargets = 1; break; }
+			case ParadigmTargetCount.Two: { numberOfTargets = 2; break; }
+			case ParadigmTargetCount.Three: { numberOfTargets = 3; break; }
+			case ParadigmTargetCount.Four: { numberOfTargets = 4; break; }
+			case ParadigmTargetCount.Eight: { numberOfTargets = 8; break; }
+			case ParadigmTargetCount.Sixteen: { numberOfTargets = 16; break; }
+		}
+		UpdateSessionTotals();
 		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
 		// TrialSequence.instance.repetitions = repetitions;
 		// TrialSequence.instance.InitialiseSequence();
@@ -216,15 +248,13 @@ public class Settings : MonoBehaviour {
 
 	public void SetRepetitions(int num){
 		repetitions = num;
+		UpdateSessionTotals();
 		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
 		// TrialSequence.instance.repetitions = repetitions;
 		// TrialSequence.instance.InitialiseSequence();
 		SaveState();
 	}
-
-	public void UpdateTrialsPerBlock(){
-	}
-
+	
 	//TODO----------------
 	public void SetSequenceType(SequenceType seqType){
 		sequenceType = seqType;
@@ -272,12 +302,14 @@ public class Settings : MonoBehaviour {
 
 	public void SetRuns(int num) {
 		sessionRuns = num;
+		UpdateSessionTotals();
 		//TODO---------------- INITIALISE BLOCK MANAGER
 		//BlockManager.instance.InitialiseTrial(trialBlocks);
 		SaveState();
 	}
 	public void SetBlocksPerRun(int num) {
 		blocksPerRun = num;
+		UpdateSessionTotals();
 		//TODO---------------- INITIALISE BLOCK MANAGER
 		//BlockManager.instance.InitialiseTrial(trialBlocks);
 		SaveState();
@@ -892,7 +924,9 @@ public class Settings : MonoBehaviour {
 		SetVisibleCountdown(visibleCountdown);
 		SetInterRunRestPeriod(interRunRestPeriod);
 		#endregion
-
+		
+		UpdateSessionTotals();
+		
 		#region trial
 		SetPreTrialWaitDuration(preTrialWaitPeriod);
 		SetFixationDuration(fixationDuration);
@@ -911,8 +945,7 @@ public class Settings : MonoBehaviour {
 		SetSampleRate(sampleRate);
 		SetActionObservation(actionObservation);
 		#endregion
-		
-		
+
 		//Environment 3D
 		Set3DEnvironment(environment3D);
 		

@@ -121,6 +121,12 @@
 		PostBlockWaitPeriod,
 		PostRunWaitPeriod
 	}
+
+	public enum SessionMetric{
+		TrialsPerBlock,
+		TrialsPerRun,
+		TrialsPerSession
+	}
 	public enum TrialSettings{
 		ActionObservation,
 		RecordTrajectory

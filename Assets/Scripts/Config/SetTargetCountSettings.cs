@@ -8,7 +8,7 @@ public class SetTargetCountSettings : MonoBehaviour
     public TextMeshProUGUI targetCountText;
 
     public ParadigmTargetCount targetCount = ParadigmTargetCount.Two;
-    
+
     private int index;
 
     private ParadigmTargetCount[] targetCounts = new ParadigmTargetCount[6];
