@@ -17,6 +17,8 @@ public class UI_DisplayText : MonoBehaviour {
     public TextMeshPro blockProgressDisplay_Wrld;
     public TextMeshProUGUI trialProgressDisplay;
     public TextMeshPro trialProgressDisplay_Wrld;
+    public TextMeshProUGUI trialTotalProgressDisplay;
+    public TextMeshPro trialTotalProgressDisplay_Wrld;
 
     public TextMeshProUGUI scoreDisplay;
     public TextMeshPro scoreDisplay_Wrld;
@@ -26,9 +28,7 @@ public class UI_DisplayText : MonoBehaviour {
 
     private void Awake() {
         instance = this;
-    }
-
-    void Start() {
+        
         scoreDisplay.text = "Score : n/a";
         scoreDisplay_Wrld.text = "Score: n/a";
         blockProgressDisplay.text = "Run: 0 / 0";
@@ -37,7 +37,11 @@ public class UI_DisplayText : MonoBehaviour {
         blockProgressDisplay_Wrld.text = "Block: 0 / 0";
         trialProgressDisplay.text = "Trial: 0 / 0";
         trialProgressDisplay_Wrld.text = "Trial: 0 / 0";
+        trialTotalProgressDisplay.text = "Total Trials: 0 / 0";
+        trialTotalProgressDisplay_Wrld.text = "Total Trials: 0 / 0";
+    }
 
+    void Start() {
         SetStatus(GameStatus.Ready, "System Ready");
     }
 
@@ -69,7 +73,10 @@ public class UI_DisplayText : MonoBehaviour {
         trialProgressDisplay.text = "Trial: " + c.ToString() + " / " + t.ToString();
         trialProgressDisplay_Wrld.text = "Trial: " + c.ToString() + " / " + t.ToString();
     }
-
+    public void SetTrialTotalProgress(int c, int t) {
+        trialTotalProgressDisplay.text = "Total Trials: " + c.ToString() + " / " + t.ToString();
+        trialTotalProgressDisplay_Wrld.text = "Total Trials: " + c.ToString() + " / " + t.ToString();
+    }
     
     public void SetStatus(GameStatus s, string t) {
         statusDisplay.text = t;

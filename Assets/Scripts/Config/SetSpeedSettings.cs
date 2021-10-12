@@ -16,7 +16,7 @@ public class SetSpeedSettings : MonoBehaviour
     public void SetSpeed(){
         speedValue = speedSlider.value;
         Settings.instance.SetSpeedModifier(speedValue);
-        SetSpeedEnd();
+        // SetSpeedEnd();
     }
 
     public void SetSpeedEnd(){

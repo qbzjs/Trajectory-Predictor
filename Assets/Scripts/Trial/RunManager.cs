@@ -37,13 +37,13 @@ public class RunManager : MonoBehaviour
 
     private void Start(){
         runIndex = 0;
+        runStatus = GameStatus.Ready;
+        runsComplete = false;
         InitialiseRun();
     }
 
     //call from settings as well so updates every change
     public void InitialiseRun(){
-        runStatus = GameStatus.Ready;
-        runsComplete = false;
         UpdateRunStatus(runStatus,runTotal,runIndex);
     }
     #endregion

@@ -43,12 +43,12 @@ public class BlockManager : MonoBehaviour
     }
     void Start(){
         blockIndex = 0;
+        blockStatus = GameStatus.Ready;
+        blocksComplete = false;
         InitialiseBlock();
     }
     //call from settings as well so updates every change
     public void InitialiseBlock(){
-        blockStatus = GameStatus.Ready;
-        blocksComplete = false;
         BlockSequenceGenerator();
         UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
     }

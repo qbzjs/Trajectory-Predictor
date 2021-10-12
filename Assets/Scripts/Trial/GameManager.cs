@@ -37,8 +37,10 @@ public class GameManager : MonoBehaviour
     public int runTotal;
     public int blockIndex;
     public int blockTotal;
-    public int trialIndex;
-    public int trialTotal;
+    public int trialSequenceIndex;
+    public int trialSequenceTotal;
+    public int totalTrialsProgress;
+    public int totalTrials;
     [Space(5)]
     public int activeTarget;
     public float activePhaseDuration;
@@ -98,13 +100,14 @@ public class GameManager : MonoBehaviour
         trialSequencer = GetComponent<TrialSequencer>();
     }
     void Start(){
+        totalTrialsProgress = 0;
         // UpdateProgressionUI();
     }
     public void InitialiseSession(){
         // variables initialised from settings then pushed to run, block and trial sequencer
         runManager.runTotal = runTotal;
         blockManager.blockTotal = blockTotal;
-        trialSequencer.sequenceLength = trialTotal;
+        trialSequencer.sequenceLength = trialSequenceTotal;
         
         trialSequencer.targetCount = targetCount;
         trialSequencer.repetitions = trialRepetitions;
@@ -127,6 +130,10 @@ public class GameManager : MonoBehaviour
 
         trialSequencer.actionObservation = actionObservation;
         
+        runManager.InitialiseRun();
+        blockManager.InitialiseBlock();
+        trialSequencer.InitialiseTrial();
+        totalTrials = TotalTrials();
         UpdateProgressionUI();
     }
 
@@ -153,21 +160,6 @@ public class GameManager : MonoBehaviour
     public void PauseTrials(bool t){
         paused = t;
     }
-    public void GameSpeed(float speed){
-        runManager.postRunWaitPeriod = runManager.postRunWaitPeriod += speed;
-        
-        blockManager.postBlockWaitPeriod = blockManager.postBlockWaitPeriod += speed;
-
-        trialSequencer.preTrialWaitPeriod = trialSequencer.preTrialWaitPeriod += speed;
-        trialSequencer.fixationPeriod = trialSequencer.fixationPeriod += speed;
-        trialSequencer.indicationPeriod = trialSequencer.indicationPeriod += speed;
-        trialSequencer.observationPeriod = trialSequencer.observationPeriod += speed;
-        trialSequencer.targetPresentationPeriod = trialSequencer.targetPresentationPeriod += speed;
-        trialSequencer.restPeriod = trialSequencer.restPeriod += speed;
-        trialSequencer.restPeriodMin = trialSequencer.restPeriodMin += speed;
-        trialSequencer.restPeriodMax = trialSequencer.restPeriodMax += speed;
-        trialSequencer.postTrialWaitPeriod = trialSequencer.postTrialWaitPeriod += speed;
-    }
     public void ResetTrials(){
         runManager.runIndex = 0;
         blockManager.blockIndex = 0;
@@ -175,6 +167,9 @@ public class GameManager : MonoBehaviour
         blockManager.blocksComplete = false;
     }
     //function to reset the loaded game (not applicable yet)
+    public void SetGameSpeed(float s){
+        gameSpeed = s;
+    }
     #endregion
     
     #region Trial Tracking
@@ -192,21 +187,34 @@ public class GameManager : MonoBehaviour
         UpdateProgressionUI();
     }
     public void TrialTracker(TrialEventType eType, int total, int index, int targetNum, float dur){
-        trialTotal = total;
-        trialIndex = index;
+        trialSequenceTotal = total;
+        trialSequenceIndex = index;
         activeTarget = targetNum;
         trialPhase = eType;
         activePhaseDuration = dur;
+        if (eType == TrialEventType.PostTrialPhase){
+            totalTrialsProgress++;
+        }
         UpdateProgressionUI();
     }
+
+    private int TotalTrials(){
+        totalTrials = Settings.instance.trialsPerSession;
+        return totalTrials;
+    }
+
+    // private void TotalTrialsProgression(){
+    //     totalTrialsProgress++;
+    // }
 
     private void UpdateProgressionUI(){
         if (debugUI){
             trialDebugUI.transform.parent.gameObject.SetActive(true);
-            trialDebugUI.text = "TARGET: " + activeTarget + " - EVENT: " + trialPhase.ToString() + " - TIMING: " + activePhaseDuration.ToString() +"s";
+            trialDebugUI.text = "ACTIVE TARGET: " + activeTarget + " - TRIAL PHASE: " + trialPhase.ToString() + " - TIMING: " + activePhaseDuration.ToString() +"s";
             UI_DisplayText.instance.SetRunProgress(runIndex,runTotal);
             UI_DisplayText.instance.SetBlockProgress(blockIndex,blockTotal);
-            UI_DisplayText.instance.SetTrialProgress(trialIndex,trialTotal);
+            UI_DisplayText.instance.SetTrialProgress(trialSequenceIndex,trialSequenceTotal);
+            UI_DisplayText.instance.SetTrialTotalProgress(totalTrialsProgress,totalTrials);
         }else
         {
             trialDebugUI.transform.parent.gameObject.SetActive(false);
@@ -215,25 +223,5 @@ public class GameManager : MonoBehaviour
 
     #endregion
     
-    #region speed setter //return to this concept
 
-    public void SetGameSpeed(float s){
-        //print(gameSpeed);
-        gameSpeed = s/100;
-  
-        trialSequencer.preTrialWaitPeriod = trialSequencer.preTrialWaitPeriod + gameSpeed;
-        trialSequencer.fixationPeriod = trialSequencer.fixationPeriod + gameSpeed;
-        trialSequencer.indicationPeriod = trialSequencer.fixationPeriod + gameSpeed;
-        trialSequencer.observationPeriod = trialSequencer.observationPeriod + gameSpeed;
-        trialSequencer.targetPresentationPeriod = trialSequencer.targetPresentationPeriod + gameSpeed;
-        trialSequencer.restPeriodMin = trialSequencer.restPeriodMin + gameSpeed;
-        trialSequencer.restPeriodMax = trialSequencer.restPeriodMax + gameSpeed;
-        trialSequencer.postTrialWaitPeriod = trialSequencer.postTrialWaitPeriod + gameSpeed;
-        blockManager.postBlockWaitPeriod = blockManager.postBlockWaitPeriod + gameSpeed;
-        runManager.postRunWaitPeriod = runManager.postRunWaitPeriod + gameSpeed;
-        
-        // InitialiseSession();
-    }
-
-    #endregion
 }

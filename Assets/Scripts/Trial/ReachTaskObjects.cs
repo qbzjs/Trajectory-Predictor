@@ -12,6 +12,7 @@ public class ReachTaskObjects : MonoBehaviour
 	public GameObject progressDisplayRun;
 	public GameObject progressDisplayBlock;
 	public GameObject progressDisplayTrial;
+	public GameObject progressDisplayTrialTotal;
 	public GameObject countdownDisplay;
 	
 	public GameObject rest;
