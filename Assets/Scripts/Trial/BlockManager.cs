@@ -21,8 +21,8 @@ public class BlockManager : MonoBehaviour
     public int blockTotal = 4;
     public int blockIndex = 0;
     public int countdown = 10;
-    public int maxCountdownDisplay;
-    public float postBlockWaitDuration = 1f;
+    public int visibleCountdownMaximum;
+    public float postBlockWaitPeriod = 1f;
 
     [Header("---------")]
     public bool blocksComplete = false;
@@ -39,6 +39,7 @@ public class BlockManager : MonoBehaviour
         instance = this;
         gameManager = GetComponent<GameManager>();
         trialSequencer = GetComponent<TrialSequencer>();
+        blockTotal = gameManager.blockTotal;
     }
     void Start(){
         blockIndex = 0;
@@ -71,7 +72,7 @@ public class BlockManager : MonoBehaviour
             UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
             
             CountdownTimer.instance.timeUp = false;
-            CountdownTimer.instance.SetCountdown(countdown + 1, maxCountdownDisplay + 1);
+            CountdownTimer.instance.SetCountdown(countdown + 1, visibleCountdownMaximum + 1);
             
             yield return new WaitUntil(() => CountdownTimer.instance.timeUp == true);
             
@@ -83,7 +84,7 @@ public class BlockManager : MonoBehaviour
         trialSequencer.StartTrialSequence();
         yield return new WaitUntil(() => trialSequencer.sequenceComplete);
 
-        yield return new WaitForSeconds(postBlockWaitDuration);
+        yield return new WaitForSeconds(postBlockWaitPeriod);
 
         blockIndex++;
         

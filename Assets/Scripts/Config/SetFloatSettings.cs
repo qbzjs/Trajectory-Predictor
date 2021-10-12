@@ -36,7 +36,7 @@ public class SetFloatSettings : MonoBehaviour
         }
         if (trialSettingValue == TrialSettingsValue.Arrow) {
             valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.arrowDuration);
+            SetNumber(Settings.instance.indicationDuration);
         }
         if (trialSettingValue == TrialSettingsValue.Observation) {
             valueDisplay = "<size=-10>s";
@@ -118,45 +118,45 @@ public class SetFloatSettings : MonoBehaviour
     private void SetValue(float v) {
         if (trialSettingValue == TrialSettingsValue.preTrialWaitPeriod) {
             valueDisplay = "<size=-10>s";
-            Settings.instance.SetPreTrialWaitDuration(v);
+            Settings.instance.SetPreTrialWaitPeriod(v);
         }
         if (trialSettingValue == TrialSettingsValue.Fixation) {
             valueDisplay = "<size=-10>s";
-            Settings.instance.SetFixationDuration(v);
+            Settings.instance.SetFixationPeriod(v);
         }
         if (trialSettingValue == TrialSettingsValue.Arrow) {
             valueDisplay = "<size=-10>s";
-            Settings.instance.SetArrowDuration(v);
+            Settings.instance.SetIndicationPeriod(v);
         }
         if (trialSettingValue == TrialSettingsValue.Observation) {
             valueDisplay = "<size=-10>s";
-            Settings.instance.SetObservationDuration(v);
-            Settings.instance.SetTargetDuration(v);
+            Settings.instance.SetObservationPeriod(v);
+            Settings.instance.SetTargetPeriod(v);
         }
         if (trialSettingValue == TrialSettingsValue.TargetDuration) {
             valueDisplay = "<size=-10>s";
-            Settings.instance.SetTargetDuration(v);
-            Settings.instance.SetObservationDuration(v);
+            Settings.instance.SetTargetPeriod(v);
+            Settings.instance.SetObservationPeriod(v);
         }
         if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
             valueDisplay = "<size=-10>s";
-            Settings.instance.SetRestDurationMin(v);
+            Settings.instance.SetRestPeriodMin(v);
         }
         if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
             valueDisplay = "<size=-10>s";
-            Settings.instance.SetRestDurationMax(v);
+            Settings.instance.SetRestPeriodMax(v);
         }
         if (trialSettingValue == TrialSettingsValue.PostTrialWaitPeriod) {
             valueDisplay = "<size=-10>s";
-            Settings.instance.SetPostTrialWaitDuration(v);
+            Settings.instance.SetPostTrialWaitPeriod(v);
         }
         if (trialSettingValue == TrialSettingsValue.PostBlockWaitPeriod) {
             valueDisplay = "<size=-10>s";
-            Settings.instance.SetPostBlockWaitDuration(v);
+            Settings.instance.SetPostBlockWaitPeriod(v);
         }
         if (trialSettingValue == TrialSettingsValue.PostRunWaitPeriod) {
             valueDisplay = "<size=-10>s";
-            Settings.instance.SetPostRunWaitDuration(v);
+            Settings.instance.SetPostRunWaitPeriod(v);
         }
     }
 }

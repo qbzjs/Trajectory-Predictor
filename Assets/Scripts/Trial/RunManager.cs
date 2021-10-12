@@ -12,12 +12,16 @@ public class RunManager : MonoBehaviour
     private BlockManager blockManager;
     
     public GameStatus runStatus;
+    
+    const int startingBlock = 1001;
 
     public int runTotal = 2;
     public int runIndex = 0;
     
-    public float postRunWaitDuration = 1f;
-
+    public float postRunWaitPeriod = 1f;
+    
+    public int interRunRestPeriod;
+    
     public bool runsComplete;
     
     public delegate void RunAction(GameStatus status, int runTotal,int runIndex);
@@ -29,10 +33,12 @@ public class RunManager : MonoBehaviour
         instance = this;
         gameManager = GetComponent<GameManager>();
         blockManager = GetComponent<BlockManager>();
+        runTotal = gameManager.runTotal;
+        runIndex = 0;
     }
 
     private void Start(){
-        runIndex = 0;
+        
         InitialiseBlock();
     }
 
@@ -74,7 +80,7 @@ public class RunManager : MonoBehaviour
         {
             yield return new WaitUntil(() => blockManager.blocksComplete);
         
-            yield return new WaitForSeconds(postRunWaitDuration);
+            yield return new WaitForSeconds(postRunWaitPeriod);
             
             runStatus = GameStatus.RunComplete;
             UpdateRunStatus(runStatus,runTotal,runIndex);

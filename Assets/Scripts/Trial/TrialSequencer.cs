@@ -12,21 +12,21 @@ public class TrialSequencer : MonoBehaviour
     public int repetitions = 4;
     public int sequenceLength = 0;
     public int sequenceIndex = 0;
+    public bool actionObservation;
 
-    [Header("---------")]
-    //public float timer;
+    [Space(5)]
     public float duration;
     
     public TrialEventType trialEventType;
-    public float preTrialWaitDuration = 1f;
-    public float fixationDuration = 2f;
-    public float arrowDuration = 2f;
-    public float observationDuration = 2f;
-    public float targetDuration = 2f;
-    public float restDuration;
-    public float restDurationMin = 2;
-    public float restDurationMax;
-    public float postTrialWaitDuration = 1f;
+    public float preTrialWaitPeriod = 1f;
+    public float fixationPeriod = 2f;
+    public float indicationPeriod = 2f;
+    public float observationPeriod = 2f;
+    public float targetPresentationPeriod = 2f;
+    public float restPeriod;
+    public float restPeriodMin = 2;
+    public float restPeriodMax;
+    public float postTrialWaitPeriod = 1f;
     
     public bool sequenceComplete = false;
 
@@ -38,6 +38,7 @@ public class TrialSequencer : MonoBehaviour
     #region Initialise
     void Awake(){
         gameManager = GetComponent<GameManager>();
+        sequenceLength = gameManager.trialTotal;
     }
     void Start(){
         sequenceIndex = 0;
@@ -82,52 +83,52 @@ public class TrialSequencer : MonoBehaviour
         
         for (int i = 0; i < sequenceLength; i++){
             
-            restDuration = GetRestDuration();
-            duration = GetTotalDuration() + restDuration;
+            restPeriod = GetRestDuration();
+            duration = GetTotalDuration() + restPeriod;
             
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
             trialEventType = TrialEventType.PreTrialPhase;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, preTrialWaitDuration);
-            yield return new WaitForSeconds(preTrialWaitDuration);
+            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, preTrialWaitPeriod);
+            yield return new WaitForSeconds(preTrialWaitPeriod);
 
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
             trialEventType = TrialEventType.Fixation;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, fixationDuration);
-            yield return new WaitForSeconds(fixationDuration);
+            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, fixationPeriod);
+            yield return new WaitForSeconds(fixationPeriod);
 
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
             trialEventType = TrialEventType.Arrow;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, arrowDuration);
-            yield return new WaitForSeconds(arrowDuration);
+            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, indicationPeriod);
+            yield return new WaitForSeconds(indicationPeriod);
 
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
-            if (Settings.instance.actionObservation){
+            if (actionObservation){
                 trialEventType = TrialEventType.Observation;
-                UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, observationDuration);
-                yield return new WaitForSeconds(observationDuration);
+                UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, observationPeriod);
+                yield return new WaitForSeconds(observationPeriod);
             }
             
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
 
             trialEventType = TrialEventType.Target;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, targetDuration);
-            yield return new WaitForSeconds(targetDuration);
+            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, targetPresentationPeriod);
+            yield return new WaitForSeconds(targetPresentationPeriod);
 
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
             trialEventType = TrialEventType.Rest;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, restDuration);
-            yield return new WaitForSeconds(restDuration);
+            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, restPeriod);
+            yield return new WaitForSeconds(restPeriod);
 
             sequenceIndex++;
             
@@ -137,8 +138,8 @@ public class TrialSequencer : MonoBehaviour
             yield return new WaitUntil(() => !gameManager.paused);
 
             trialEventType = TrialEventType.PostTrialPhase;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, postTrialWaitDuration);
-            yield return new WaitForSeconds(postTrialWaitDuration);
+            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, postTrialWaitPeriod);
+            yield return new WaitForSeconds(postTrialWaitPeriod);
 
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
@@ -155,18 +156,18 @@ public class TrialSequencer : MonoBehaviour
     }
 
     private float GetRestDuration(){
-        float d = Random.Range(restDurationMin, restDurationMax);
-        if (restDurationMax <= restDurationMin){
-            d = restDurationMin;
+        float d = Random.Range(restPeriodMin, restPeriodMax);
+        if (restPeriodMax <= restPeriodMin){
+            d = restPeriodMin;
         }
 
         return d;
     }
 
     private float GetTotalDuration(){
-        float d = fixationDuration + arrowDuration + observationDuration + targetDuration;
+        float d = fixationPeriod + indicationPeriod + observationPeriod + targetPresentationPeriod;
         if (!Settings.instance.actionObservation){
-            d = d - observationDuration;
+            d = d - observationPeriod;
         }
 
         return d;

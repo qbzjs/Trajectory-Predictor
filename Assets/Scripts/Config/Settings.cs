@@ -26,7 +26,7 @@ public class Settings : MonoBehaviour {
 	// public TrialParadigm trialParadigm = TrialParadigm.Avatar3D;
 	public TrialParadigm trialParadigm = TrialParadigm.Horizontal;
 	public ParadigmTargetCount paradigmTargetCount = ParadigmTargetCount.Two;
-	public int numberOfTargets = 2; //ready only
+	public int numberOfTargets = 0; //ready only
 	public int trialsPerBlock = 0; //ready only
 	public int trialsPerRun = 0; //ready only
 	public int trialsPerSession = 0; //ready only
@@ -51,13 +51,13 @@ public class Settings : MonoBehaviour {
 
 	[Header("TRIAL SETTINGS")] 
 	[Range(-5, 5)]
-	public int trialSpeed = 0;
+	public float gameSpeedModifier = 0;
 	[Range(0, 5)] 
 	public float preTrialWaitPeriod = 1f;
 	[Range(0, 5)] 
 	public float fixationDuration = 2f;
 	[Range(0, 5)] 
-	public float arrowDuration = 2f;
+	public float indicationDuration = 2f;
 	[Range(1, 10)] 
 	public float observationDuration = 2f; //observation time is the same as target time (ghost hand movement)
 	[Range(1, 10)] 
@@ -80,8 +80,6 @@ public class Settings : MonoBehaviour {
 	public bool recordMotionData = false;
 	public SampleRate sampleRate = SampleRate.Hz60;
 
-	
-	
 	[Header("STATUS")] 
 	public GameStatus gameStatus = GameStatus.Ready;
 
@@ -182,8 +180,6 @@ public class Settings : MonoBehaviour {
 		}
 	}
 
-
-
 //---------SESSION INFO---------
 	public string GetSessionInfo()
 	{
@@ -193,10 +189,15 @@ public class Settings : MonoBehaviour {
 	
 	//metrics
 	private void UpdateSessionTotals(){
+		//update totals for UI 
 		trialsPerBlock = numberOfTargets * repetitions;
 		trialsPerRun = trialsPerBlock * blocksPerRun;
 		trialsPerSession = trialsPerRun * sessionRuns;
+		
+		//update timing totals...
+		
 		UpdateSettingsEvent();
+		SaveState();
 	}
 
 	public void UpdateSettingsEvent(){
@@ -225,7 +226,8 @@ public class Settings : MonoBehaviour {
 
 	public void SetTrialParadigm(TrialParadigm paradigm){
 		trialParadigm = paradigm;
-
+		GameManager.instance.trialParadigm = trialParadigm;
+		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 
@@ -240,41 +242,148 @@ public class Settings : MonoBehaviour {
 			case ParadigmTargetCount.Sixteen: { numberOfTargets = 16; break; }
 		}
 		UpdateSessionTotals();
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.repetitions = repetitions;
-		// TrialSequence.instance.InitialiseSequence();
+		GameManager.instance.targetCount = numberOfTargets;
+		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 
 	public void SetRepetitions(int num){
 		repetitions = num;
 		UpdateSessionTotals();
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.repetitions = repetitions;
-		// TrialSequence.instance.InitialiseSequence();
+		GameManager.instance.trialRepetitions = repetitions;
+		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	
 	//TODO----------------
 	public void SetSequenceType(SequenceType seqType){
 		sequenceType = seqType;
-		// TrialSequence.instance.sequenceType = sequenceType;
+		GameManager.instance.sequenceType = sequenceType;
+		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 
 	public void SetHandedness(Handedness side){
 		handedness = side;
-		//contact 3d target manager
-		reachTaskObjects.reachTaskObject.GetComponent<ReachTargetManager>().SetReachSide(handedness);
+		//todo update with new reach paradigm from game manager
+		GameManager.instance.handedness = handedness;
+		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 
 	#endregion
 
+	#region Session Settings
+
+	public void SetRuns(int num) {
+		sessionRuns = num;
+		UpdateSessionTotals();
+		GameManager.instance.runTotal = sessionRuns;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetBlocksPerRun(int num) {
+		blocksPerRun = num;
+		UpdateSessionTotals();
+		GameManager.instance.blockTotal = blocksPerRun;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetBlockCountdown(int num) {
+		preBlockCountdown = num;
+		GameManager.instance.blockCountdown = preBlockCountdown;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetVisibleCountdown(int num) {
+		visibleCountdown = num;
+		GameManager.instance.visibleCountdown = visibleCountdown;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetInterRunRestPeriod(int num) {
+		interRunRestPeriod = num;
+		GameManager.instance.interRunRestPeriod = interRunRestPeriod;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+
+	#endregion
+
+	#region Trial Timings
+	
+	public void SetSpeedModifier(float s){
+		gameSpeedModifier = s;
+		GameManager.instance.SetGameSpeed(gameSpeedModifier);
+		//trial speed isn't saved..
+	}
+	public void SetPreTrialWaitPeriod(float num){
+		preTrialWaitPeriod = num;
+		GameManager.instance.preTrialWaitPeriod = preTrialWaitPeriod;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetFixationPeriod(float num){
+		fixationDuration = num;
+		GameManager.instance.fixationPeriod = fixationDuration;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetIndicationPeriod(float num){
+		indicationDuration = num;
+		GameManager.instance.indicationPeriod = indicationDuration;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetObservationPeriod(float num) {
+		observationDuration = num;
+		GameManager.instance.observationPeriod = observationDuration;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetTargetPeriod(float num) {
+		targetDuration = num;
+		GameManager.instance.targetPresentationPeriod = targetDuration;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetRestPeriodMin(float num) {
+		restDurationMin = num;
+		GameManager.instance.restPeriodMinimum = restDurationMin;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetRestPeriodMax(float num) {
+		restDurationMax = num;
+		GameManager.instance.restPeriodMaximum = restDurationMax;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetPostTrialWaitPeriod(float num) {
+		postTrialWaitPeriod = num;
+		GameManager.instance.postTrialWaitPeriod = postTrialWaitPeriod;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetPostBlockWaitPeriod(float num) {
+		postBlockWaitPeriod = num;
+		GameManager.instance.postBlockRestPeriod = postBlockWaitPeriod;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	public void SetPostRunWaitPeriod(float num) {
+		postRunWaitPeriod = num;
+		GameManager.instance.postRunRestPeriod = postRunWaitPeriod;
+		GameManager.instance.InitialiseSession();
+		SaveState();
+	}
+	#endregion
 
 	#region Additional Settings
 	public void SetActionObservation(bool t){
 		actionObservation = t;
+		GameManager.instance.actionObservation = actionObservation;
+		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetRecordTrajectory(bool t){
@@ -297,112 +406,6 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 	#endregion
-
-	#region Session Settings
-
-	public void SetRuns(int num) {
-		sessionRuns = num;
-		UpdateSessionTotals();
-		//TODO---------------- INITIALISE BLOCK MANAGER
-		//BlockManager.instance.InitialiseTrial(trialBlocks);
-		SaveState();
-	}
-	public void SetBlocksPerRun(int num) {
-		blocksPerRun = num;
-		UpdateSessionTotals();
-		//TODO---------------- INITIALISE BLOCK MANAGER
-		//BlockManager.instance.InitialiseTrial(trialBlocks);
-		SaveState();
-	}
-	public void SetBlockCountdown(int num) {
-		preBlockCountdown = num;
-		//TODO---------------- INITIALISE BLOCK MANAGER
-		//BlockManager.instance.initialWaitPeriod = startDelay;
-		SaveState();
-	}
-	public void SetVisibleCountdown(int num) {
-		visibleCountdown = num;
-		//TODO---------------- INITIALISE BLOCK MANAGER
-		//BlockManager.instance.initialWaitPeriod = startDelay;
-		SaveState();
-	}
-	public void SetInterRunRestPeriod(int num) {
-		interRunRestPeriod = num;
-		//TODO---------------- INITIALISE BLOCK MANAGER
-		//BlockManager.instance.interBlockRestPeriod = interBlockRestPeriod;
-		SaveState();
-	}
-
-	#endregion
-
-
-	#region Trial Timings
-
-	public void SetTrialSpeed(int s){
-		trialSpeed = s;
-	}
-	public void SetPreTrialWaitDuration(float num){
-		preTrialWaitPeriod = num;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.fixationDuration = fixationDuration;
-		SaveState();
-	}
-	public void SetFixationDuration(float num){
-		fixationDuration = num;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.fixationDuration = fixationDuration;
-		SaveState();
-	}
-	public void SetArrowDuration(float num){
-		arrowDuration = num;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.arrowDuration = arrowDuration;
-		SaveState();
-	}
-	public void SetObservationDuration(float num) {
-		observationDuration = num;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.observationDuration = observationDuration;
-		SaveState();
-	}
-	public void SetTargetDuration(float num) {
-		targetDuration = num;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.targetDuration = targetDurationGranular;
-		SaveState();
-	}
-	public void SetRestDurationMin(float num) {
-		restDurationMin = num;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.restDurationMin = restDurationMin;
-		SaveState();
-	}
-	public void SetRestDurationMax(float num) {
-		restDurationMax = num;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.restDurationMax = restDurationMax;
-		SaveState();
-	}
-	public void SetPostTrialWaitDuration(float num) {
-		postTrialWaitPeriod = num;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.restDurationMax = restDurationMax;
-		SaveState();
-	}
-	public void SetPostBlockWaitDuration(float num) {
-		postBlockWaitPeriod = num;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.restDurationMax = restDurationMax;
-		SaveState();
-	}
-	public void SetPostRunWaitDuration(float num) {
-		postRunWaitPeriod = num;
-		//TODO---------------- INITIALISE SEQUENCER IN BLOCK MANAGER
-		// TrialSequence.instance.restDurationMax = restDurationMax;
-		SaveState();
-	}
-	#endregion
-
 
 	#region Interface
 
@@ -586,7 +589,8 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("ip", ip);
 		EasySave.Save("portListen", portListen);
 		EasySave.Save("portSend", portSend);
-		//trial
+		
+		#region session & trial save
 		// EasySave.Save("trialType", trialType.ToString());
 		EasySave.Save("trialParadigm", trialParadigm.ToString());
 		EasySave.Save("paradigmTargetCount", paradigmTargetCount.ToString());
@@ -602,7 +606,7 @@ public class Settings : MonoBehaviour {
 		
 		EasySave.Save("preTrialWaitPeriod", preTrialWaitPeriod);
 		EasySave.Save("fixationDuration", fixationDuration);
-		EasySave.Save("arrowDuration", arrowDuration);
+		EasySave.Save("arrowDuration", indicationDuration);
 		EasySave.Save("observationDuration", observationDuration);
 		EasySave.Save("targetDuration", targetDuration);
 		EasySave.Save("restDurationMin", restDurationMin);
@@ -614,6 +618,7 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("recordTrajectory", recordMotionData);
 		EasySave.Save("sampleRate", sampleRate.ToString());
 		EasySave.Save("actionObservation", actionObservation);
+		#endregion
 		
 
 		//environment
@@ -664,7 +669,7 @@ public class Settings : MonoBehaviour {
 		
 		settingsData.preTrialWaitPeriod = preTrialWaitPeriod;
 		settingsData.fixationDuration = fixationDuration;
-		settingsData.arrowDuration = arrowDuration;
+		settingsData.arrowDuration = indicationDuration;
 		settingsData.observationDuration = observationDuration;
 		settingsData.targetDuration = targetDuration;
 		settingsData.restPeriodMin = restDurationMin;
@@ -761,7 +766,7 @@ public class Settings : MonoBehaviour {
 
 			preTrialWaitPeriod = EasySave.Load<float>("fixationDuration");
 			fixationDuration = EasySave.Load<float>("fixationDuration");
-			arrowDuration = EasySave.Load<float>("arrowDuration");
+			indicationDuration = EasySave.Load<float>("arrowDuration");
 			observationDuration = EasySave.Load<float>("observationDuration");
 			targetDuration = EasySave.Load<float>("targetDuration"); //check float
 			restDurationMin = EasySave.Load<int>("restDurationMin");
@@ -836,7 +841,7 @@ public class Settings : MonoBehaviour {
 			// trialType = TrialType.CentreOut;
 			trialParadigm = TrialParadigm.Horizontal;
 			paradigmTargetCount = ParadigmTargetCount.Two;
-			repetitions = 10;
+			repetitions = 8;
 			sequenceType = SequenceType.Permutation;
 			handedness = Handedness.Right;
 			#endregion
@@ -846,13 +851,13 @@ public class Settings : MonoBehaviour {
 			blocksPerRun = 4;
 			preBlockCountdown = 10;
 			visibleCountdown = 5;
-			interRunRestPeriod = 15;
+			interRunRestPeriod = 20;
 			#endregion
 			
 			#region trial
 			preTrialWaitPeriod = 1f;
 			fixationDuration = 2f;
-			arrowDuration = 2f;
+			indicationDuration = 2f;
 			observationDuration = 2f;
 			targetDuration = 2f;
 			restDurationMin = 2f;
@@ -928,16 +933,16 @@ public class Settings : MonoBehaviour {
 		UpdateSessionTotals();
 		
 		#region trial
-		SetPreTrialWaitDuration(preTrialWaitPeriod);
-		SetFixationDuration(fixationDuration);
-		SetArrowDuration(arrowDuration);
-		SetObservationDuration(observationDuration);
-		SetTargetDuration(targetDuration);
-		SetRestDurationMin(restDurationMin);
-		SetRestDurationMax(restDurationMax);
-		SetPostTrialWaitDuration(postTrialWaitPeriod);
-		SetPostBlockWaitDuration(postBlockWaitPeriod);
-		SetPostRunWaitDuration(postRunWaitPeriod);
+		SetPreTrialWaitPeriod(preTrialWaitPeriod);
+		SetFixationPeriod(fixationDuration);
+		SetIndicationPeriod(indicationDuration);
+		SetObservationPeriod(observationDuration);
+		SetTargetPeriod(targetDuration);
+		SetRestPeriodMin(restDurationMin);
+		SetRestPeriodMax(restDurationMax);
+		SetPostTrialWaitPeriod(postTrialWaitPeriod);
+		SetPostBlockWaitPeriod(postBlockWaitPeriod);
+		SetPostRunWaitPeriod(postRunWaitPeriod);
 		#endregion
 
 		#region additional
