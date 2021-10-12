@@ -9,7 +9,8 @@ public class ReachTaskObjects : MonoBehaviour
 	public GameObject[] labels = new GameObject[3];
 	public GameObject scoreDisplay;
 	public GameObject statusDisplay;
-	public GameObject progressDisplayMovement;
+	public GameObject progressDisplayRun;
+	public GameObject progressDisplayBlock;
 	public GameObject progressDisplayTrial;
 	public GameObject countdownDisplay;
 	

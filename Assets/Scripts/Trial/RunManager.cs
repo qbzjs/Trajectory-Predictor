@@ -33,17 +33,15 @@ public class RunManager : MonoBehaviour
         instance = this;
         gameManager = GetComponent<GameManager>();
         blockManager = GetComponent<BlockManager>();
-        runTotal = gameManager.runTotal;
-        runIndex = 0;
     }
 
     private void Start(){
-        
-        InitialiseBlock();
+        runIndex = 0;
+        InitialiseRun();
     }
 
     //call from settings as well so updates every change
-    public void InitialiseBlock(){
+    public void InitialiseRun(){
         runStatus = GameStatus.Ready;
         runsComplete = false;
         UpdateRunStatus(runStatus,runTotal,runIndex);
@@ -85,7 +83,8 @@ public class RunManager : MonoBehaviour
             runStatus = GameStatus.RunComplete;
             UpdateRunStatus(runStatus,runTotal,runIndex);
 
-            Debug.Log("RUN END ________________________________________________");
+            //Debug.Log("RUN END ________________________________________________");
+            UpdateRunStatus(GameStatus.Debug,runTotal,runIndex);
         
             if (blockManager.blocksComplete){
                 runIndex++;
@@ -105,12 +104,20 @@ public class RunManager : MonoBehaviour
     #region Status & Event Updates
 
     private void UpdateRunStatus(GameStatus status, int total, int index){
-        if (OnRunAction != null){
+        if (OnRunAction != null && status!=GameStatus.Debug){
             OnRunAction(status, total, index);
         }
-        gameManager.RunTracker(status,total,index);
-        if (gameManager.debug){
+
+        if (status != GameStatus.Debug){
+            gameManager.RunTracker(status,total,index);
+        }
+        
+        if (gameManager.debugTimingDetailed){
             Debug.Log("------ Run Status: " + status + "Run Progress: " + index+"/"+total);
+        }
+
+        if (gameManager.debugTimingSimple && status == GameStatus.Debug){
+            Debug.Log("RUN END ________________________________________________");
         }
     }
     

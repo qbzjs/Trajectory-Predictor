@@ -16,12 +16,13 @@
 	    PreTrialPhase,
 	    Initialise,
 		Fixation,
-		Arrow,
+		Indication,
 		Target,
 		Observation,
 		Rest,
 		Complete,
-		PostTrialPhase
+		PostTrialPhase,
+		Debug
     }
 	public enum RigType {AvatarRig, GhostRig}
 	
@@ -164,7 +165,8 @@
 		RunComplete,
 		AllRunsComplete,
 		GameComplete,
-		Complete
+		Complete,
+		Debug
 	}
 
 	public enum UserInputType{

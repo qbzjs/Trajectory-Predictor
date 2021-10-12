@@ -131,7 +131,8 @@ public class Settings : MonoBehaviour {
 	public Color controlRestColour;
 	public Color controlActiveColour;
 
-	//Object pools
+	[Header("OBJECT POOLS")] 
+	public GameObject objectPools;
 	private UI_DisplayObjects displayObjects;
 	private ReachTaskObjects reachTaskObjects;
 	
@@ -144,8 +145,8 @@ public class Settings : MonoBehaviour {
 	void Awake () {
 		// EasySave.Delete<int>("targetDuration");
 		instance = this;
-		displayObjects = GetComponent<UI_DisplayObjects>();
-		reachTaskObjects = GetComponent<ReachTaskObjects>();
+		displayObjects = objectPools.GetComponent<UI_DisplayObjects>();
+		reachTaskObjects = objectPools.GetComponent<ReachTaskObjects>();
 		//check and load save files
 		LoadSave();
 	}
@@ -465,10 +466,14 @@ public class Settings : MonoBehaviour {
 	}
 	public void SetDisplayProgress(bool t) {
 		displayProgress = t;
-		displayObjects.progressDisplayMovement.SetActive(displayProgress);
-		reachTaskObjects.progressDisplayMovement.SetActive(displayProgress);
 		displayObjects.progressDisplayTrial.SetActive(displayProgress);
-		reachTaskObjects.progressDisplayTrial.SetActive(displayProgress);
+		//reachTaskObjects.progressDisplayTrial.SetActive(displayProgress);
+		displayObjects.progressDisplayBlock.SetActive(displayProgress);
+		//reachTaskObjects.progressDisplayBlock.SetActive(displayProgress);
+		displayObjects.progressDisplayRun.SetActive(displayProgress);
+		//reachTaskObjects.progressDisplayRun.SetActive(displayProgress);
+
+		displayObjects.progressDisplayRun.transform.parent.gameObject.SetActive(t);
 		SaveState();
 	}
 	public void SetDisplayCountdown(bool t) {

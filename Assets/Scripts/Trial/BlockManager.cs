@@ -91,12 +91,13 @@ public class BlockManager : MonoBehaviour
         blockStatus = GameStatus.BlockComplete;
         UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
         
-        Debug.Log("__BLOCK END ______________________________________________");
+        //Debug.Log("__BLOCK END ______________________________________________");
+        UpdateBlockStatus(GameStatus.Debug,blockTotal,blockIndex);
 
         if (blockIndex >= blockTotal){
             blocksComplete = true;
             blockStatus = GameStatus.AllBlocksComplete;
-            UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
+            //UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
             blockIndex = 0;
         }
     }
@@ -117,12 +118,20 @@ public class BlockManager : MonoBehaviour
     #region Status & Event Updates
 
     private void UpdateBlockStatus(GameStatus status, int total, int index){
-        if (OnBlockAction != null){
+        if (OnBlockAction != null && status != GameStatus.Debug){
             OnBlockAction(status, total, index);
         }
-        gameManager.BlockTracker(status,total,index);
-        if (gameManager.debug){
+
+        if (status != GameStatus.Debug){
+            gameManager.BlockTracker(status,total,index);
+        }
+        
+        if (gameManager.debugTimingDetailed){
             Debug.Log("------ Block Status: " + status + "Block Progress: " + index+"/"+total);
+        }
+
+        if (gameManager.debugTimingSimple && status == GameStatus.Debug){
+            Debug.Log("__BLOCK END ______________________________________________");
         }
     }
     

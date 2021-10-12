@@ -38,7 +38,6 @@ public class TrialSequencer : MonoBehaviour
     #region Initialise
     void Awake(){
         gameManager = GetComponent<GameManager>();
-        sequenceLength = gameManager.trialTotal;
     }
     void Start(){
         sequenceIndex = 0;
@@ -58,9 +57,9 @@ public class TrialSequencer : MonoBehaviour
     #region User Input
 
     void Update(){
-        if (Input.GetKeyDown(KeyCode.G)){
-            StartTrialSequence();
-        }
+        // if (Input.GetKeyDown(KeyCode.G)){
+        //     StartTrialSequence();
+        // }
     }
 
     //run from blockmanager
@@ -103,7 +102,7 @@ public class TrialSequencer : MonoBehaviour
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
-            trialEventType = TrialEventType.Arrow;
+            trialEventType = TrialEventType.Indication;
             UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, indicationPeriod);
             yield return new WaitForSeconds(indicationPeriod);
 
@@ -144,7 +143,9 @@ public class TrialSequencer : MonoBehaviour
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
-            Debug.Log("____TRIAL END ____________________________________________");
+            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], TrialEventType.Debug, 0);
+            
+            //Debug.Log("____TRIAL END ____________________________________________");
             
             if (sequenceIndex >= sequenceLength){
                 sequenceComplete = true;
@@ -177,15 +178,25 @@ public class TrialSequencer : MonoBehaviour
     #region Status & Event Updates
 
     private void UpdateTrialStatus(int total, int index, int tNum, TrialEventType eType, float dur){
-        if (OnTargetAction != null){
+        if (OnTargetAction != null && eType!= TrialEventType.Debug){
             OnTargetAction(total, index, tNum, eType, dur);
         }
-        gameManager.TrialTracker(total, index, tNum, eType, dur);
 
-        if (gameManager.debug){
+        if (eType != TrialEventType.Debug){
+            gameManager.TrialTracker(eType, total, index, tNum, dur);
+        }
+        
+        if (gameManager.debugTimingDetailed){
             Debug.Log("Trial Index: " + index + "Target: " + tNum + " - Event: " + trialEventType.ToString() + " - Timing: " + dur);
+        }
+
+        if (gameManager.debugTimingSimple && eType == TrialEventType.Debug){
+            Debug.Log("____TRIAL END ____________________________________________");
         }
     }
 
+    private void DebugTiming(){
+        
+    }
     #endregion
 }
