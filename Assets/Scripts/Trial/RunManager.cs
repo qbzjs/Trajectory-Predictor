@@ -13,12 +13,15 @@ public class RunManager : MonoBehaviour
     
     public GameStatus runStatus;
     
-    const int startingBlock = 1001;
+    const int startingRunTrigger = 1001;
 
     public int runTotal = 2;
     public int runIndex = 0;
     
     public float postRunWaitPeriod = 1f;
+    
+    [HideInInspector] 
+    public BlockSequenceGenerator runSequence;
     
     public int interRunRestPeriod;
     
@@ -44,6 +47,7 @@ public class RunManager : MonoBehaviour
 
     //call from settings as well so updates every change
     public void InitialiseRun(){
+        runSequence = gameManager.TriggerSequenceGenerator(runTotal, startingRunTrigger);//generate run trigger sequences
         UpdateRunStatus(runStatus,runTotal,runIndex);
     }
     #endregion
@@ -51,11 +55,10 @@ public class RunManager : MonoBehaviour
     #region User Input
     
     public void StartTrial(){
-        if (runIndex < runTotal){
+        if (runIndex <= runTotal){
+            runsComplete = false;
+            InitialiseRun();
             StartCoroutine(RunBlock());
-        }
-        else{
-            Debug.Log("RUNS FINISHED");
         }
     }
     
@@ -64,6 +67,16 @@ public class RunManager : MonoBehaviour
     #region RunLogic
 
     private IEnumerator RunBlock(){
+
+        if (runIndex == 0 || blockManager.blocksComplete){
+            runIndex++;
+            
+            //UDP ON
+            gameManager.SendUDP_byte(runSequence.sequenceStartTrigger[runIndex-1],"Run Started");
+        }
+
+        Debug.Log("----------RunManager - Started Block------------------");
+
         runStatus = GameStatus.Preparation;
         UpdateRunStatus(runStatus,runTotal,runIndex);
         
@@ -74,31 +87,32 @@ public class RunManager : MonoBehaviour
         runStatus = GameStatus.RunningTrials;
         UpdateRunStatus(runStatus,runTotal,runIndex);
 
-        if (blockManager.blockIndex == blockManager.blockTotal-1) //only progress run on last block
+        // if (blockManager.blockIndex == blockManager.blockTotal-1) //only progress run on last block
+        if (blockManager.blockIndex == blockManager.blockTotal) //only progress this logic on last block
         {
             yield return new WaitUntil(() => blockManager.blocksComplete);
         
-            yield return new WaitForSeconds(postRunWaitPeriod);
+            yield return new WaitForSeconds(gameManager.SpeedCheck(postRunWaitPeriod));
             
             runStatus = GameStatus.RunComplete;
             UpdateRunStatus(runStatus,runTotal,runIndex);
 
+            //UDP OFF
+            gameManager.SendUDP_byte(runSequence.sequenceEndTrigger[runIndex-1],"Run Ended");
+            
             //Debug.Log("RUN END ________________________________________________");
             UpdateRunStatus(GameStatus.Debug,runTotal,runIndex);
-        
-            if (blockManager.blocksComplete){
-                runIndex++;
-            }
-        
+            
             if (runIndex >= runTotal){
+                //UpdateRunStatus(GameStatus.Debug,runTotal,runIndex);//debug
                 runsComplete = true;
                 runStatus = GameStatus.AllRunsComplete;
+                runIndex = 0;
                 UpdateRunStatus(runStatus,runTotal,runIndex);
-                //runIndex = 0;
             }
         }
-
     }
+
     #endregion
     
     #region Status & Event Updates
@@ -120,11 +134,6 @@ public class RunManager : MonoBehaviour
             Debug.Log("RUN END ________________________________________________");
         }
     }
-    
-    // private void SendUDP_byte(int t){
-    //     Debug.Log("Run Trigger Sent: " + t);
-    //     UDPClient.instance.SendData((byte)t);
-    // }
 
     #endregion
     

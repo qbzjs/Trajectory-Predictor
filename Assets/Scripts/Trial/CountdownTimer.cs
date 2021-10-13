@@ -40,9 +40,10 @@ public class CountdownTimer : MonoBehaviour
     void Update()
     {
         if (timerEnabled)
+            
         {
             if (GameManager.instance.paused == false){
-                timer -= Time.deltaTime;
+                timer -= Time.deltaTime * GetGameSpeed();
             }
             
             if (timer <= maxTimerDisplay && timer >= 0) //only show countdown from max of 60
@@ -94,5 +95,13 @@ public class CountdownTimer : MonoBehaviour
     }
     public bool TimerComplete(){
         return timeUp;
+    }
+
+    private int GetGameSpeed(){
+        int s = Mathf.RoundToInt(GameManager.instance.gameSpeed);
+        if (s == 0){
+            s = 1;
+        }
+        return s;
     }
 }

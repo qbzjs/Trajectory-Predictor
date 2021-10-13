@@ -23,6 +23,12 @@ public class SettingsTabNavigation : MonoBehaviour
     public GameObject panelParent;
 
     void Awake(){
+        if (panels[0] != null){
+            for (int i = 0; i < panels.Length; i++){
+                panels[i].SetActive(true);
+            }
+        }
+        
         defaultColour = tabs[0].GetComponent<Image>().color;
         tabs[0].GetComponent<Image>().color = highlightedColour;
 

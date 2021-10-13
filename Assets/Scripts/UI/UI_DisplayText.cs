@@ -9,6 +9,7 @@ using TMPro;
 public class UI_DisplayText : MonoBehaviour {
     public static UI_DisplayText instance;
 
+    public TextMeshProUGUI pauseDisplay;
     public TextMeshProUGUI statusDisplay;
     public TextMeshPro statusDisplay_Wrld;
     public TextMeshProUGUI runProgressDisplay;
@@ -19,6 +20,8 @@ public class UI_DisplayText : MonoBehaviour {
     public TextMeshPro trialProgressDisplay_Wrld;
     public TextMeshProUGUI trialTotalProgressDisplay;
     public TextMeshPro trialTotalProgressDisplay_Wrld;
+
+    public TextMeshProUGUI trialPhaseDisplay;
 
     public TextMeshProUGUI scoreDisplay;
     public TextMeshPro scoreDisplay_Wrld;
@@ -39,27 +42,14 @@ public class UI_DisplayText : MonoBehaviour {
         trialProgressDisplay_Wrld.text = "Trial: 0 / 0";
         trialTotalProgressDisplay.text = "Total Trials: 0 / 0";
         trialTotalProgressDisplay_Wrld.text = "Total Trials: 0 / 0";
+
+        trialPhaseDisplay.text = "Trial Phase Detail...";
     }
 
     void Start() {
         SetStatus(GameStatus.Ready, "System Ready");
     }
-
-//    public void SetStatus(GameStatus s) {
-//        string dis = "";
-//        switch (s) {
-//            case GameStatus.Ready :
-//                dis = "Trail Ready";
-//                break;
-//            case GameStatus.Running :
-//                dis = "Trail Running";
-//                break;
-//            case GameStatus.Complete :
-//                dis = "Trail Complete";
-//                break;
-//        }
-//        statusDisplay.text = dis;
-//    }
+    
 
     public void SetRunProgress(int c, int t) {
         runProgressDisplay.text = "Run: " + c.ToString() + " / " + t.ToString();
@@ -77,6 +67,14 @@ public class UI_DisplayText : MonoBehaviour {
         trialTotalProgressDisplay.text = "Total Trials: " + c.ToString() + " / " + t.ToString();
         trialTotalProgressDisplay_Wrld.text = "Total Trials: " + c.ToString() + " / " + t.ToString();
     }
+
+    public void SetTrialPhaseDetail(string s){
+        trialPhaseDisplay.text = s;
+    }
+
+    public void SetPause(string p){
+        pauseDisplay.text = p;
+    }
     
     public void SetStatus(GameStatus s, string t) {
         statusDisplay.text = t;
@@ -91,16 +89,16 @@ public class UI_DisplayText : MonoBehaviour {
                 statusDisplay_Wrld.color = defaultColour;
                 break;
             case GameStatus.Ready :
-                statusDisplay.color = completeColour;
-                statusDisplay_Wrld.color = completeColour;
+                statusDisplay.color = defaultColour;
+                statusDisplay_Wrld.color = defaultColour;
                 break;
             case GameStatus.Countdown :
                 statusDisplay.color = defaultColour;
                 statusDisplay_Wrld.color = defaultColour;
                 break;
             case GameStatus.RunningTrials :
-                statusDisplay.color = defaultColour;
-                statusDisplay_Wrld.color = defaultColour;
+                statusDisplay.color = completeColour;
+                statusDisplay_Wrld.color = completeColour;
                 break;
             case GameStatus.Complete :
                 statusDisplay.color = completeColour;

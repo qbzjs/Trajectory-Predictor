@@ -39,24 +39,27 @@ public class InputManager : MonoBehaviour{
 	void Update(){
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			StartTrial();
+			StartTrials();
 		}
 
-		if (Input.GetKeyDown(KeyCode.Escape)){
-			
+		if (Input.GetKeyDown(KeyCode.P)){
+			PauseGame();
+		}
+		if (Input.GetKeyDown(KeyCode.R)){
+			ResetSession();
 		}
 	}
 	private void SenselTapOnUserInputAction(UserInputType iType, float x, float y, float f)
 	{
 		Debug.Log("Sensel Input ---> " + "X: " + x + " : " + "Y: " + y + "F: " + f);
-		StartTrial();
+		StartTrials();
 	}
 
 	#endregion
 
 	#region Input Actions
 
-	public void StartTrial(){
+	public void StartTrials(){
 		if (inputEnabled){
 			if (OnUserInputAction != null){
 				OnUserInputAction(UserInputType.Start);
@@ -72,10 +75,17 @@ public class InputManager : MonoBehaviour{
 		}
 	}
 	
-	public void PauseTrial(){
+	public void PauseGame(){
 		if (inputEnabled){
 			if (OnUserInputAction != null){
-				OnUserInputAction(UserInputType.Stop);
+				OnUserInputAction(UserInputType.Pause);
+			}
+		}
+	}
+	public void ResetSession(){
+		if (inputEnabled){
+			if (OnUserInputAction != null){
+				OnUserInputAction(UserInputType.Reset);
 			}
 		}
 	}

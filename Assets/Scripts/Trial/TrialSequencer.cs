@@ -80,57 +80,66 @@ public class TrialSequencer : MonoBehaviour
 
     private IEnumerator RunTrialSequence(){
         sequenceIndex = 0;
+        sequenceComplete = false;
         
         for (int i = 0; i < sequenceLength; i++){
             
             restPeriod = GetRestDuration();
             duration = GetTotalDuration() + restPeriod;
             
+            sequenceIndex++;
+            
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
             trialEventType = TrialEventType.PreTrialPhase;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, preTrialWaitPeriod);
-            yield return new WaitForSeconds(SpeedCheck(preTrialWaitPeriod));
+            UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], trialEventType, preTrialWaitPeriod);
+            yield return new WaitForSeconds(gameManager.SpeedCheck(preTrialWaitPeriod));
 
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
             trialEventType = TrialEventType.Fixation;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, fixationPeriod);
-            yield return new WaitForSeconds(SpeedCheck(fixationPeriod));
+            UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], trialEventType, fixationPeriod);
+            yield return new WaitForSeconds(gameManager.SpeedCheck(fixationPeriod));
 
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
             trialEventType = TrialEventType.Indication;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, indicationPeriod);
-            yield return new WaitForSeconds(SpeedCheck(indicationPeriod));
+            UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], trialEventType, indicationPeriod);
+            yield return new WaitForSeconds(gameManager.SpeedCheck(indicationPeriod));
 
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
             if (actionObservation){
                 trialEventType = TrialEventType.Observation;
-                UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, observationPeriod);
-                yield return new WaitForSeconds(SpeedCheck(observationPeriod));
+                UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], trialEventType, observationPeriod);
+                yield return new WaitForSeconds(gameManager.SpeedCheck(observationPeriod));
             }
             
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
 
+            //UDP ON
+            gameManager.SendUDP_byte(sequenceOrder[i],"Trial Presentation");
+            
+            //TARGET PRESENTATION
             trialEventType = TrialEventType.Target;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, targetPresentationPeriod);
-            yield return new WaitForSeconds(SpeedCheck(targetPresentationPeriod));
+            UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], trialEventType, targetPresentationPeriod);
+            yield return new WaitForSeconds(gameManager.SpeedCheck(targetPresentationPeriod));
+            
+            //UDP OFF
+            gameManager.SendUDP_byte(sequenceOrder[i]+10, "Trial Presentation Ended");
 
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
             trialEventType = TrialEventType.Rest;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, restPeriod);
-            yield return new WaitForSeconds(SpeedCheck(restPeriod));
-
-            sequenceIndex++;
+            UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], trialEventType, restPeriod);
+            yield return new WaitForSeconds(gameManager.SpeedCheck(restPeriod));
+            
             
             //POST TRIAL SEQUENCE -----
             
@@ -138,13 +147,13 @@ public class TrialSequencer : MonoBehaviour
             yield return new WaitUntil(() => !gameManager.paused);
 
             trialEventType = TrialEventType.PostTrialPhase;
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], trialEventType, postTrialWaitPeriod);
-            yield return new WaitForSeconds(SpeedCheck(postTrialWaitPeriod));
+            UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], trialEventType, postTrialWaitPeriod);
+            yield return new WaitForSeconds(gameManager.SpeedCheck(postTrialWaitPeriod));
 
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
-            UpdateTrialStatus(sequenceLength,i,sequenceOrder[i], TrialEventType.Debug, 0);
+            UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], TrialEventType.Debug, 0);
             
             //Debug.Log("____TRIAL END ____________________________________________");
             
@@ -173,23 +182,7 @@ public class TrialSequencer : MonoBehaviour
         }
         return d;
     }
-
-    private float SpeedCheck(float t){
-        float ts = t;
-        float gs = GameManager.instance.gameSpeed/10;
-        if (gs < 0){
-            gs = Mathf.Abs(gs);
-            ts = ts + gs;
-        }
-        else if (gs > 0){
-            ts = ts - gs;
-        }
-
-        if (ts < 0){
-            ts = 0;
-        }
-        return ts;
-    }
+    
     #endregion
 
     #region Status & Event Updates
@@ -210,10 +203,6 @@ public class TrialSequencer : MonoBehaviour
         if (gameManager.debugTimingSimple && eType == TrialEventType.Debug){
             Debug.Log("____TRIAL END ____________________________________________");
         }
-    }
-
-    private void DebugTiming(){
-        
     }
     #endregion
 }

@@ -106,18 +106,18 @@
 
 	public enum TrialSettingsValue{
 		Runs,
-		TrialBlocks,
+		BlocksPerRun,
 		Repetitions,
 		Countdown,
 		visibleCountdown,
 		InterRunRestPeriod,
 		preTrialWaitPeriod,
-		TargetDuration,
-		Fixation,
-		Arrow,
-		Observation,
-		RestDurationMin,
-		RestDurationMax,
+		TargetPresentationPeriod,
+		FixationPeriod,
+		IndicationPeriod,
+		ObservationPeriod,
+		RestPeriodMin,
+		RestPeriodMax,
 		PostTrialWaitPeriod,
 		PostBlockWaitPeriod,
 		PostRunWaitPeriod
@@ -156,6 +156,7 @@
 		Null,
 		Orientation,
 		Preparation,
+		WaitingForInput,
 		Ready,
 		Countdown,
 		
@@ -166,12 +167,15 @@
 		AllRunsComplete,
 		GameComplete,
 		Complete,
+		Paused,
 		Debug
 	}
 
 	public enum UserInputType{
 		Start,
 		Stop,
+		Pause,
+		Reset,
 		Sensel
 	}
 

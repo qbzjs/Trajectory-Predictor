@@ -55,18 +55,18 @@ public class Settings : MonoBehaviour {
 	[Range(0, 5)] 
 	public float preTrialWaitPeriod = 1f;
 	[Range(0, 5)] 
-	public float fixationDuration = 2f;
+	public float fixationPeriod = 2f;
 	[Range(0, 5)] 
-	public float indicationDuration = 2f;
+	public float indicationPeriod = 2f;
 	[Range(1, 10)] 
-	public float observationDuration = 2f; //observation time is the same as target time (ghost hand movement)
+	public float observationPeriod = 2f; //observation time is the same as target time (ghost hand movement)
 	[Range(1, 10)] 
-	public float targetDuration = 2f;
+	public float targetPresentationPeriod = 2f;
 
 	[Range(2, 10)] 
-	public float restDurationMin = 2;
+	public float restPeriodMin = 2;
 	[Range(2, 10)] 
-	public float restDurationMax = 2;
+	public float restPeriodMax = 2;
 	
 	[Range(0, 5)] 
 	public float postTrialWaitPeriod = 1;
@@ -325,38 +325,38 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 	public void SetFixationPeriod(float num){
-		fixationDuration = num;
-		GameManager.instance.fixationPeriod = fixationDuration;
+		fixationPeriod = num;
+		GameManager.instance.fixationPeriod = fixationPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetIndicationPeriod(float num){
-		indicationDuration = num;
-		GameManager.instance.indicationPeriod = indicationDuration;
+		indicationPeriod = num;
+		GameManager.instance.indicationPeriod = indicationPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetObservationPeriod(float num) {
-		observationDuration = num;
-		GameManager.instance.observationPeriod = observationDuration;
+		observationPeriod = num;
+		GameManager.instance.observationPeriod = observationPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetTargetPeriod(float num) {
-		targetDuration = num;
-		GameManager.instance.targetPresentationPeriod = targetDuration;
+		targetPresentationPeriod = num;
+		GameManager.instance.targetPresentationPeriod = targetPresentationPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetRestPeriodMin(float num) {
-		restDurationMin = num;
-		GameManager.instance.restPeriodMinimum = restDurationMin;
+		restPeriodMin = num;
+		GameManager.instance.restPeriodMinimum = restPeriodMin;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetRestPeriodMax(float num) {
-		restDurationMax = num;
-		GameManager.instance.restPeriodMaximum = restDurationMax;
+		restPeriodMax = num;
+		GameManager.instance.restPeriodMaximum = restPeriodMax;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
@@ -604,18 +604,18 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("handedness", handedness.ToString());
 
 		EasySave.Save("sessionRuns", sessionRuns);
-		EasySave.Save("trialBlocks", blocksPerRun);
+		EasySave.Save("blocksPerRun", blocksPerRun);
 		EasySave.Save("preBlockCountdown", preBlockCountdown);
 		EasySave.Save("visibleCountdown", visibleCountdown);
 		EasySave.Save("interRunRestPeriod", interRunRestPeriod);
 		
 		EasySave.Save("preTrialWaitPeriod", preTrialWaitPeriod);
-		EasySave.Save("fixationDuration", fixationDuration);
-		EasySave.Save("arrowDuration", indicationDuration);
-		EasySave.Save("observationDuration", observationDuration);
-		EasySave.Save("targetDuration", targetDuration);
-		EasySave.Save("restDurationMin", restDurationMin);
-		EasySave.Save("restDurationMax", restDurationMax);
+		EasySave.Save("fixationPeriod", fixationPeriod);
+		EasySave.Save("indicationPeriod", indicationPeriod);
+		EasySave.Save("observationPeriod", observationPeriod);
+		EasySave.Save("targetPresentationPeriod", targetPresentationPeriod);
+		EasySave.Save("restPeriodMin", restPeriodMin);
+		EasySave.Save("restPeriodMax", restPeriodMax);
 		EasySave.Save("postTrialWaitPeriod", postTrialWaitPeriod);
 		EasySave.Save("postBlockWaitPeriod", postBlockWaitPeriod);
 		EasySave.Save("postRunWaitPeriod", postRunWaitPeriod);
@@ -673,11 +673,11 @@ public class Settings : MonoBehaviour {
 		settingsData.interRunRestPeriod = interRunRestPeriod;
 		
 		settingsData.preTrialWaitPeriod = preTrialWaitPeriod;
-		settingsData.fixationDuration = fixationDuration;
-		settingsData.arrowDuration = indicationDuration;
-		settingsData.observationDuration = observationDuration;
-		settingsData.targetDuration = targetDuration;
-		settingsData.restPeriodMin = restDurationMin;
+		settingsData.fixationDuration = fixationPeriod;
+		settingsData.arrowDuration = indicationPeriod;
+		settingsData.observationDuration = observationPeriod;
+		settingsData.targetDuration = targetPresentationPeriod;
+		settingsData.restPeriodMin = restPeriodMin;
 		settingsData.postTrialWaitPeriod = postTrialWaitPeriod;
 		settingsData.postBlockWaitPeriod = postBlockWaitPeriod;
 		settingsData.postRunWaitPeriod = postRunWaitPeriod;
@@ -760,7 +760,7 @@ public class Settings : MonoBehaviour {
 			#region Session data load
 
 			sessionRuns = EasySave.Load<int>("sessionRuns");
-			blocksPerRun = EasySave.Load<int>("trialBlocks");
+			blocksPerRun = EasySave.Load<int>("blocksPerRun");
 			preBlockCountdown = EasySave.Load<int>("preBlockCountdown");
 			visibleCountdown = EasySave.Load<int>("visibleCountdown");
 			interRunRestPeriod = EasySave.Load<int>("interRunRestPeriod");
@@ -769,13 +769,13 @@ public class Settings : MonoBehaviour {
 
 			#region trial data load
 
-			preTrialWaitPeriod = EasySave.Load<float>("fixationDuration");
-			fixationDuration = EasySave.Load<float>("fixationDuration");
-			indicationDuration = EasySave.Load<float>("arrowDuration");
-			observationDuration = EasySave.Load<float>("observationDuration");
-			targetDuration = EasySave.Load<float>("targetDuration"); //check float
-			restDurationMin = EasySave.Load<int>("restDurationMin");
-			restDurationMax = EasySave.Load<int>("restDurationMax");
+			preTrialWaitPeriod = EasySave.Load<float>("preTrialWaitPeriod");
+			fixationPeriod = EasySave.Load<float>("fixationPeriod");
+			indicationPeriod = EasySave.Load<float>("indicationPeriod");
+			observationPeriod = EasySave.Load<float>("observationPeriod");
+			targetPresentationPeriod = EasySave.Load<float>("targetPresentationPeriod"); //check float
+			restPeriodMin = EasySave.Load<float>("restPeriodMin");
+			restPeriodMax = EasySave.Load<float>("restPeriodMax");
 			postTrialWaitPeriod = EasySave.Load<float>("postTrialWaitPeriod");
 			postBlockWaitPeriod = EasySave.Load<float>("postBlockWaitPeriod");
 			postRunWaitPeriod = EasySave.Load<float>("postRunWaitPeriod");
@@ -861,12 +861,12 @@ public class Settings : MonoBehaviour {
 			
 			#region trial
 			preTrialWaitPeriod = 1f;
-			fixationDuration = 2f;
-			indicationDuration = 2f;
-			observationDuration = 2f;
-			targetDuration = 2f;
-			restDurationMin = 2f;
-			restDurationMax = 4f;
+			fixationPeriod = 2f;
+			indicationPeriod = 2f;
+			observationPeriod = 2f;
+			targetPresentationPeriod = 2f;
+			restPeriodMin = 2f;
+			restPeriodMax = 4f;
 			postTrialWaitPeriod = 1f;
 			postBlockWaitPeriod = 1f;
 			postRunWaitPeriod = 1f;
@@ -939,12 +939,12 @@ public class Settings : MonoBehaviour {
 		
 		#region trial
 		SetPreTrialWaitPeriod(preTrialWaitPeriod);
-		SetFixationPeriod(fixationDuration);
-		SetIndicationPeriod(indicationDuration);
-		SetObservationPeriod(observationDuration);
-		SetTargetPeriod(targetDuration);
-		SetRestPeriodMin(restDurationMin);
-		SetRestPeriodMax(restDurationMax);
+		SetFixationPeriod(fixationPeriod);
+		SetIndicationPeriod(indicationPeriod);
+		SetObservationPeriod(observationPeriod);
+		SetTargetPeriod(targetPresentationPeriod);
+		SetRestPeriodMin(restPeriodMin);
+		SetRestPeriodMax(restPeriodMax);
 		SetPostTrialWaitPeriod(postTrialWaitPeriod);
 		SetPostBlockWaitPeriod(postBlockWaitPeriod);
 		SetPostRunWaitPeriod(postRunWaitPeriod);

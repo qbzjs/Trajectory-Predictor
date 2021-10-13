@@ -30,31 +30,31 @@ public class SetFloatSettings : MonoBehaviour
             valueDisplay = "<size=-10>s";
             SetNumber(Settings.instance.preTrialWaitPeriod);
         }
-        if (trialSettingValue == TrialSettingsValue.Fixation) {
+        if (trialSettingValue == TrialSettingsValue.FixationPeriod) {
             valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.fixationDuration);
+            SetNumber(Settings.instance.fixationPeriod);
         }
-        if (trialSettingValue == TrialSettingsValue.Arrow) {
+        if (trialSettingValue == TrialSettingsValue.IndicationPeriod) {
             valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.indicationDuration);
+            SetNumber(Settings.instance.indicationPeriod);
         }
-        if (trialSettingValue == TrialSettingsValue.Observation) {
+        if (trialSettingValue == TrialSettingsValue.ObservationPeriod) {
             valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.observationDuration);
-            SetNumber(Settings.instance.targetDuration);
+            SetNumber(Settings.instance.observationPeriod);
+            SetNumber(Settings.instance.targetPresentationPeriod);
         }
-        if (trialSettingValue == TrialSettingsValue.TargetDuration) {
+        if (trialSettingValue == TrialSettingsValue.TargetPresentationPeriod) {
             valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.targetDuration);
-            SetNumber(Settings.instance.observationDuration);
+            SetNumber(Settings.instance.targetPresentationPeriod);
+            SetNumber(Settings.instance.observationPeriod);
         }
-        if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
+        if (trialSettingValue == TrialSettingsValue.RestPeriodMin) {
             valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.restDurationMin);
+            SetNumber(Settings.instance.restPeriodMin);
         }
-        if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
+        if (trialSettingValue == TrialSettingsValue.RestPeriodMax) {
             valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.restDurationMax);
+            SetNumber(Settings.instance.restPeriodMax);
         }
         if (trialSettingValue == TrialSettingsValue.PostTrialWaitPeriod) {
             valueDisplay = "<size=-10>s";
@@ -120,29 +120,29 @@ public class SetFloatSettings : MonoBehaviour
             valueDisplay = "<size=-10>s";
             Settings.instance.SetPreTrialWaitPeriod(v);
         }
-        if (trialSettingValue == TrialSettingsValue.Fixation) {
+        if (trialSettingValue == TrialSettingsValue.FixationPeriod) {
             valueDisplay = "<size=-10>s";
             Settings.instance.SetFixationPeriod(v);
         }
-        if (trialSettingValue == TrialSettingsValue.Arrow) {
+        if (trialSettingValue == TrialSettingsValue.IndicationPeriod) {
             valueDisplay = "<size=-10>s";
             Settings.instance.SetIndicationPeriod(v);
         }
-        if (trialSettingValue == TrialSettingsValue.Observation) {
+        if (trialSettingValue == TrialSettingsValue.ObservationPeriod) {
             valueDisplay = "<size=-10>s";
             Settings.instance.SetObservationPeriod(v);
             Settings.instance.SetTargetPeriod(v);
         }
-        if (trialSettingValue == TrialSettingsValue.TargetDuration) {
+        if (trialSettingValue == TrialSettingsValue.TargetPresentationPeriod) {
             valueDisplay = "<size=-10>s";
             Settings.instance.SetTargetPeriod(v);
             Settings.instance.SetObservationPeriod(v);
         }
-        if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
+        if (trialSettingValue == TrialSettingsValue.RestPeriodMin) {
             valueDisplay = "<size=-10>s";
             Settings.instance.SetRestPeriodMin(v);
         }
-        if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
+        if (trialSettingValue == TrialSettingsValue.RestPeriodMax) {
             valueDisplay = "<size=-10>s";
             Settings.instance.SetRestPeriodMax(v);
         }

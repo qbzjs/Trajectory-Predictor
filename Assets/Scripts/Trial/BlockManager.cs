@@ -15,7 +15,7 @@ public class BlockManager : MonoBehaviour
 
     public GameStatus blockStatus;
 
-    const int startingBlock = 101;
+    const int startingBlockTrigger = 101;
 
     public bool useCountdown = true;
     public int blockTotal = 4;
@@ -49,7 +49,7 @@ public class BlockManager : MonoBehaviour
     }
     //call from settings as well so updates every change
     public void InitialiseBlock(){
-        BlockSequenceGenerator();
+        blockSequence = gameManager.TriggerSequenceGenerator(blockTotal, startingBlockTrigger); //generate trigger sequences
         UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
     }
 
@@ -58,6 +58,7 @@ public class BlockManager : MonoBehaviour
     #region User Input
     public void StartTrial(){
         if (blockIndex < blockTotal){
+            blocksComplete = false;
             InitialiseBlock();
             StartCoroutine(RunTrialSequence());
         }
@@ -67,6 +68,9 @@ public class BlockManager : MonoBehaviour
     #region Block Logic
     
     private IEnumerator RunTrialSequence(){
+        
+        blockIndex++;
+        
         if (useCountdown){
             blockStatus = GameStatus.Countdown;
             UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
@@ -78,38 +82,45 @@ public class BlockManager : MonoBehaviour
             
         }
         
+        Debug.Log("--------BlockManager - Started Trial Sequence------------------");
+        
+        //UDP ON
+        gameManager.SendUDP_byte(blockSequence.sequenceStartTrigger[blockIndex-1],"Block Started");
+
         blockStatus = GameStatus.RunningTrials;
         UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
         
         trialSequencer.StartTrialSequence();
         yield return new WaitUntil(() => trialSequencer.sequenceComplete);
 
-        yield return new WaitForSeconds(postBlockWaitPeriod);
+        yield return new WaitForSeconds(gameManager.SpeedCheck(postBlockWaitPeriod));
 
-        blockIndex++;
-        
         blockStatus = GameStatus.BlockComplete;
         UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
-        
+
         //Debug.Log("__BLOCK END ______________________________________________");
         UpdateBlockStatus(GameStatus.Debug,blockTotal,blockIndex);
+        
+        //UDP OFF
+        gameManager.SendUDP_byte(blockSequence.sequenceEndTrigger[blockIndex-1], "Block Ended");
 
         if (blockIndex >= blockTotal){
-            blocksComplete = true;
+            blocksComplete = true; // tells run manager to progress
             blockStatus = GameStatus.AllBlocksComplete;
-            //UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
             blockIndex = 0;
+            UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
         }
-    }
 
-
-    public void BlockSequenceGenerator(){
-        blockSequence = new BlockSequenceGenerator();
-        blockSequence.GenerateSequence(blockTotal, startingBlock);
-        // for (int i = 0; i < blockSequence.sequenceStartTrigger.Length; i++){
-        //     Debug.Log(blockSequence.sequenceStartTrigger[i]);
-        //     Debug.Log(blockSequence.sequenceEndTrigger[i]);
-        // }
+        yield return new WaitForSeconds(gameManager.SpeedCheck(gameManager.postRunRestPeriod *4));
+        blockStatus = GameStatus.WaitingForInput;
+        UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
+        
+        //automated block starts???
+        if (gameManager.automateInput && !gameManager.trialsActive){
+            // yield return new WaitUntil(() => !gameManager.trialsActive);
+            // yield return new WaitForSeconds(gameManager.SpeedCheck(gameManager.postRunRestPeriod *2));
+            gameManager.StartTrial();
+        }
     }
 
     #endregion
@@ -133,11 +144,6 @@ public class BlockManager : MonoBehaviour
         if (gameManager.debugTimingSimple && status == GameStatus.Debug){
             Debug.Log("__BLOCK END ______________________________________________");
         }
-    }
-    
-    private void SendUDP_byte(int t){
-        Debug.Log("Block Trigger Sent: " + t);
-        UDPClient.instance.SendData((byte)t);
     }
 
     #endregion

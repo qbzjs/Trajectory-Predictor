@@ -27,7 +27,7 @@ public class SetNumberSettings : MonoBehaviour {
         if (trialSettingValue == TrialSettingsValue.Runs) {
             SetNumber(Settings.instance.sessionRuns);
         }
-        if (trialSettingValue == TrialSettingsValue.TrialBlocks) {
+        if (trialSettingValue == TrialSettingsValue.BlocksPerRun) {
             SetNumber(Settings.instance.blocksPerRun);
         }
         if (trialSettingValue == TrialSettingsValue.Countdown) {
@@ -112,7 +112,7 @@ public class SetNumberSettings : MonoBehaviour {
         if (trialSettingValue == TrialSettingsValue.Runs) {
             Settings.instance.SetRuns(v);
         }
-        if (trialSettingValue == TrialSettingsValue.TrialBlocks) {
+        if (trialSettingValue == TrialSettingsValue.BlocksPerRun) {
             Settings.instance.SetBlocksPerRun(v);
         }
         if (trialSettingValue == TrialSettingsValue.Countdown) {

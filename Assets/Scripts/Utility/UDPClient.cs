@@ -19,6 +19,9 @@ public class UDPClient : MonoBehaviour
 {
     public static UDPClient instance;
 
+    public bool sendEnabled = true;
+    public bool receiveEnabled = true;
+    
     public string ip = "127.0.0.1";
     public int portListen = 3002;
     public int portSend = 3010;
@@ -109,20 +112,19 @@ public class UDPClient : MonoBehaviour
     // UDP send: one byte
     public void SendData(byte inputByte)
     {
-        try
-        {
-            //Prepare byte-data array
-            byte[] data = new byte[1];
-            data[0] = inputByte;
+        //Debug.Log("valueToSend");
+        if (sendEnabled){
+            try{
+                //Prepare byte-data array
+                byte[] data = new byte[1];
+                data[0] = inputByte;
 
-//            Debug.Log("UDP Send : " + data);
-
-            // Send bytes to remote client
-            client.Send(data, data.Length, remoteEndPoint);
-        }
-        catch (Exception err)
-        {
-            Debug.LogError("Error udp send : " + err.Message);
+                // Send bytes to remote client
+                client.Send(data, data.Length, remoteEndPoint);
+            }
+            catch (Exception err){
+                Debug.LogError("Error udp send : " + err.Message);
+            }
         }
     }
     
