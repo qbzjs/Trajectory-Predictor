@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public bool debugTimingSimple = true;
     public bool debugTimingDetailed = true;
     public bool debugUDPTriggers = true;
+    public bool debugGameEvents = true;
 
     private RunManager runManager;
     private BlockManager blockManager;
@@ -145,6 +146,10 @@ public class GameManager : MonoBehaviour
 
         trialSequencer.actionObservation = actionObservation;
         
+
+    }
+
+    public void InitialiseComponents(){
         runManager.InitialiseRun();
         blockManager.InitialiseBlock();
         trialSequencer.InitialiseTrial();
@@ -152,9 +157,6 @@ public class GameManager : MonoBehaviour
         UpdateProgressionUI();
     }
 
-
-    
-    
     #endregion
 
 
@@ -163,8 +165,9 @@ public class GameManager : MonoBehaviour
     public void StartTrial(){
         //trialsactive set by blocks - set false after each block completes
         if (!trialsActive && !runManager.runsComplete){
-            trialsActive = true;
-            UpdateGameStatusUI(GameStatus.RunningTrials);
+            InitialiseComponents();
+            GameEvent(GameStatus.Initialised);
+            SetTrialActiveStatus(true);
             runManager.StartTrial();
         }
 
@@ -179,20 +182,24 @@ public class GameManager : MonoBehaviour
     public void PauseTrials(){
         if (!paused){
             paused = true;
+            GameEvent(GameStatus.Paused);
             UpdateGameStatusUI("--Paused--");
         }
         else{
             paused = false;
+            GameEvent(GameStatus.Unpaused);
             UpdateGameStatusUI("--Unpaused--");
         }
     }
     public void PauseTrials(bool p){
         if (p){
             paused = true;
+            GameEvent(GameStatus.Paused);
             UpdateGameStatusUI("--Paused--");
         }
         else{
             paused = false;
+            GameEvent(GameStatus.Unpaused);
             UpdateGameStatusUI("--Unpaused--");
         }
     }
@@ -209,6 +216,7 @@ public class GameManager : MonoBehaviour
         totalTrialsProgress = 0;
         trialsActive = false;
         UpdateProgressionUI();
+        GameEvent(GameStatus.Reset);
         Debug.Log("----------Trial Session Reset!------------------");
     }
     //function to reset the loaded game (not applicable yet)
@@ -237,10 +245,11 @@ public class GameManager : MonoBehaviour
         return sequence;
     }
     public void SendUDP_byte(int t, string n){
+        UDP_Trigger = t;
         if (debugUDPTriggers){
-            Debug.Log(n + " UDP Trigger Sent: " + t);
+            Debug.Log(n + " UDP Trigger Sent: " + UDP_Trigger);
         }
-        UDPClient.instance.SendData((byte)t);
+        UDPClient.instance.SendData((byte)UDP_Trigger);
     }
     
     #endregion
@@ -249,6 +258,14 @@ public class GameManager : MonoBehaviour
 
     public void SetTrialActiveStatus(bool t){
         trialsActive = t;
+        if (trialsActive){
+            GameEvent(GameStatus.RunningTrials);
+            UpdateGameStatusUI(GameStatus.RunningTrials);
+        }
+        else{
+            GameEvent(GameStatus.WaitingForInput);
+            UpdateGameStatusUI(GameStatus.Ready);
+        }
     }
     public void RunTracker(GameStatus status, int total, int index){
         runStatus = status;
@@ -263,26 +280,27 @@ public class GameManager : MonoBehaviour
         blockStatus = status;
         blockTotal = total;
         blockIndex = index;
-        if (status == GameStatus.WaitingForInput){
-            SetTrialActiveStatus(false);
-            UpdateGameStatusUI(GameStatus.Ready);
-            Debug.Log("Waiting for Input");
-        }
-        
         UpdateProgressionUI();
     }
+
     public void TrialTracker(TrialEventType eType, int total, int index, int targetNum, float dur){
         trialSequenceTotal = total;
         trialSequenceIndex = index;
         activeTarget = targetNum;
         trialPhase = eType;
         activePhaseDuration = dur;
-        if (eType == TrialEventType.PostTrialPhase){
+        if (trialPhase == TrialEventType.PostTrialPhase){
             totalTrialsProgress++;
         }
         UpdateProgressionUI();
     }
 
+    //use as overall status - maybe later..for FSM
+    public void SetSystemStatus(GameStatus gs){
+        if (gs == GameStatus.WaitingForInput){
+            SetTrialActiveStatus(false);
+        }
+    }
     private int TotalTrials(){
         totalTrials = Settings.instance.trialsPerSession;
         return totalTrials;
@@ -311,6 +329,52 @@ public class GameManager : MonoBehaviour
         
     }
     #endregion
-    
 
+    #region Events
+
+    public delegate void GameActions(GameStatus eventType); 
+    public static event GameActions OnGameAction;
+    
+    public delegate void RunActions(GameStatus eventType,float lifeTime, int runIndex, int runTotal);
+    public static event RunActions OnRunAction;
+    public delegate void BlockActions(GameStatus eventType,float lifeTime, int blockIndex, int blockTotal);
+    public static event BlockActions OnBlockAction;
+
+    public delegate void TrialActions(TrialEventType eventType, int targetNum, float lifeTime, int index, int total);
+    public static event TrialActions OnTrialAction;
+
+    public void GameEvent(GameStatus e){
+        Debug.Log("GAME event: " + e);
+        if (OnGameAction != null){
+            OnGameAction(e);
+        }
+    }
+    public void RunEvent(GameStatus e, float lifeTime){
+        Debug.Log("RUN event: " + e);
+        if (OnRunAction != null){
+            OnRunAction(e, lifeTime, runIndex, runTotal);
+        }
+
+        if (e == GameStatus.RunComplete || e == GameStatus.AllRunsComplete){
+            GameEvent(GameStatus.DisplayRunMenu);
+        }
+    }
+    public void BlockEvent(GameStatus e, float lifeTime){
+        Debug.Log("RUN event: " + e);
+        if (OnBlockAction != null){
+            OnBlockAction(e, lifeTime, blockIndex, blockTotal);
+        }
+        
+        if (e == GameStatus.BlockComplete || e == GameStatus.AllBlocksComplete){
+            GameEvent(GameStatus.DisplayBlockMenu);
+        }
+    }
+    public void TrialEvent(TrialEventType e, int tNum, float lifeTime, int i, int tot  ){
+        Debug.Log("TRIAL event: " + e);
+        if (OnTrialAction != null){
+            OnTrialAction(e, tNum, lifeTime,i,tot);
+        }
+    }
+
+    #endregion
 }

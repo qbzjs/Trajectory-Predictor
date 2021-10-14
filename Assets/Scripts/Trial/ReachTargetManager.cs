@@ -91,7 +91,7 @@ public class ReachTargetManager : MonoBehaviour{
         
         PlayBeep(1f);
 
-        if (eType == TrialEventType.Target)
+        if (eType == TrialEventType.TargetPresentation)
         {
             SendUDP_byte(targetNumber + 1);
 

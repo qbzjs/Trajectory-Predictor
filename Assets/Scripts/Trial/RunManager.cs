@@ -73,13 +73,18 @@ public class RunManager : MonoBehaviour
             
             //UDP ON
             gameManager.SendUDP_byte(runSequence.sequenceStartTrigger[runIndex-1],"Run Started");
+            runStatus = GameStatus.RunStarted;
+            UpdateRunStatus(runStatus,runTotal,runIndex);
+            //event
+            gameManager.RunEvent(GameStatus.RunStarted,0);
         }
 
         Debug.Log("----------RunManager - Started Block------------------");
 
         runStatus = GameStatus.Preparation;
         UpdateRunStatus(runStatus,runTotal,runIndex);
-        
+        // //event
+        // gameManager.RunEvent(GameStatus.Preparation,0);
         blockManager.StartTrial();
         
         yield return new WaitUntil(() => CountdownTimer.instance.timeUp == true);
@@ -96,11 +101,13 @@ public class RunManager : MonoBehaviour
             
             runStatus = GameStatus.RunComplete;
             UpdateRunStatus(runStatus,runTotal,runIndex);
+            //event
+            gameManager.RunEvent(GameStatus.RunComplete,0);
 
             //UDP OFF
             gameManager.SendUDP_byte(runSequence.sequenceEndTrigger[runIndex-1],"Run Ended");
             
-            //Debug.Log("RUN END ________________________________________________");
+            Debug.Log("RUN END ________________________________________________");
             UpdateRunStatus(GameStatus.Debug,runTotal,runIndex);
             
             if (runIndex >= runTotal){
@@ -109,6 +116,8 @@ public class RunManager : MonoBehaviour
                 runStatus = GameStatus.AllRunsComplete;
                 runIndex = 0;
                 UpdateRunStatus(runStatus,runTotal,runIndex);
+                //event
+                gameManager.RunEvent(GameStatus.AllRunsComplete,0);
             }
         }
     }

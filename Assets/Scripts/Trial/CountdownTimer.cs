@@ -17,6 +17,7 @@ public class CountdownTimer : MonoBehaviour
     public float timer;
     public int maxTimerDisplay = 61; //the number where the countdown timer renders on screen
     public int timerDisplay;
+    public bool visibleDisplay;
     public bool timeUp;
 
     void Awake()
@@ -34,6 +35,7 @@ public class CountdownTimer : MonoBehaviour
     {
         timer = t;
         maxTimerDisplay = maxCountdownDisplay;
+        visibleDisplay = false;
         timeUp = false;
         timerEnabled = true;
     }
@@ -46,8 +48,10 @@ public class CountdownTimer : MonoBehaviour
                 timer -= Time.deltaTime * GetGameSpeed();
             }
             
-            if (timer <= maxTimerDisplay && timer >= 0) //only show countdown from max of 60
+            if (timer <= maxTimerDisplay && timer >= 0) //only show countdown from max of set value
             {
+                visibleDisplay = true;//callback
+                
                 timerDisplay = (int)timer % maxTimerDisplay;
                 for (int i = 0; i < countdownDisplayWorld.Length; i++)
                 {

@@ -70,16 +70,27 @@ public class BlockManager : MonoBehaviour
     private IEnumerator RunTrialSequence(){
         
         blockIndex++;
-        
+
         if (useCountdown){
             blockStatus = GameStatus.Countdown;
             UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
             
+            CountdownTimer.instance.visibleDisplay = false;
             CountdownTimer.instance.timeUp = false;
             CountdownTimer.instance.SetCountdown(countdown + 1, visibleCountdownMaximum + 1);
             
+            //event
+            gameManager.BlockEvent(GameStatus.Countdown,countdown);
+            
+            yield return new WaitUntil(() => CountdownTimer.instance.visibleDisplay == true);
+            
+            //event
+            gameManager.BlockEvent(GameStatus.VisibleCountdown,visibleCountdownMaximum);
+            
             yield return new WaitUntil(() => CountdownTimer.instance.timeUp == true);
             
+            //event
+            gameManager.BlockEvent(GameStatus.CountdownComplete,0);
         }
         
         Debug.Log("--------BlockManager - Started Trial Sequence------------------");
@@ -90,10 +101,16 @@ public class BlockManager : MonoBehaviour
         blockStatus = GameStatus.RunningTrials;
         UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
         
+        //event
+        gameManager.BlockEvent(GameStatus.BlockStarted,0);
+        
         trialSequencer.StartTrialSequence();
         yield return new WaitUntil(() => trialSequencer.sequenceComplete);
 
         yield return new WaitForSeconds(gameManager.SpeedCheck(postBlockWaitPeriod));
+        
+        //event
+        gameManager.BlockEvent(GameStatus.BlockComplete,0);
 
         blockStatus = GameStatus.BlockComplete;
         UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
@@ -109,16 +126,23 @@ public class BlockManager : MonoBehaviour
             blockStatus = GameStatus.AllBlocksComplete;
             blockIndex = 0;
             UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
+            //event
+            gameManager.BlockEvent(GameStatus.AllBlocksComplete,0);
         }
 
-        yield return new WaitForSeconds(gameManager.SpeedCheck(gameManager.postRunRestPeriod *4));
-        blockStatus = GameStatus.WaitingForInput;
-        UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
+        yield return new WaitForSeconds(gameManager.SpeedCheck(gameManager.postRunRestPeriod *2));
+
+        gameManager.SetSystemStatus(GameStatus.WaitingForInput); // System ready for new input
+
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
         
-        //automated block starts???
+        //event
+        gameManager.BlockEvent(GameStatus.AllBlocksComplete,0);
+        
+        //automated block restart
         if (gameManager.automateInput && !gameManager.trialsActive){
-            // yield return new WaitUntil(() => !gameManager.trialsActive);
-            // yield return new WaitForSeconds(gameManager.SpeedCheck(gameManager.postRunRestPeriod *2));
             gameManager.StartTrial();
         }
     }

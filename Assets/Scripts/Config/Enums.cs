@@ -13,15 +13,18 @@
     {
 	    Null,
 	    Ready,
+	    TrialSequenceStarted,
 	    PreTrialPhase,
 	    Initialise,
 		Fixation,
 		Indication,
-		Target,
+		TargetPresentation,
 		Observation,
 		Rest,
 		Complete,
 		PostTrialPhase,
+		TrialComplete,
+		TrialSequenceComplete,
 		Debug
     }
 	public enum RigType {AvatarRig, GhostRig}
@@ -154,20 +157,30 @@
 
 	public enum GameStatus{
 		Null,
+		Initialised,
 		Orientation,
 		Preparation,
 		WaitingForInput,
+		SetStartButton,
+		DisplayBlockMenu,
+		DisplayRunMenu,
+		DisplayMenu,
 		Ready,
 		Countdown,
-		
+		VisibleCountdown,
+		CountdownComplete,
 		RunningTrials,
+		BlockStarted,
 		BlockComplete,
 		AllBlocksComplete,
+		RunStarted,
 		RunComplete,
 		AllRunsComplete,
 		GameComplete,
 		Complete,
 		Paused,
+		Unpaused,
+		Reset,
 		Debug
 	}
 
