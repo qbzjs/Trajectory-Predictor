@@ -1,0 +1,32 @@
+//Game Events
+GameEvent(GameStatus.Initialised);
+GameEvent(GameStatus.Reset);
+GameEvent(GameStatus.Pause);
+GameEvent(GameStatus.Unpause);
+
+//Run Events
+RunEvent(GameStatus.RunStarted,0);
+RunEvent(GameStatus.RunComplete,0);
+RunEvent(GameStatus.AllRunsComplete,0);
+
+//Bock Event
+BlockEvent(GameStatus.Countdown,countdown);
+//ADD A COUNT EVENT PER SECOND!
+BlockEvent(GameStatus.VisibleCountdown,visibleCountdownMaximum);
+BlockEvent(GameStatus.CountdownComplete,0);
+BlockEvent(GameStatus.BlockStarted,0);
+BlockEvent(GameStatus.BlockComplete,0);
+BlockEvent(GameStatus.AllBlocksComplete,0); //in run
+BlockEvent(GameStatus.WaitingForInput,0);
+
+//Trial Events
+TrialEvent(TrialEventType.TrialSequenceStarted, -1, 0,sequenceIndex,sequenceLength);
+TrialEvent(TrialEventType.PreTrialPhase, sequenceOrder[i],preTrialWaitPeriod,sequenceIndex,sequenceLength);
+TrialEvent(TrialEventType.Fixation, sequenceOrder[i],fixationPeriod,sequenceIndex,sequenceLength);
+TrialEvent(TrialEventType.Indication, sequenceOrder[i],indicationPeriod,sequenceIndex,sequenceLength);
+TrialEvent(TrialEventType.Observation, sequenceOrder[i],observationPeriod,sequenceIndex,sequenceLength);
+TrialEvent(TrialEventType.TargetPresentation, sequenceOrder[i],targetPresentationPeriod,sequenceIndex,sequenceLength);
+TrialEvent(TrialEventType.Rest, sequenceOrder[i],restPeriod,sequenceIndex,sequenceLength);         
+TrialEvent(TrialEventType.PostTrialPhase, sequenceOrder[i],postTrialWaitPeriod,sequenceIndex,sequenceLength);
+TrialEvent(TrialEventType.TrialComplete, sequenceOrder[i],0,sequenceIndex,sequenceLength);
+TrialEvent(TrialEventType.TrialSequenceComplete, sequenceOrder[i],0,sequenceIndex,sequenceLength);

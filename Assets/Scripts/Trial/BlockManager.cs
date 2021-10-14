@@ -139,7 +139,7 @@ public class BlockManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         
         //event
-        gameManager.BlockEvent(GameStatus.AllBlocksComplete,0);
+        gameManager.BlockEvent(GameStatus.WaitingForInput,0);
         
         //automated block restart
         if (gameManager.automateInput && !gameManager.trialsActive){
