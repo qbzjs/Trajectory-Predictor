@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class TargetMagnitudeTracker : MonoBehaviour
     
     [Header("Values")] 
     public Transform start;
+    
     public Transform target;
     [Range(0, 2f)] public float feedbackMultiplier = 1;
     public Vector3 startPoint;
@@ -28,11 +30,20 @@ public class TargetMagnitudeTracker : MonoBehaviour
     public float distanceE;
     public float difference;
     private float percentageToTarget;
-    
-    
+
+
+    private void OnEnable(){
+        if (DAO.instance != null){
+            //get start point at hand position when enabled
+            startPoint = DAO.instance.motionDataRightWrist.position;
+        }
+    }
+
     void Start()
     {
-        startPoint = start.position;
+        //this was to test
+        // startPoint = start.position;
+        
         endPoint = target.position;
         
         startToEndDistance = (startPoint-endPoint).magnitude;
