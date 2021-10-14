@@ -127,7 +127,12 @@ public class Settings : MonoBehaviour {
 	
 	[Header("COLOURS")] 
 	public Color restColour;
+	public Color defaultColour;
 	public Color highlightColour;
+	public Color defaultFixationColour;
+	public Color highlightFixationColour;
+	public Color defaultIndicatorColour;
+	public Color highlightIndicatorColour;
 	public Color controlRestColour;
 	public Color controlActiveColour;
 

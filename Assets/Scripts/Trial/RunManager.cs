@@ -83,8 +83,7 @@ public class RunManager : MonoBehaviour
 
         runStatus = GameStatus.Preparation;
         UpdateRunStatus(runStatus,runTotal,runIndex);
-        // //event
-        // gameManager.RunEvent(GameStatus.Preparation,0);
+
         blockManager.StartTrial();
         
         yield return new WaitUntil(() => CountdownTimer.instance.timeUp == true);

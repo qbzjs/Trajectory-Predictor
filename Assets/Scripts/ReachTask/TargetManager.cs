@@ -5,19 +5,36 @@ using Unity.Mathematics;
 using Enums;
 using UnityEngine;
 using PathologicalGames;
+using DG.Tweening;
+using Leap.Unity;
 
 public class TargetManager : MonoBehaviour
 {
     private TargetController controller;
     
     public GameObject targetGhostPrefab;
-    private GameObject[] targetGhosts = new GameObject[0];
+    public GameObject[] targetGhosts = new GameObject[0];
     public GameObject targetPrefab;
-    private GameObject target;
+    private GameObject target; //move this
+    private GameObject targetMesh; //scale and colour this
     public GameObject fixationCrossPrefab;
     private GameObject fixationCross;
     public GameObject indicatorPrefab;
-    private GameObject indication;
+    private GameObject indicatior;
+
+    public GameObject ghostHandRight;
+    public Renderer ghostHandRightMesh;
+    
+    private Renderer targetRenderer;
+    private Renderer fixationRenderer;
+    private Renderer indicatorHeadRenderer;
+    private Renderer indicatorBodyRenderer;
+    private Color defaultColour;
+    private Color highlightColour;
+    private Color defaultFixationColour;
+    private Color highlightFixationColour;
+    private Color defaultIndicatorColour;
+    private Color highlightIndicatorColour;
 
     public Transform originPoint;
     [Range(0.05f,0.25f)]
@@ -26,6 +43,11 @@ public class TargetManager : MonoBehaviour
     public Vector3 offsetFromOrigin;
     public Vector3 targetDestination;
     public Transform destinationTransform;
+    public Transform fallbackTransform;
+
+    [Range(0, 1)] public float animationDuration = 0.1f;
+    
+
     
     public int targetIndex;
     public float lifeTime;
@@ -76,7 +98,7 @@ public class TargetManager : MonoBehaviour
 
     private void GameManagerOnBlockAction(GameStatus eventType, float lifeTime, int blockIndex, int blockTotal){
         if (eventType == GameStatus.Countdown){
-            InitialiseTargetArray();
+            InitialiseGhostTargetArray();
         }
 
         if (eventType == GameStatus.VisibleCountdown){
@@ -92,7 +114,7 @@ public class TargetManager : MonoBehaviour
         }
 
         if (eventType == GameStatus.BlockComplete){
-
+            RemoveGhostTargetArray();
         }
 
         if (eventType == GameStatus.AllBlocksComplete){
@@ -161,28 +183,9 @@ public class TargetManager : MonoBehaviour
     void Awake(){
         originPoint = this.transform;
         controller = gameObject.GetComponent<TargetController>();
-    }
 
-    void Update(){
-        if (Input.GetKeyDown(KeyCode.Alpha0)){
-            Debug.Log("target centre");
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1)){
-            Debug.Log("target left");
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2)){
-            Debug.Log("target top");
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3)){
-            Debug.Log("target right");
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha4)){
-            Debug.Log("target bottom");
-        }
+        ghostHandRightMesh.material.DOFade(0, 0);
+        ghostHandRight.transform.DOMove(fallbackTransform.position, 0);
     }
 
     private void InitialiseObjects(){
@@ -192,57 +195,114 @@ public class TargetManager : MonoBehaviour
         fixationCross = Instantiate(fixationCrossPrefab, originPoint.position, quaternion.identity);
         fixationCross.transform.position = originPoint.position;
         
-        indication = Instantiate(indicatorPrefab, originPoint.position, quaternion.identity);
-        indication.transform.position = originPoint.position;
+        indicatior = Instantiate(indicatorPrefab, originPoint.position, quaternion.identity);
+        indicatior.transform.position = originPoint.position;
         
-        SmoothLookAtConstraint look = indication.GetComponent<SmoothLookAtConstraint>();
+        SmoothLookAtConstraint look = indicatior.GetComponent<SmoothLookAtConstraint>();
         look.target = destinationTransform.transform;
         
         target = Instantiate(targetPrefab, originPoint.position, quaternion.identity);
         target.transform.position = targetDestination;
+        targetMesh = target.transform.Find("Target").gameObject;
+        targetMesh.transform.DOScale(0, 0);
         
+        targetRenderer = targetMesh.GetComponent<Renderer>();
+        fixationRenderer = fixationCross.transform.Find("Cross").GetComponent<Renderer>();
+        indicatorHeadRenderer = indicatior.transform.Find("Body").GetComponent<Renderer>();
+        indicatorBodyRenderer = indicatior.transform.Find("Body").transform.Find("Head").GetComponent<Renderer>();
+        
+        fixationCross.transform.DOScale(0.4f, 0);
+        indicatior.transform.DOScale(0, 0);
+        
+        defaultColour = Settings.instance.defaultColour;
+        highlightColour = Settings.instance.highlightColour;
+        defaultFixationColour = Settings.instance.defaultFixationColour;
+        highlightFixationColour = Settings.instance.highlightFixationColour;
+        defaultIndicatorColour = Settings.instance.defaultIndicatorColour;
+        highlightIndicatorColour = Settings.instance.highlightIndicatorColour;
+        
+
         fixationCross.SetActive(false);
-        indication.SetActive(false);
+        indicatior.SetActive(false);
         target.SetActive(false);
     }
 
     private void DisplayFixation(){
+        fixationRenderer.material.DOColor(defaultFixationColour,0);
         fixationCross.SetActive(true);
+        fixationCross.transform.DOScale(0.5f, lifeTime/4);
+        fixationRenderer.material.DOColor(highlightFixationColour,lifeTime/4);
     }
     private void DisplayIndication()
     {
-        fixationCross.SetActive(false);
-        indication.SetActive(true);
+        // fixationCross.SetActive(false);
+        fixationRenderer.material.DOColor(defaultFixationColour,lifeTime/4);
+        indicatior.transform.DOMoveY(-0.05f, 0);
+        indicatior.SetActive(true);
+        targetGhosts[targetIndex].transform.DOScale(0f, lifeTime/4);
+        target.SetActive(true);
+        targetMesh.transform.DOScale(0.5f, lifeTime/4);
+        
+        
     }
     private void DisplayObservation()
     {
-        
+        ghostHandRightMesh.material.DOFade(0.25f, lifeTime);
+        ghostHandRight.transform.DOMove(destinationTransform.position, lifeTime);
+
     }
     private void DisplayTarget()
     {
-        indication.SetActive(false);
-        target.SetActive(true);
+        ghostHandRightMesh.material.DOFade(0.05f, lifeTime/4);
+        fixationCross.transform.DOScale(0.5f, lifeTime/4);
+        indicatior.SetActive(false);
+        targetMesh.transform.DOScale(1, lifeTime/4);
+        targetRenderer.material.DOColor(highlightColour, lifeTime / 4);
+
     }
     private void RemoveTarget()
     {
-        target.SetActive(false);
+        targetMesh.transform.DOScale(0f, lifeTime/4);
+        targetRenderer.material.DOColor(defaultColour, lifeTime / 4);
+        targetGhosts[targetIndex].transform.DOScale(0.5f, lifeTime/4);
+        fixationRenderer.material.DOFade(0,lifeTime/4);
+        
+        ghostHandRightMesh.material.DOFade(0, lifeTime/4);
+        ghostHandRight.transform.DOMove(fallbackTransform.position, lifeTime / 2);
     }
     private void DestroyObjects()
     {
+        target.SetActive(false);
         if (target != null)
         {
             Destroy(target);
-            Destroy(indication);
+            Destroy(indicatior);
             Destroy(fixationCross);
         }
     }
 
-    private void InitialiseTargetArray(){
-        targetGhosts = new GameObject[GameManager.instance.targetCount];
+    private void InitialiseFixation(){
+        
+    }
+    private void InitialiseGhostTargetArray(){
+        if (targetGhosts.Length == 0){
+            targetGhosts = new GameObject[GameManager.instance.targetCount];
+            for (int i = 0; i < targetGhosts.Length; i++){
+                targetGhosts[i] = Instantiate(targetGhostPrefab, originPoint.position, quaternion.identity);
+                targetGhosts[i].transform.DOScale(0, 0);
+            }
+        }
+        
         for (int i = 0; i < targetGhosts.Length; i++){
-            targetGhosts[i] = Instantiate(targetGhostPrefab, originPoint.position, quaternion.identity);
-            //scale to zero
-            //animate to destination
+            targetGhosts[i].transform.DOScale(0, 0);
+            targetGhosts[i].transform.DOScale(0.5f, GameManager.instance.SpeedCheck(animationDuration));
+            targetGhosts[i].transform.DOMove(GetDestination(i), GameManager.instance.SpeedCheck(animationDuration));
+        }
+    }
+    private void RemoveGhostTargetArray(){
+        for (int i = 0; i < targetGhosts.Length; i++){
+            targetGhosts[i].transform.DOScale(0, GameManager.instance.SpeedCheck(animationDuration));
+            targetGhosts[i].transform.DOMove(originPoint.transform.position, GameManager.instance.SpeedCheck(animationDuration));
         }
     }
     private Vector3 GetDestination(int tNum)

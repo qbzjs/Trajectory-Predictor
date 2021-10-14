@@ -234,8 +234,8 @@ public class GameManager : MonoBehaviour
             ts = ts - gs;
         }
 
-        if (ts < 0){
-            ts = 0;
+        if (ts < 0f){
+            ts = 0.01f;
         }
         return ts;
     }
