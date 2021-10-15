@@ -245,11 +245,13 @@ public class GameManager : MonoBehaviour
         return sequence;
     }
     public void SendUDP_byte(int t, string n){
-        UDP_Trigger = t;
+        UDP_Trigger = t+1;
         if (debugUDPTriggers){
             Debug.Log(n + " UDP Trigger Sent: " + UDP_Trigger);
         }
         UDPClient.instance.SendData((byte)UDP_Trigger);
+        UDPClient.instance.SendData((byte)0);
+        
     }
     
     #endregion

@@ -113,7 +113,7 @@ public class UDPClient : MonoBehaviour
     public void SendData(byte inputByte)
     {
         //Debug.Log("valueToSend");
-        if (sendEnabled){
+        // if (sendEnabled){
             try{
                 //Prepare byte-data array
                 byte[] data = new byte[1];
@@ -125,7 +125,7 @@ public class UDPClient : MonoBehaviour
             catch (Exception err){
                 Debug.LogError("Error udp send : " + err.Message);
             }
-        }
+        // }
     }
     
     //Call this method to send a message from this app to ipSend using portSend

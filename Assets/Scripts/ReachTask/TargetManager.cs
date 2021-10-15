@@ -49,6 +49,7 @@ public class TargetManager : MonoBehaviour
 
     [Range(0, 1)] public float animationDuration = 0.1f;
 
+    public bool lineToTarget = false;
     private LineRenderer lineRenderer;
 
     public int targetIndex;
@@ -190,56 +191,67 @@ public class TargetManager : MonoBehaviour
         controller = gameObject.GetComponent<TargetController>();
 
         ghostHandRightMesh.material.DOFade(0, 0);
-        ghostHandRight.transform.DOMove(handPosition, 0);
-
-        lineRenderer = gameObject.GetComponent<LineRenderer>();
         
-        fixationCross = Instantiate(fixationCrossPrefab, originPoint.position, quaternion.identity);
-        fixationCross.transform.position = originPoint.position;
-        fixationRenderer = fixationCross.transform.Find("Cross").GetComponent<Renderer>();
-        fixationCross.transform.DOScale(0, 0);
-        fixationRenderer.material.DOFade(0, 0);
+        lineRenderer = gameObject.GetComponent<LineRenderer>();
+
+        lineToTarget = false;
+    }
+
+    private void Start(){
+        if (DAO.instance != null){
+            handPosition = DAO.instance.motionDataRightWrist.position;
+        }
+        InitialisePositions();
+    }
+
+    private IEnumerator InitialisePositions(){
+        yield return new WaitForEndOfFrame();
+
+        ghostHandRight.transform.DOMove(handPosition, 0);
+        lineDestinationTransform.position = handPosition;
     }
 
     private void Update(){
         if (DAO.instance != null){
             handPosition = DAO.instance.motionDataRightWrist.position;
         }
-        lineRenderer.SetPosition(0,originPoint.position);
+        // lineRenderer.SetPosition(0,originPoint.position);
+
+        lineRenderer.SetPosition(0,handPosition);
         lineRenderer.SetPosition(1,lineDestinationTransform.position);
         
+        if (lineToTarget){
+            lineRenderer.SetPosition(0,handPosition);
+            lineRenderer.SetPosition(1,lineDestinationTransform.position);
+        }
+        else{
+            lineRenderer.SetPosition(0,handPosition);
+            lineRenderer.SetPosition(1,handPosition);
+        }
+
     }
 
     private void InitialiseFixation(){
-        // if (fixationCross == null){
-        //     fixationCross = Instantiate(fixationCrossPrefab, originPoint.position, quaternion.identity);
-        // }
+        if (fixationCross == null){
+            fixationCross = Instantiate(fixationCrossPrefab, originPoint.position, quaternion.identity);
+            fixationCross.transform.position = originPoint.position;
+            fixationRenderer = fixationCross.transform.Find("Cross").GetComponent<Renderer>();
+            fixationCross.transform.DOScale(0, 0);
+            fixationRenderer.material.DOFade(0, 0);
+            fixationCross.SetActive(true);
+        }
         
-        fixationCross.transform.position = originPoint.position;
-        //fixation on initialise
-        // fixationRenderer.material.DOColor(defaultFixationColour,0);
-        fixationCross.SetActive(true);
-        fixationCross.transform.DOScale(0, 0);
-        fixationRenderer.material.DOFade(0, 0);
         fixationCross.transform.DOScale(0.5f, GameManager.instance.SpeedCheck(animationDuration));
         fixationRenderer.material.DOFade(1, GameManager.instance.SpeedCheck(animationDuration));
     }
 
     private void RemoveFixation(){
         fixationCross.transform.DOScale(0, GameManager.instance.SpeedCheck(animationDuration));
+        fixationRenderer.material.DOFade(0, GameManager.instance.SpeedCheck(animationDuration));
     }
     private void InitialiseObjects(){
         targetDestination = GetDestination(targetIndex);
         destinationTransform.position = targetDestination;
-        
-        // fixationCross = Instantiate(fixationCrossPrefab, originPoint.position, quaternion.identity);
-        // fixationCross.transform.position = originPoint.position;
-        
-        // indicatior = Instantiate(indicatorPrefab, originPoint.position, quaternion.identity);
-        // indicatior.transform.position = originPoint.position;
-        
-        // SmoothLookAtConstraint look = indicatior.GetComponent<SmoothLookAtConstraint>();
-        // look.target = destinationTransform.transform;
         
         target = Instantiate(targetPrefab, originPoint.position, quaternion.identity);
         target.transform.position = targetDestination;
@@ -252,58 +264,58 @@ public class TargetManager : MonoBehaviour
         highlightColour = Settings.instance.highlightColour;
         defaultFixationColour = Settings.instance.defaultFixationColour;
         highlightFixationColour = Settings.instance.highlightFixationColour;
-        // defaultIndicatorColour = Settings.instance.defaultIndicatorColour;
-        // highlightIndicatorColour = Settings.instance.highlightIndicatorColour;
-        
 
         target.SetActive(false);
-        
-
     }
 
     private void DisplayFixation(){
-        // fixationRenderer.material.DOColor(defaultFixationColour,0);
-        fixationCross.SetActive(true);
-        fixationCross.transform.DOScale(0.5f, lifeTime/4);
-        // fixationRenderer.material.DOColor(highlightFixationColour,lifeTime/4);
+
     }
     private void DisplayIndication()
     {
-        // fixationCross.SetActive(false);
-        // fixationRenderer.material.DOColor(defaultFixationColour,lifeTime/4);
         targetGhosts[targetIndex].transform.DOScale(0f, lifeTime/4);
         target.SetActive(true);
-        targetMesh.transform.DOScale(0.5f, lifeTime/4);
-
+        targetMesh.transform.DOScale(0.75f, lifeTime/4);
         
-
+        ghostHandRightMesh.material.DOFade(0.05f, lifeTime);
+        ghostHandRightMesh.material.DOFade(0, lifeTime);
+        ghostHandRight.transform.DOMove(handPosition, lifeTime);
     }
     private void DisplayObservation()
     {
-        lineDestinationTransform.DOMove(destinationTransform.position, lifeTime / 2);
-        ghostHandRightMesh.material.DOFade(0.25f, lifeTime);
-        ghostHandRight.transform.DOMove(destinationTransform.position, lifeTime);
+        // lineDestinationTransform.DOMove(destinationTransform.position, lifeTime / 2);
+        // ghostHandRightMesh.material.DOFade(0.25f, lifeTime);
+        // ghostHandRight.transform.DOMove(destinationTransform.position, lifeTime);
 
     }
     private void DisplayTarget()
     {
-        ghostHandRightMesh.material.DOFade(0.05f, lifeTime/4);
-        fixationCross.transform.DOScale(0.5f, lifeTime/4);
+        //everything in target period
+        lineToTarget = true;
+        lineDestinationTransform.position = handPosition;
+        lineDestinationTransform.DOMove(destinationTransform.position, lifeTime / 4);
+        ghostHandRightMesh.material.DOFade(0.2f, lifeTime);
+        ghostHandRight.transform.DOMove(destinationTransform.position, lifeTime);
+
         targetMesh.transform.DOScale(1, lifeTime/4);
         targetRenderer.material.DOColor(highlightColour, lifeTime / 4);
 
     }
     private void RemoveTarget()
     {
+        // ghostHandRightMesh.material.DOFade(0.05f, lifeTime/4);
+        
         targetMesh.transform.DOScale(0f, lifeTime/4);
         targetRenderer.material.DOColor(defaultColour, lifeTime / 4);
+        
         targetGhosts[targetIndex].transform.DOScale(0.5f, lifeTime/4);
         fixationRenderer.material.DOFade(0,lifeTime/4);
         
         ghostHandRightMesh.material.DOFade(0, lifeTime/4);
-        ghostHandRight.transform.DOMove(handPosition, lifeTime / 2);
+        ghostHandRight.transform.DOMove(handPosition, lifeTime/4);
         
-        lineDestinationTransform.DOMove(originPoint.position, lifeTime / 4);
+        lineDestinationTransform.DOMove(handPosition, lifeTime/4);
+        lineToTarget = false;
     }
     private void DestroyObjects()
     {
@@ -326,7 +338,7 @@ public class TargetManager : MonoBehaviour
         
         for (int i = 0; i < targetGhosts.Length; i++){
             targetGhosts[i].transform.DOScale(0, 0);
-            targetGhosts[i].transform.DOScale(0.5f, GameManager.instance.SpeedCheck(animationDuration));
+            targetGhosts[i].transform.DOScale(0.75f, GameManager.instance.SpeedCheck(animationDuration));
             targetGhosts[i].transform.DOMove(GetDestination(i), GameManager.instance.SpeedCheck(animationDuration));
         }
     }
