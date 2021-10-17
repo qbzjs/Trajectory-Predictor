@@ -17,7 +17,7 @@ public class MotionTracker : MonoBehaviour
     private MotionDataStreaming motionDataStreaming;
     private DataWriter dataWriter;
 
-    public bool recordEnabled;
+    public bool recordEnabled; //set in inspector 
     [Space(10)]
     public Transform motionObject;
 
@@ -25,7 +25,9 @@ public class MotionTracker : MonoBehaviour
     public string sessionTag = "Session Name Here";
     public string fileName = "Name Here";
     private string testID;
+    public int targetNumber;
     private string targetTag = "Target Tag Here";
+    public string id;
 
     private bool recordTrajectory = false;
 
@@ -34,6 +36,7 @@ public class MotionTracker : MonoBehaviour
     [Header("PHYSICS MOTION TRACKING")]
     public MotionDataFormat motionData;
 
+    
     private Vector3 position;
     private Vector3 rotation;
     private float elapsedTime;
@@ -96,6 +99,8 @@ public class MotionTracker : MonoBehaviour
         motion_Depc = gameObject.AddComponent<MotionMath>();
 
         motionDataStreaming = new MotionDataStreaming();
+        
+        id = System.Guid.NewGuid().ToString();
     }
     
     //TODO - fix file name generator from new 'BlockManager' 
@@ -114,12 +119,40 @@ public class MotionTracker : MonoBehaviour
     }
 
     private void OnEnable(){
-        //record event goes here - calls toggletracking record
+        GameManager.OnBlockAction+=GameManagerOnBlockAction;
+        GameManager.OnTrialAction+= GameManagerOnTrialAction;
+    }
+    private void OnDisable(){
+        GameManager.OnBlockAction-=GameManagerOnBlockAction;
+        GameManager.OnTrialAction-= GameManagerOnTrialAction;
+    }
+    private void GameManagerOnBlockAction(GameStatus eventType, float lifeTime, int blockIndex, int blockTotal){
+        if (eventType == GameStatus.BlockStarted){
+            id = System.Guid.NewGuid().ToString();
+        }
+        //start of trial in block
+        if (eventType == GameStatus.CountdownComplete){
+            ToggleTrackingRecord(true, id);
+        }
+
+        if (eventType == GameStatus.BlockComplete){
+            ToggleTrackingRecord(false, id);
+        }
+    }
+    private void GameManagerOnTrialAction(TrialEventType eventType, int targetNum, float lifeTime, int index, int total){
+        if (eventType == TrialEventType.TargetPresentation){
+            targetNumber = targetNum+1;
+        }
+        if (eventType == TrialEventType.Rest){
+            targetNumber = targetNumber+10;
+        }
+        if (eventType == TrialEventType.PostTrialPhase){
+            targetNumber = 0;
+        }
     }
 
-    private void OnDisable(){
-        //record event goes here
-    }
+
+
 
     private void ToggleTrackingRecord(bool t, string id)
     {
@@ -204,12 +237,21 @@ public class MotionTracker : MonoBehaviour
                 t.Seconds, 
                 t.Milliseconds);
 
-            targetTag = DAO.instance.reachTarget.ToString();
+            // targetTag = DAO.instance.reachTarget.ToString(); //depreciated
+            if (targetNumber != 0){
+                targetTag = targetNumber.ToString();
+            }
+            else{
+                targetTag = "";
+            }
+            
 
             dataWriter.WriteTrajectoryData(timeStamp, elapsedTime.ToString("f2"), motionTag.ToString(), targetTag,
                 inMotion.ToString(),  motionThreshold,position, rotation,
                 p_speed,p_velocity, velocity, p_acceleration,p_accelerationStrength,p_direction,
                 p_angularSpeed,p_angularVelocity,p_angularAcceleration,p_angularAccelerationStrength,p_angularAxis);
+
+            
 
             //needs seconds recorder
             if (recordDepreciatedMotion)

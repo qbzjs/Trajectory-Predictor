@@ -129,14 +129,7 @@ namespace ViveSR
                 
                 //*************************************
                 
-                private void OnEnable(){
-                    //new record event goes here
-                    ///InputManager.OnRecordAction += ToggleTrackingRecord;//depreciated
-                }
-                private void OnDisable(){
-                    //new record event goes here
-                    //InputManager.OnRecordAction -= ToggleTrackingRecord;//depreciated
-                }
+                
                 
                 private DataWriter dataWriter;
                 
@@ -150,7 +143,9 @@ namespace ViveSR
                 public string sessionTag = "Session Name Here";
                 public string fileName = "Name Here";
                 private string testID;
+                public int targetNumber;
                 private string targetTag = "Target Tag Here";
+                public string id;
                 
                 private bool recordEyeData = false;
                 
@@ -173,6 +168,41 @@ namespace ViveSR
                     }
                     return n;
                 }
+                
+                private void OnEnable(){
+                    GameManager.OnBlockAction+=GameManagerOnBlockAction;
+                    GameManager.OnTrialAction+= GameManagerOnTrialAction;
+                }
+                private void OnDisable(){
+                    GameManager.OnBlockAction-=GameManagerOnBlockAction;
+                    GameManager.OnTrialAction-= GameManagerOnTrialAction;
+                }
+
+                private void GameManagerOnBlockAction(GameStatus eventType, float lifeTime, int blockIndex, int blockTotal){
+                    if (eventType == GameStatus.BlockStarted){
+                        id = System.Guid.NewGuid().ToString();
+                    }
+                    //start of trial in block
+                    if (eventType == GameStatus.CountdownComplete){
+                        ToggleTrackingRecord(true, id);
+                    }
+
+                    if (eventType == GameStatus.BlockComplete){
+                        ToggleTrackingRecord(false, id);
+                    }
+                }
+                private void GameManagerOnTrialAction(TrialEventType eventType, int targetNum, float lifeTime, int index, int total){
+                    if (eventType == TrialEventType.TargetPresentation){
+                        targetNumber = targetNum+1;
+                    }
+                    if (eventType == TrialEventType.Rest){
+                        targetNumber = targetNumber+10;
+                    }
+                    if (eventType == TrialEventType.PostTrialPhase){
+                        targetNumber = 0;
+                    }
+                }
+                
                 private void ToggleTrackingRecord(bool t, string id)
                 {
                     //recordTrajectory = t;
@@ -190,6 +220,7 @@ namespace ViveSR
                         }
                         else
                         {
+                            print("dfdfokbnmdfobndmfo");
                             //Debug.Log("---- Stop Eye Tracking Tracking : " + fileName);
                             recordEyeData = false;
                             dataWriter.WriteData(testID);
@@ -215,7 +246,14 @@ namespace ViveSR
                             t.Seconds, 
                             t.Milliseconds);
 
-                        targetTag = DAO.instance.reachTarget.ToString();
+                        // targetTag = DAO.instance.reachTarget.ToString(); //depreciated
+                        if (targetNumber != 0){
+                            targetTag = targetNumber.ToString();
+                        }
+                        else{
+                            targetTag = "";
+                        }
+
             
                         // dataWriter.WriteTrajectoryData(timeStamp, elapsedTime.ToString("f2"), sessionTag, targetTag, position, rotation,
                         //     p_speed,p_velocity,p_acceleration,p_accelerationStrength,p_direction,
