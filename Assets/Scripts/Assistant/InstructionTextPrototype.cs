@@ -7,39 +7,59 @@ using TMPro;
 
 public class InstructionTextPrototype : MonoBehaviour
 {
-    public Color actualColour;
-    public Color imaginedColour;
     public TextMeshPro instructionTextActual;
     public TextMeshPro instructionTextImagined;
+    public TextMeshPro instructionTextBlockComplete;
+    public TextMeshPro instructionTextSessionComplete;
+
+    private void Awake(){
+        RemoveText();
+    }
+
+    void Update(){
+        if (Input.GetKeyDown(KeyCode.Space)){
+            RemoveText();
+        }
+    }
 
     private void OnEnable(){
         GameManager.OnGameAction += GameManagerOnGameAction;
         GameManager.OnRunAction += GameManagerOnRunAction;
-    }
-
-    private void GameManagerOnGameAction(GameStatus eventType){
-        if (eventType == GameStatus.Ready){
-            DisplayText();
-        }
+        GameManager.OnBlockAction += GameManagerOnBlockAction;
     }
 
     private void OnDisable(){
         GameManager.OnGameAction -= GameManagerOnGameAction;
         GameManager.OnRunAction -= GameManagerOnRunAction;
+        GameManager.OnBlockAction -= GameManagerOnBlockAction;
+    }
+    private void GameManagerOnGameAction(GameStatus eventType){
+        if (eventType == GameStatus.Ready){
+            DisplayNewRunText();
+        }
     }
     private void GameManagerOnRunAction(GameStatus eventType, float lifeTime, int runIndex, int runTotal){
         if (eventType == GameStatus.RunComplete){
-            DisplayText();
+            DisplayNewRunText();
+        }
+        if (eventType == GameStatus.AllRunsComplete){
+            RemoveText();
+            instructionTextSessionComplete.gameObject.SetActive(true);
+        }
+    }
+    private void GameManagerOnBlockAction(GameStatus eventType, float lifeTime, int blockIndex, int blockTotal){
+        if (eventType == GameStatus.BlockComplete){
+            DisplayNewBlockText();
+        }
+    }
+
+    void DisplayNewBlockText(){
+        if (GameManager.instance.blockIndex != GameManager.instance.blockTotal){
+            instructionTextBlockComplete.gameObject.SetActive(true);
         }
     }
     
-
-    void Start()
-    {
-        
-    }
-    
-    void DisplayText()
+    void DisplayNewRunText()
     {
         if((GameManager.instance.runIndex+1)%2 == 0)
         {
@@ -58,5 +78,7 @@ public class InstructionTextPrototype : MonoBehaviour
     public void RemoveText(){
         instructionTextActual.gameObject.SetActive(false);
         instructionTextImagined.gameObject.SetActive(false);
+        instructionTextBlockComplete.gameObject.SetActive(false);
+        instructionTextSessionComplete.gameObject.SetActive(false);
     }
 }
