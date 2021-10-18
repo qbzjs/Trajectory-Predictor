@@ -277,9 +277,9 @@ public class TargetManager : MonoBehaviour
         target.SetActive(true);
         targetMesh.transform.DOScale(0.75f, lifeTime/4);
         
-        ghostHandRightMesh.material.DOFade(0.05f, lifeTime);
+        // ghostHandRightMesh.material.DOFade(0.05f, lifeTime);
         ghostHandRightMesh.material.DOFade(0, lifeTime);
-        ghostHandRight.transform.DOMove(handPosition, lifeTime);
+        ghostHandRight.transform.DOMove(handPosition, lifeTime/2);
     }
     private void DisplayObservation()
     {
@@ -291,6 +291,7 @@ public class TargetManager : MonoBehaviour
     private void DisplayTarget()
     {
         //everything in target period
+        gameObject.GetComponent<AudioSource>().Play();
         lineToTarget = true;
         lineDestinationTransform.position = handPosition;
         lineDestinationTransform.DOMove(destinationTransform.position, lifeTime / 4);
@@ -309,7 +310,7 @@ public class TargetManager : MonoBehaviour
         targetRenderer.material.DOColor(defaultColour, lifeTime / 4);
         
         targetGhosts[targetIndex].transform.DOScale(0.5f, lifeTime/4);
-        fixationRenderer.material.DOFade(0,lifeTime/4);
+        // fixationRenderer.material.DOFade(0,lifeTime/4);
         
         ghostHandRightMesh.material.DOFade(0, lifeTime/4);
         ghostHandRight.transform.DOMove(handPosition, lifeTime/4);

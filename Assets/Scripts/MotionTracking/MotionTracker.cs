@@ -100,7 +100,7 @@ public class MotionTracker : MonoBehaviour
 
         motionDataStreaming = new MotionDataStreaming();
         
-        id = System.Guid.NewGuid().ToString();
+        // id = System.Guid.NewGuid().ToString();
     }
     
     //TODO - fix file name generator from new 'BlockManager' 
@@ -128,7 +128,7 @@ public class MotionTracker : MonoBehaviour
     }
     private void GameManagerOnBlockAction(GameStatus eventType, float lifeTime, int blockIndex, int blockTotal){
         if (eventType == GameStatus.BlockStarted){
-            id = System.Guid.NewGuid().ToString();
+            // id = System.Guid.NewGuid().ToString();
         }
         //start of trial in block
         if (eventType == GameStatus.CountdownComplete){
@@ -137,6 +137,7 @@ public class MotionTracker : MonoBehaviour
 
         if (eventType == GameStatus.BlockComplete){
             ToggleTrackingRecord(false, id);
+            Debug.Log("-------------------------------------------------");
         }
     }
     private void GameManagerOnTrialAction(TrialEventType eventType, int targetNum, float lifeTime, int index, int total){
@@ -161,7 +162,7 @@ public class MotionTracker : MonoBehaviour
         if (Settings.instance.recordMotionData){
             if (!recordTrajectory && recordEnabled)
             {
-                //Debug.Log("---- Start Trajectory Tracking : " + fileName);
+                Debug.Log("---- Start Trajectory Motion Capture : " + fileName);
                 //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
                 dataWriter = new DataWriter();
                 fileName = GenerateFileName();
@@ -171,7 +172,7 @@ public class MotionTracker : MonoBehaviour
             }
             else
             {
-                //Debug.Log("---- Stop Trajectory Tracking : " + fileName);
+                Debug.Log("---- Stop Trajectory Motion Capture : " + fileName);
                 recordTrajectory = false;
                 dataWriter.WriteData(testID);
             }

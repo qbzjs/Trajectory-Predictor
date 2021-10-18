@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     public int trialSequenceTotal;
     public int totalTrialsProgress;
     public int totalTrials;
+    public float completionPercentage;
     [Space(5)]
     public int activeTarget;
     public float activePhaseDuration;
@@ -117,6 +118,7 @@ public class GameManager : MonoBehaviour
         totalTrialsProgress = 0;
         UpdateGameStatusUI(GameStatus.Ready);
         PauseTrials(false);
+        ResetTrials();
         // UpdateProgressionUI();
     }
     public void InitialiseSession(){
@@ -217,6 +219,7 @@ public class GameManager : MonoBehaviour
         trialsActive = false;
         UpdateProgressionUI();
         GameEvent(GameStatus.Reset);
+        GameEvent(GameStatus.Ready);
         Debug.Log("----------Trial Session Reset!------------------");
     }
     //function to reset the loaded game (not applicable yet)
@@ -293,6 +296,11 @@ public class GameManager : MonoBehaviour
         activePhaseDuration = dur;
         if (trialPhase == TrialEventType.PostTrialPhase){
             totalTrialsProgress++;
+            
+            float p = totalTrialsProgress;
+            float t = totalTrials;
+            Debug.Log(p / t);
+            completionPercentage = (p / t) *100;
         }
         UpdateProgressionUI();
     }
@@ -313,7 +321,12 @@ public class GameManager : MonoBehaviour
         UI_DisplayText.instance.SetBlockProgress(blockIndex,blockTotal);
         UI_DisplayText.instance.SetTrialProgress(trialSequenceIndex,trialSequenceTotal);
         UI_DisplayText.instance.SetTrialTotalProgress(totalTrialsProgress,totalTrials);
-        
+
+        if (totalTrialsProgress > 0){
+            // completionPercentage = totalTrialsProgress/totalTrials;
+            // completionPercentage = (totalTrialsProgress / totalTrials) * 100;
+        }
+
         string phaseDisplay = "ACTIVE TARGET: " + activeTarget + " - TRIAL PHASE: " + trialPhase.ToString() + " - TIMING: " + activePhaseDuration.ToString("f2") +"s";
         UI_DisplayText.instance.SetTrialPhaseDetail(phaseDisplay);
     }

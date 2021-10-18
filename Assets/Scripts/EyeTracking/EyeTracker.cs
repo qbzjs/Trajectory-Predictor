@@ -90,7 +90,7 @@ namespace ViveSR
                         GazeRayRenderer.SetPosition(0, Camera.main.transform.position  - Camera.main.transform.up * 0.05f); 
                         GazeRayRenderer.SetPosition(1, Camera.main.transform.position + GazeDirectionCombined * LengthOfRay);
 
-
+                        if (gazeDataDisplay){
                             gazeDataDisplay.text = "Left Gaze Direction : " + gazeDirectionLeft.ToString("F2") + "  :::  Right Gaze Direction : " + gazeDirectionRight.ToString("F2");
                             eyeOpennessDisplay.text = "Left Eye Openness : " + eyeOpennessLeft.ToString("F2") + "  :::  Right Eye Openness : " + eyeOpennessRight.ToString("F2");
                             pupilDiameterDisplay.text = "Left Pupil Diameter : " + pupilDiameterLeft.ToString("F2") + "  :::  Right Pupil Diameter : " + pupilDiameterRight.ToString("F2");
@@ -102,7 +102,7 @@ namespace ViveSR
                             {
                                 blinkDisplay.text = "NOT BLINKING!";
                             }
-                        
+                        }
                     }
 
                 }
@@ -180,7 +180,7 @@ namespace ViveSR
 
                 private void GameManagerOnBlockAction(GameStatus eventType, float lifeTime, int blockIndex, int blockTotal){
                     if (eventType == GameStatus.BlockStarted){
-                        id = System.Guid.NewGuid().ToString();
+                        // id = System.Guid.NewGuid().ToString();
                     }
                     //start of trial in block
                     if (eventType == GameStatus.CountdownComplete){
