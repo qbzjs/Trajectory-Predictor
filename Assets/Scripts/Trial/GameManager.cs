@@ -303,6 +303,8 @@ public class GameManager : MonoBehaviour
             completionPercentage = (p / t) *100;
         }
         UpdateProgressionUI();
+
+        ProgressEvent(GameStatus.Progress);
     }
 
     //use as overall status - maybe later..for FSM
@@ -347,17 +349,28 @@ public class GameManager : MonoBehaviour
 
     #region Events
 
+    //update with score progress in online version
+    public delegate void ProgressActions(GameStatus eventType, float completionPercentage, int run, int runTotal, int block, int blockTotal, int trial, int trialTotal);
+    public static event ProgressActions OnProgressAction;
+    
     public delegate void GameActions(GameStatus eventType); 
     public static event GameActions OnGameAction;
     
     public delegate void RunActions(GameStatus eventType,float lifeTime, int runIndex, int runTotal);
     public static event RunActions OnRunAction;
+    
     public delegate void BlockActions(GameStatus eventType,float lifeTime, int blockIndex, int blockTotal);
     public static event BlockActions OnBlockAction;
 
     public delegate void TrialActions(TrialEventType eventType, int targetNum, float lifeTime, int index, int total);
     public static event TrialActions OnTrialAction;
 
+    public void ProgressEvent(GameStatus e){
+        Debug.Log("Progress event: " + e);
+        if (OnProgressAction != null){
+            OnProgressAction(e, completionPercentage, runIndex, runTotal, blockIndex, blockTotal, trialSequenceIndex, trialSequenceTotal);
+        }
+    }
     public void GameEvent(GameStatus e){
         Debug.Log("GAME event: " + e);
         if (OnGameAction != null){

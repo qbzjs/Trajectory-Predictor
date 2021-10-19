@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Enums;
 using UnityEngine;
 
 public class SetWorldUI : MonoBehaviour{
@@ -13,7 +15,27 @@ public class SetWorldUI : MonoBehaviour{
     public GameObject outerLines;
     public GameObject innerLinesA;
     public GameObject innerLinesB;
-    
+
+    private void OnEnable(){
+        GameManager.OnBlockAction += GameManagerOnBlockAction;
+    }
+    private void OnDisable(){
+        GameManager.OnBlockAction -= GameManagerOnBlockAction;
+    }
+    private void GameManagerOnBlockAction(GameStatus eventType, float lifeTime, int blockIndex, int blockTotal){
+        if (Settings.instance.interface3D == true){
+            if (eventType == GameStatus.VisibleCountdown){
+                worldUI.SetActive(false);
+            }
+            if (eventType == GameStatus.Ready){
+                worldUI.SetActive(true);
+            }
+            if (eventType == GameStatus.BlockComplete){
+                worldUI.SetActive(true);
+            }
+        }
+    }
+
     void Awake(){
         instance = this;
     }

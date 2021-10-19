@@ -181,6 +181,8 @@
 		Paused,
 		Unpaused,
 		Reset,
+		Generic,
+		Progress,
 		Debug
 	}
 

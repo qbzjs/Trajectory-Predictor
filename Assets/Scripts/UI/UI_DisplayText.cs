@@ -21,6 +21,8 @@ public class UI_DisplayText : MonoBehaviour {
     public TextMeshProUGUI trialTotalProgressDisplay;
     public TextMeshPro trialTotalProgressDisplay_Wrld;
 
+    public Slider progressSlider;
+
     public TextMeshProUGUI trialPhaseDisplay;
 
     public TextMeshProUGUI scoreDisplay;
@@ -28,6 +30,17 @@ public class UI_DisplayText : MonoBehaviour {
 
     public Color defaultColour = Color.white;
     public Color completeColour = Color.green;
+
+
+    private void OnEnable(){
+        GameManager.OnProgressAction += GameManagerOnProgressAction;
+    }
+    private void OnDisable(){
+        GameManager.OnProgressAction -= GameManagerOnProgressAction;
+    }
+    private void GameManagerOnProgressAction(GameStatus eventType, float completionPercentage, int run, int runTotal, int block, int blockTotal, int trial, int trialTotal){
+        SetProgressSlider(completionPercentage);
+    }
 
     private void Awake() {
         instance = this;
@@ -68,6 +81,10 @@ public class UI_DisplayText : MonoBehaviour {
         trialTotalProgressDisplay_Wrld.text = "Total Trials: " + c.ToString() + " / " + t.ToString();
     }
 
+    public void SetProgressSlider(float p){
+        progressSlider.value = p;
+    }
+    
     public void SetTrialPhaseDetail(string s){
         trialPhaseDisplay.text = s;
     }
