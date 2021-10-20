@@ -30,7 +30,10 @@ public class UDPClient : MonoBehaviour
     public bool debugListen = false;
 
     [Space(10)]
-    private string received = "";
+    public string received = "";
+    
+    [Space(10)]
+    public float dataReceived = 0;
     
     private bool receivedFlag = false;
     
@@ -157,12 +160,17 @@ public class UDPClient : MonoBehaviour
                 IPEndPoint anyIP = new IPEndPoint (IPAddress.Any, portListen);
                 byte[] data = client.Receive (ref anyIP);
 
-                // Bytes into text
+                // Bytes into text - not used - bytes need converted
                 string text = "";
                 text = Encoding.UTF8.GetString (data);
-	
-                received = text;		
-       
+                received = text;
+                
+                
+                received = ConvertByteData(data).ToString("F");
+                
+                dataReceived = ConvertByteData(data);
+                dataReceived = dataReceived / 1000;
+
             } 
             catch (Exception err) {
                 Debug.Log ("Error:" + err.ToString ());
@@ -171,6 +179,17 @@ public class UDPClient : MonoBehaviour
         }
     }
 
+    //NEW FUNCTION - CONVERT DATA TEST!!!
+    private float ConvertByteData(byte[] b){
+        float d = BitConverter.ToInt16(b, 0);
+        return d;
+    }
+    // private int ConvertByteData(byte[] b){
+    //     int d = 0;
+    //
+    //     return d;
+    // }
+    
     //Exit UDP client
     public void OnDisable()
     {
