@@ -7,7 +7,7 @@ public class SetParadigmSettings : MonoBehaviour
 {
     public TextMeshProUGUI paradigmText;
     
-    public TrialParadigm paradigm = TrialParadigm.Horizontal;
+    public TrialParadigm paradigm = TrialParadigm.Null;
     
     private int index;
 
@@ -37,6 +37,10 @@ public class SetParadigmSettings : MonoBehaviour
     public void NextParadigm(){
         //move index
         switch (paradigm){
+            case TrialParadigm.Null: {
+                paradigm = TrialParadigm.Horizontal;
+                break;
+            }
             case TrialParadigm.Horizontal: {
                 paradigm = TrialParadigm.Vertical;
                 break;
@@ -54,7 +58,7 @@ public class SetParadigmSettings : MonoBehaviour
                 break;
             }
             case TrialParadigm.RandomPosition: {
-                paradigm = TrialParadigm.Horizontal;
+                paradigm = TrialParadigm.Null;
                 break;
             }
         }
@@ -87,6 +91,10 @@ public class SetParadigmSettings : MonoBehaviour
                 break;
             }
             case TrialParadigm.Horizontal: {
+                paradigm = TrialParadigm.Null;
+                break;
+            }
+            case TrialParadigm.Null: {
                 paradigm = TrialParadigm.RandomPosition;
                 break;
             }

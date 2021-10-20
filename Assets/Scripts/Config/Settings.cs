@@ -26,10 +26,17 @@ public class Settings : MonoBehaviour {
 	// public TrialParadigm trialParadigm = TrialParadigm.Avatar3D;
 	public TrialParadigm trialParadigm = TrialParadigm.Horizontal;
 	public ParadigmTargetCount paradigmTargetCount = ParadigmTargetCount.Two;
-	public int numberOfTargets = 0; //ready only
-	public int trialsPerBlock = 0; //ready only
-	public int trialsPerRun = 0; //ready only
-	public int trialsPerSession = 0; //ready only
+	
+	public int numberOfTargets = 0; //read only
+	public int trialsPerBlock = 0; //read only
+	public int trialsPerRun = 0; //read only
+	public int trialsPerSession = 0; //read only
+	
+	public float estTrialDuration = 0;
+	public float estBlockDuration = 0; //read only
+	public float estRunDuration = 0; //read only
+	public float estSessionDuration = 0; //read only
+	
 	[Range(1, 50)] 
 	public int repetitions = 5; // num of sequences to run
 	public SequenceType sequenceType = SequenceType.Permutation;
@@ -169,7 +176,14 @@ public class Settings : MonoBehaviour {
 		active = true;
 		//ToggleSettings(); // use to start in or out of settings menu
 	}
-	
+	//utility method
+	private string FormatString(float v){
+		// string t = "";
+		int m = (int)v / 60;
+		int s = (int)v % 60;
+		string t = m.ToString() + ":" + ((s < 10) ? ("0") : ("")) + s.ToString();;
+		return t;
+	}
 	public GameStatus Status {
 		get { return gameStatus;}
 		set { gameStatus = value;}
@@ -201,7 +215,16 @@ public class Settings : MonoBehaviour {
 		trialsPerSession = trialsPerRun * sessionRuns;
 		
 		//update timing totals...
-		
+		if (!actionObservation){
+			estTrialDuration = preTrialWaitPeriod + fixationPeriod + indicationPeriod + targetPresentationPeriod + restPeriodMax + postTrialWaitPeriod;
+		}
+		else{
+			estTrialDuration = preTrialWaitPeriod + fixationPeriod + indicationPeriod + observationPeriod + targetPresentationPeriod + restPeriodMax + postTrialWaitPeriod;
+		}
+		estBlockDuration = estTrialDuration * trialsPerBlock;
+		estRunDuration = estBlockDuration * blocksPerRun;
+		estSessionDuration = estRunDuration * sessionRuns;
+
 		UpdateSettingsEvent();
 		SaveState();
 	}
@@ -671,8 +694,18 @@ public class Settings : MonoBehaviour {
 		settingsData.repetitions = repetitions;
 		settingsData.handedness = handedness.ToString();
 
+		settingsData.blocks = blocksPerRun;
 		settingsData.runs = sessionRuns;
-		settingsData.blocksPerRun = blocksPerRun;
+		
+		settingsData.trialsPerBlock = trialsPerBlock;
+		settingsData.trialsPerRun = trialsPerRun;
+		settingsData.trialsPerSession = trialsPerSession;
+
+		settingsData.estimatedTrialDuration = estTrialDuration;
+		settingsData.estimatedBlockDuration = FormatString(estBlockDuration);
+		settingsData.estimatedRunDuration = FormatString(estRunDuration);
+		settingsData.estimatedSessionDuration = FormatString(estSessionDuration);
+		
 		settingsData.preBlockCountdown = preBlockCountdown;
 		settingsData.visibleCountdown = visibleCountdown;
 		settingsData.interRunRestPeriod = interRunRestPeriod;
@@ -697,6 +730,7 @@ public class Settings : MonoBehaviour {
 		
 //		Debug.Log("Settings Saved!");
 	}
+	
 	private void LoadSave() {
 		if (EasySave.HasKey<string>("ip")) {
 			//ports

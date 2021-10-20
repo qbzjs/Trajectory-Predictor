@@ -12,7 +12,7 @@ public class SettingsDataObject
     public string handedness;
 
     public int runs;
-    public int blocksPerRun;
+    public int blocks;
     public int preBlockCountdown;
     public int visibleCountdown;
     public int interRunRestPeriod;
@@ -28,6 +28,15 @@ public class SettingsDataObject
     public float postBlockWaitPeriod;
     public float postRunWaitPeriod;
 
+    public int trialsPerBlock;
+    public int trialsPerRun;
+    public int trialsPerSession;
+    
+    public float estimatedTrialDuration;
+    public string estimatedBlockDuration;
+    public string estimatedRunDuration;
+    public string estimatedSessionDuration;
+
     public bool actionObservation;
     public string sampleRate;
 
@@ -37,7 +46,10 @@ public class SettingsDataObject
     
 
     public SettingsDataObject(string trialParadigm, string targets, int repetitions, string handedness, 
-        int runs,int blocksPerRun,int preBlockCountdown,int visibleCountdown,int interRunRestPeriod,
+        int blocks, int runs,
+        int trialsPerBlock, int trialsPerRun, int trialsPerSession,
+        float estimatedTrialDuration, string estimatedBlockDuration, string estimatedRunDuration, string estimatedSessionDuration,
+        int preBlockCountdown,int visibleCountdown,int interRunRestPeriod,
         float preTrialWaitPeriod,float fixationDuration,float arrowDuration,float observationDuration,
         float targetDuration,float restPeriodMin,float restPeriodMax,
         float postTrialWaitPeriod,float postBlockWaitPeriod,float postRunWaitPeriod, 
@@ -48,6 +60,22 @@ public class SettingsDataObject
         this.repetitions = repetitions;
         this.handedness = handedness;
 
+        this.blocks = blocks;
+        this.runs = runs;
+        
+        this.trialsPerBlock = trialsPerBlock;
+        this.trialsPerRun = trialsPerRun;
+        this.trialsPerSession = trialsPerSession;
+
+        this.estimatedTrialDuration = estimatedTrialDuration;
+        this.estimatedBlockDuration = estimatedBlockDuration;
+        this.estimatedRunDuration = estimatedRunDuration;
+        this.estimatedSessionDuration = estimatedSessionDuration;
+
+        this.preBlockCountdown = preBlockCountdown;
+        this.visibleCountdown = visibleCountdown;
+        this.interRunRestPeriod = interRunRestPeriod;
+        
         this.preTrialWaitPeriod = preTrialWaitPeriod;
         this.fixationDuration = fixationDuration;
         this.arrowDuration = arrowDuration;

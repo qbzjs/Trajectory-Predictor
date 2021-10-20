@@ -11,7 +11,7 @@ public class UpdateValueSettings : MonoBehaviour
     
     public TextMeshProUGUI numberText;
 
-    private string valueDisplay = "";
+    public string valueTypeString = "";
     
     private Color defaultColour;
 
@@ -38,10 +38,36 @@ public class UpdateValueSettings : MonoBehaviour
         if (sessionMetric == SessionMetric.TrialsPerSession){
             SetValueDisplay(Settings.instance.trialsPerSession);
         }
+
+        if (sessionMetric == SessionMetric.EstimatedTrialDuration){
+            SetValueDisplay(Settings.instance.estTrialDuration);
+        }
+        if (sessionMetric == SessionMetric.EstimatedBlockDuration){
+            SetValueDisplay(Settings.instance.estBlockDuration);
+        }
+        if (sessionMetric == SessionMetric.EstimatedRunDuration){
+            SetValueDisplay(Settings.instance.estRunDuration);
+        }
+        if (sessionMetric == SessionMetric.EstimatedSessionDuration){
+            SetValueDisplay(Settings.instance.estSessionDuration);
+        }
     }
     
     private void SetValueDisplay(int v) {
-        numberText.text = v.ToString() + "<size=-10>" + valueDisplay;
+        numberText.text = v.ToString() + "<size=-2>" + valueTypeString;
+        numberText.color = Settings.instance.highlightColour;
+        StartCoroutine(DefaultColour());
+    }
+    private void SetValueDisplay(float v) {
+        
+        int minutes = (int)v / 60;
+        int seconds = (int)v % 60;
+        numberText.text = minutes.ToString() + ":" + ((seconds < 10) ? ("0") : ("")) + seconds.ToString() + "<size=-10>" + valueTypeString;;
+        
+        if (sessionMetric == SessionMetric.EstimatedTrialDuration){
+            numberText.text = v.ToString("F2") + "<size=-2>" + valueTypeString;
+        }
+        
         numberText.color = Settings.instance.highlightColour;
         StartCoroutine(DefaultColour());
     }

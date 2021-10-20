@@ -30,6 +30,7 @@
 	public enum RigType {AvatarRig, GhostRig}
 	
 	public enum TrialParadigm{
+		Null,
 		Horizontal,
 		Vertical,
 		Circle,
@@ -129,7 +130,11 @@
 	public enum SessionMetric{
 		TrialsPerBlock,
 		TrialsPerRun,
-		TrialsPerSession
+		TrialsPerSession,
+		EstimatedTrialDuration,
+		EstimatedBlockDuration,
+		EstimatedRunDuration,
+		EstimatedSessionDuration
 	}
 	public enum TrialSettings{
 		ActionObservation,
