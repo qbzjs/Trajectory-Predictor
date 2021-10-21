@@ -76,9 +76,12 @@ public class InstructionTextPrototype : MonoBehaviour
     }
 
     public void RemoveText(){
+        GetComponent<AudioSource>().Play();
         instructionTextActual.gameObject.SetActive(false);
         instructionTextImagined.gameObject.SetActive(false);
         instructionTextBlockComplete.gameObject.SetActive(false);
         instructionTextSessionComplete.gameObject.SetActive(false);
+        
+        // instructionTextActual.tr
     }
 }

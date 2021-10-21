@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Enums;
 using UnityEngine;
+using DG.Tweening;
 
 public class SetWorldUI : MonoBehaviour{
     
@@ -16,6 +17,8 @@ public class SetWorldUI : MonoBehaviour{
     public GameObject innerLinesA;
     public GameObject innerLinesB;
 
+    public Transform progressMenu;
+
     private void OnEnable(){
         GameManager.OnBlockAction += GameManagerOnBlockAction;
     }
@@ -25,13 +28,19 @@ public class SetWorldUI : MonoBehaviour{
     private void GameManagerOnBlockAction(GameStatus eventType, float lifeTime, int blockIndex, int blockTotal){
         if (Settings.instance.interface3D == true){
             if (eventType == GameStatus.VisibleCountdown){
-                worldUI.SetActive(false);
+                progressMenu.DOScaleY(0, 0.5f);
+                progressMenu.GetComponent<AudioSource>().Play();
+                // worldUI.SetActive(false);
             }
             if (eventType == GameStatus.Ready){
-                worldUI.SetActive(true);
+                progressMenu.DOScaleY(1, 0.75f);
+                progressMenu.GetComponent<AudioSource>().Play();
+                // worldUI.SetActive(true);
             }
             if (eventType == GameStatus.BlockComplete){
-                worldUI.SetActive(true);
+                progressMenu.DOScaleY(1, 0.75f);
+                progressMenu.GetComponent<AudioSource>().Play();
+                // worldUI.SetActive(true);
             }
         }
     }
