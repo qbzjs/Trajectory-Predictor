@@ -13,7 +13,7 @@ public class RunManager : MonoBehaviour
     
     public GameStatus runStatus;
     
-    const int startingRunTrigger = 1001;
+    const int startingRunTrigger = 200;
 
     public int runTotal = 2;
     public int runIndex = 0;

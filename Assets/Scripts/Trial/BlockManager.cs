@@ -15,7 +15,7 @@ public class BlockManager : MonoBehaviour
 
     public GameStatus blockStatus;
 
-    const int startingBlockTrigger = 101;
+    const int startingBlockTrigger = 100;
 
     public bool useCountdown = true;
     public int blockTotal = 4;
