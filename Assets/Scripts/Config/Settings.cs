@@ -224,6 +224,11 @@ public class Settings : MonoBehaviour {
 		estBlockDuration = estTrialDuration * trialsPerBlock;
 		estRunDuration = estBlockDuration * blocksPerRun;
 		estSessionDuration = estRunDuration * sessionRuns;
+		
+		//calculate plus rest periods
+		int rpTotal = interRunRestPeriod * sessionRuns;
+		int cdTotal = (preBlockCountdown * blocksPerRun) * sessionRuns;
+		estSessionDuration = estSessionDuration + rpTotal + cdTotal;
 
 		UpdateSettingsEvent();
 		SaveState();
@@ -320,18 +325,21 @@ public class Settings : MonoBehaviour {
 	}
 	public void SetBlockCountdown(int num) {
 		preBlockCountdown = num;
+		UpdateSessionTotals();
 		GameManager.instance.blockCountdown = preBlockCountdown;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetVisibleCountdown(int num) {
 		visibleCountdown = num;
+		UpdateSessionTotals();
 		GameManager.instance.visibleCountdown = visibleCountdown;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetInterRunRestPeriod(int num) {
 		interRunRestPeriod = num;
+		UpdateSessionTotals();
 		GameManager.instance.interRunRestPeriod = interRunRestPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
