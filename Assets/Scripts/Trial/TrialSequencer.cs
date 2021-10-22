@@ -138,7 +138,7 @@ public class TrialSequencer : MonoBehaviour
             yield return new WaitUntil(() => !gameManager.paused);
 
             //UDP ON
-            gameManager.SendUDP_byte(sequenceOrder[i],"Trial Presentation");
+            gameManager.SendUDP_byte(sequenceOrder[i],1, TrialEventType.TargetPresentation); //modifier adds 1 to the trigger number
             
             //TARGET PRESENTATION
             trialEventType = TrialEventType.TargetPresentation;
@@ -146,7 +146,7 @@ public class TrialSequencer : MonoBehaviour
             yield return new WaitForSeconds(gameManager.SpeedCheck(targetPresentationPeriod));
             
             //UDP OFF
-            gameManager.SendUDP_byte(sequenceOrder[i]+10, "Trial Presentation Ended");
+            gameManager.SendUDP_byte(sequenceOrder[i]+10, 1, TrialEventType.Rest); //modifier adds 1 to the trigger number
 
             //trial event
             gameManager.TrialEvent(TrialEventType.Rest, sequenceOrder[i],gameManager.SpeedCheck(restPeriod),sequenceIndex,sequenceLength);

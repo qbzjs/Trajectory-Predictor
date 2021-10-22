@@ -13,7 +13,7 @@ public class RunManager : MonoBehaviour
     
     public GameStatus runStatus;
     
-    const int startingRunTrigger = 200;
+    const int startingRunTrigger = 201; // starts from 101 //TODO FIX + 1 TO BLOCK AND RUN
 
     public int runTotal = 2;
     public int runIndex = 0;
@@ -72,7 +72,7 @@ public class RunManager : MonoBehaviour
             runIndex++;
             
             //UDP ON
-            gameManager.SendUDP_byte(runSequence.sequenceStartTrigger[runIndex-1],"Run Started");
+            gameManager.SendUDP_byte(runSequence.sequenceStartTrigger[runIndex-1],0,GameStatus.RunStarted); //no modifier
             runStatus = GameStatus.RunStarted;
             UpdateRunStatus(runStatus,runTotal,runIndex);
             //event
@@ -104,7 +104,7 @@ public class RunManager : MonoBehaviour
             gameManager.RunEvent(GameStatus.RunComplete,0);
 
             //UDP OFF
-            gameManager.SendUDP_byte(runSequence.sequenceEndTrigger[runIndex-1],"Run Ended");
+            gameManager.SendUDP_byte(runSequence.sequenceEndTrigger[runIndex-1],0,GameStatus.AllRunsComplete); //no modifier
             
             Debug.Log("RUN END ________________________________________________");
             UpdateRunStatus(GameStatus.Debug,runTotal,runIndex);

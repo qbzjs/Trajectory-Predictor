@@ -15,7 +15,7 @@ public class BlockManager : MonoBehaviour
 
     public GameStatus blockStatus;
 
-    const int startingBlockTrigger = 100;
+    const int startingBlockTrigger = 101; // starts from 101 //TODO FIX + 1 TO BLOCK AND RUN
 
     public bool useCountdown = true;
     public int blockTotal = 4;
@@ -96,7 +96,7 @@ public class BlockManager : MonoBehaviour
         Debug.Log("--------BlockManager - Started Trial Sequence------------------");
         
         //UDP ON
-        gameManager.SendUDP_byte(blockSequence.sequenceStartTrigger[blockIndex-1],"Block Started");
+        gameManager.SendUDP_byte(blockSequence.sequenceStartTrigger[blockIndex-1], 0,GameStatus.BlockStarted);
 
         blockStatus = GameStatus.RunningTrials;
         UpdateBlockStatus(blockStatus,blockTotal,blockIndex);
@@ -119,7 +119,7 @@ public class BlockManager : MonoBehaviour
         UpdateBlockStatus(GameStatus.Debug,blockTotal,blockIndex);
         
         //UDP OFF
-        gameManager.SendUDP_byte(blockSequence.sequenceEndTrigger[blockIndex-1], "Block Ended");
+        gameManager.SendUDP_byte(blockSequence.sequenceEndTrigger[blockIndex-1], 0,GameStatus.BlockComplete);
 
         if (blockIndex >= blockTotal){
             blocksComplete = true; // tells run manager to progress

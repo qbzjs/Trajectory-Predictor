@@ -247,14 +247,48 @@ public class GameManager : MonoBehaviour
         sequence.GenerateSequence(total, triggerStart);
         return sequence;
     }
+    public void SendUDP_byte(int t){
+        UDP_Trigger = t;
+        if (debugUDPTriggers){
+            Debug.Log("UDP Trigger Sent: " + UDP_Trigger);
+        }
+        UDPClient.instance.SendData((byte)UDP_Trigger);
+        UDPClient.instance.SendData((byte)0);
+        
+    }
     public void SendUDP_byte(int t, string n){
-        UDP_Trigger = t+1;
+        UDP_Trigger = t;
         if (debugUDPTriggers){
             Debug.Log(n + " UDP Trigger Sent: " + UDP_Trigger);
         }
         UDPClient.instance.SendData((byte)UDP_Trigger);
         UDPClient.instance.SendData((byte)0);
         
+    }
+    public void SendUDP_byte(int t, int mod, string n){
+        UDP_Trigger = t+mod;
+        if (debugUDPTriggers){
+            Debug.Log(n + " UDP Trigger Sent: " + UDP_Trigger);
+        }
+        UDPClient.instance.SendData((byte)UDP_Trigger);
+        UDPClient.instance.SendData((byte)0);
+        
+    }
+    public void SendUDP_byte(int t, int mod, GameStatus s){
+        UDP_Trigger = t+mod;
+        if (debugUDPTriggers){
+            Debug.Log(s.ToString() + " UDP Trigger Sent: " + UDP_Trigger);
+        }
+        UDPClient.instance.SendData((byte)UDP_Trigger);
+        UDPClient.instance.SendData((byte)0);
+    }
+    public void SendUDP_byte(int t, int mod, TrialEventType e){
+        UDP_Trigger = t+mod; //target number
+        if (debugUDPTriggers){
+            Debug.Log(e.ToString() + " UDP Trigger Sent: " + UDP_Trigger);
+        }
+        UDPClient.instance.SendData((byte)UDP_Trigger);
+        UDPClient.instance.SendData((byte)0);
     }
     
     #endregion
