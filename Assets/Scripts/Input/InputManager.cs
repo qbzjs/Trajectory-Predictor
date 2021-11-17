@@ -41,13 +41,13 @@ public class InputManager : MonoBehaviour{
 		{
 			StartTrials();
 		}
-
 		if (Input.GetKeyDown(KeyCode.P)){
 			PauseGame();
 		}
 		if (Input.GetKeyDown(KeyCode.R)){
 			ResetSession();
 		}
+		
 	}
 	private void SenselTapOnUserInputAction(UserInputType iType, float x, float y, float f)
 	{
