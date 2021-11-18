@@ -20,6 +20,9 @@ public class InstructionTextPrototype : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space)){
             RemoveText();
         }
+        if (Input.GetKeyDown(KeyCode.H)){
+            RemoveText();
+        }
     }
 
     private void OnEnable(){

@@ -25,6 +25,13 @@ public class SetWorldUI : MonoBehaviour{
     private void OnDisable(){
         GameManager.OnBlockAction -= GameManagerOnBlockAction;
     }
+
+    private void Update(){
+        if (Input.GetKeyDown(KeyCode.H)){
+            GameManagerOnBlockAction(GameStatus.VisibleCountdown, 0.5F, 0, 0);
+        }
+    }
+
     private void GameManagerOnBlockAction(GameStatus eventType, float lifeTime, int blockIndex, int blockTotal){
         if (Settings.instance.interface3D == true){
             if (eventType == GameStatus.VisibleCountdown){

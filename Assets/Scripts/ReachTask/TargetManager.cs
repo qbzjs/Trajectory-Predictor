@@ -49,11 +49,15 @@ public class TargetManager : MonoBehaviour
 
     [Range(0, 1)] public float animationDuration = 0.1f;
 
+    public bool useLine = true;
     public bool lineToTarget = false;
     private LineRenderer lineRenderer;
 
     public int targetIndex;
     public float lifeTime;
+    
+    //debugging
+    private bool targetsActive;
 
     #region Event Subscriptions
 
@@ -131,8 +135,7 @@ public class TargetManager : MonoBehaviour
         }
     }
 
-    private void GameManagerOnTrialAction(TrialEventType eventType, int targetNum, float lifeTime, int index,
-        int total){
+    private void GameManagerOnTrialAction(TrialEventType eventType, int targetNum, float lifeTime, int index, int total){
         targetIndex = targetNum;
         this.lifeTime = lifeTime;
         if (eventType == TrialEventType.TrialSequenceStarted){
@@ -229,6 +232,58 @@ public class TargetManager : MonoBehaviour
             lineRenderer.SetPosition(1,handPosition);
         }
 
+        //debugging controls
+        if (Input.GetKeyDown(KeyCode.UpArrow)){
+            InitialiseGhostTargetArray();
+            InitialiseFixation();
+            InitialiseObjects();
+            lifeTime = 1f;
+            targetsActive = true;
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow)){
+            RemoveGhostTargetArray();
+            targetsActive = false;
+        }
+
+        if (targetsActive){
+            if (Input.GetKeyDown(KeyCode.Alpha0)){
+                RemoveTarget();
+                DestroyObjects();
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha1)){
+                RemoveTarget();
+                DestroyObjects();
+                targetIndex = 0;
+                InitialiseObjects();
+                DisplayIndication();
+                DisplayTarget();
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2)){
+                RemoveTarget();
+                DestroyObjects();
+                targetIndex = 1;
+                InitialiseObjects();
+                DisplayIndication();
+                DisplayTarget();
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3)){
+                RemoveTarget();
+                DestroyObjects();
+                targetIndex = 2;
+                InitialiseObjects();
+                DisplayIndication();
+                DisplayTarget();
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4)){
+                RemoveTarget();
+                DestroyObjects();
+                targetIndex = 3;
+                InitialiseObjects();
+                DisplayIndication();
+                DisplayTarget();
+            }
+        }
+
     }
 
     private void InitialiseFixation(){
@@ -251,6 +306,7 @@ public class TargetManager : MonoBehaviour
     }
     private void InitialiseObjects(){
         targetDestination = GetDestination(targetIndex);
+        Debug.Log(targetDestination);
         destinationTransform.position = targetDestination;
         
         target = Instantiate(targetPrefab, originPoint.position, quaternion.identity);
@@ -292,7 +348,9 @@ public class TargetManager : MonoBehaviour
     {
         //everything in target period
         gameObject.GetComponent<AudioSource>().Play();
-        lineToTarget = true;
+        if (useLine){
+            lineToTarget = true;
+        }
         lineDestinationTransform.position = handPosition;
         lineDestinationTransform.DOMove(destinationTransform.position, lifeTime / 4);
         ghostHandRightMesh.material.DOFade(0.2f, lifeTime);
