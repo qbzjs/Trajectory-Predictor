@@ -39,8 +39,8 @@ public class BlockSequenceGenerator : MonoBehaviour
         {
             sequenceStartTrigger[i] = startingBlock + (1*i);
             sequenceEndTrigger[i] = sequenceStartTrigger[i] + 10;
-            Debug.Log(sequenceStartTrigger[i]);
-            Debug.Log(sequenceEndTrigger[i]);
+            // Debug.Log(sequenceStartTrigger[i]);
+            // Debug.Log(sequenceEndTrigger[i]);
         }
     }
 }
