@@ -176,14 +176,14 @@ public class PointRenderer : MonoBehaviour {
              {
      
                  // Set x/y/z, standardized to between 0-1
-                 // float x = (Convert.ToSingle(pointList[i][xColumnName]) - xMin) / (xMax - xMin);
-                 // float y = (Convert.ToSingle(pointList[i][yColumnName]) - yMin) / (yMax - yMin);
-                 // float z = (Convert.ToSingle(pointList[i][zColumnName]) - zMin) / (zMax - zMin);
+                 float xc = (Convert.ToSingle(pointList[i][xColumnName]) - xMin) / (xMax - xMin);
+                 float yc = (Convert.ToSingle(pointList[i][yColumnName]) - yMin) / (yMax - yMin);
+                 float zc = (Convert.ToSingle(pointList[i][zColumnName]) - zMin) / (zMax - zMin);
                  
                  float x = (Convert.ToSingle(pointList[i][xColumnName]));
                  float y = (Convert.ToSingle(pointList[i][yColumnName]));
                  float z = (Convert.ToSingle(pointList[i][zColumnName]));
-     
+
                  // Create vector 3 for positioning particlePoints
      			Vector3 position = new Vector3 (x, y, z) * plotScale;
      
@@ -312,7 +312,7 @@ public class PointRenderer : MonoBehaviour {
 
             //GlowColor = 
             // Set point color
-            particlePoints[i].startColor = new Color(xc, yc, zc, 1.0f);
+            particlePoints[i].startColor = new Color(x, y, z, 1.0f);
             particlePoints[i].startSize = particleScale; 
         }
                 
