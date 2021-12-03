@@ -15,7 +15,8 @@ namespace Unity.Labs.SuperScience.Example{
         public Vector3 direction;
         public float speed;
         public float magnitude = 0f;
-        
+
+        public int trajectoryLength = 100; //iterationLimit
         
         public Vector3 originPoint;
 
@@ -69,12 +70,16 @@ namespace Unity.Labs.SuperScience.Example{
             magnitude = velocity.magnitude * speed*forceMultiplier;
 
             originPoint = GetComponent<MotionTracker>().motionObject.transform.position;
+
+            float l = (magnitude * speed) * 150;
+            trajectoryLength = Mathf.RoundToInt(l);
         }
 
         void LateUpdate(){
             if (GetComponent<MotionTracker>().inMotion){
                 //set line duration to delta time so that it only lasts the length of a frame
                 trajectoryPredictor.debugLineDuration = Time.unscaledDeltaTime;
+                trajectoryPredictor.iterationLimit = trajectoryLength;
                 //tell the predictor to predict a 3d line. this will also cause it to draw a prediction line
                 //because drawDebugOnPredict is set to true
                 //trajectoryPredictor.Predict3D(originPoint.position, originPoint.forward * forceMultiplier, Physics.gravity);

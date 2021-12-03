@@ -73,13 +73,13 @@ namespace Unity.Labs.SuperScience
             {
                 if (m_UseDirection)
                 {
-                    GizmoModule.instance.DrawRay(m_ToTrack.position, m_MotionData.Direction, k_SmoothVelColor, 1.0f, m_MotionData.Speed*k_VelocityScale);
-                    GizmoModule.instance.DrawSphere(m_ToTrack.position + m_MotionData.Velocity*k_VelocityScale, k_RayEndcap, k_SmoothVelColor);
+                    GizmoModule.instance.DrawRay(m_ToTrack.position, m_MotionData.Direction, k_SmoothVelColor, 2.0f, m_MotionData.Speed*(k_VelocityScale/4)); //modified the velocity scale /2 for shorter vis length
+                    GizmoModule.instance.DrawSphere(m_ToTrack.position + m_MotionData.Velocity*(k_VelocityScale/4), k_RayEndcap, k_SmoothVelColor); //modified the velocity scale /2 for shorter vis lengt
                 }
                 else
                 {
-                    GizmoModule.instance.DrawRay(m_ToTrack.position, transform.forward, k_SmoothVelColor, 1.0f, m_MotionData.Speed*k_VelocityScale);
-                    GizmoModule.instance.DrawSphere(m_ToTrack.position + transform.forward*m_MotionData.Speed*k_VelocityScale, k_RayEndcap, k_SmoothVelColor);
+                    GizmoModule.instance.DrawRay(m_ToTrack.position, transform.forward, k_SmoothVelColor, 2.0f, m_MotionData.Speed*(k_VelocityScale/4)); //modified the velocity scale /2 for shorter vis lengt
+                    GizmoModule.instance.DrawSphere(m_ToTrack.position + transform.forward*m_MotionData.Speed*(k_VelocityScale/4), k_RayEndcap, k_SmoothVelColor); //modified the velocity scale /2 for shorter vis lengt
                 }
             }
             
