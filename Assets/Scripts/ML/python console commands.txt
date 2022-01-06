@@ -1,0 +1,56 @@
+python
+
+exit()
+
+cd C:\Users\siroc>
+
+d:
+
+cd D:\Unity Projects\ML\ML-Agents
+
+(install/initialise virtual environment) (makes folder and scripts 'venv'->'virtual environment')
+python -m venv venv
+
+(to activate)
+venv\Scripts\activate
+
+python -m pip install --upgrade pip
+
+pip install torch==1.7.1 -f https://download.pytorch.org/whl/torch_stable.thml
+
+pip install mlagents
+
+(if doesnt install)
+pip install mlagents --use-feature=2020-resolver 
+pip install mlagents --use-feature=2021-resolver
+
+(to verify)
+mlagents-learn --help
+
+(to run)
+mlagents-learn
+
+(to force rewrite over previous id)
+mlagents-learn --force
+
+(to force resume from id)
+mlagents-learn --resume
+
+(to run using new id)
+mlagents-learn --run-id=TestName
+
+(to learn from config 'yaml' file)
+mlagents-learn config/MoveToGoal.yaml --run-id=TestParameters
+
+(to learn from config 'yaml' file previous brain)
+mlagents-learn config/MoveToGoal.yaml --initialize-from=MoveToGoal --run-id=MoveToGoal2
+
+
+----------Tensorboard-------------
+(new commandline)
+(navigate to environment and activate)
+
+tensorboard --logdir results  (visualise results in logdirectory)
+
+(to view)
+http://localhost:6006/
