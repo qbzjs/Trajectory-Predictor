@@ -1,0 +1,29 @@
+{
+    "ArmReach": {
+        "checkpoints": [
+            {
+                "steps": 8547,
+                "file_path": "results\\ppo\\ArmReach\\ArmReach-8547.onnx",
+                "reward": -0.07012987012987013,
+                "creation_time": 1641510890.0264196,
+                "auxillary_file_paths": [
+                    "results\\ppo\\ArmReach\\ArmReach-8547.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 8547,
+            "file_path": "results\\ppo\\ArmReach.onnx",
+            "reward": -0.07012987012987013,
+            "creation_time": 1641510890.0264196,
+            "auxillary_file_paths": [
+                "results\\ppo\\ArmReach\\ArmReach-8547.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.27.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

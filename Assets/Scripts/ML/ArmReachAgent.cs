@@ -1,0 +1,105 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Unity.MLAgents;
+using Unity.MLAgents.Actuators;
+using Unity.MLAgents.Sensors;
+
+public class ArmReachAgent : Agent{
+
+    [Range(1,10)]
+    public int moveMagnitude = 1;
+    [Range(1,10)]
+    public float baseReward = 1;
+    [Range(1,10)]
+    public float bonusMultiplier = 10;
+
+    [SerializeField] private Transform homePosition;
+    
+    private ArmReachAgentObservations armReachObservations;
+
+    private Rigidbody agentRigidBody;
+    
+    void Start(){
+        armReachObservations = this.GetComponent<ArmReachAgentObservations>();
+        agentRigidBody = this.GetComponent<Rigidbody>();
+    }
+
+    public override void Initialize(){
+        
+    }
+
+    public override void OnEpisodeBegin(){
+        transform.position = homePosition.position;
+        DAO dao = DAO.instance;
+        if (DAO.instance){
+            dao = DAO.instance;
+        }
+        //transform.position = new Vector3(dao.motionDataRightWrist.position.x, dao.motionDataRightWrist.position.y, dao.motionDataRightWrist.position.z);
+    }
+
+    //OBSERVATIONS
+    public override void CollectObservations(VectorSensor sensor){
+        sensor.AddObservation(armReachObservations.TargetPresent() ? 1 : 0);
+        sensor.AddObservation(armReachObservations.RestPresent() ? 1 : 0);  
+        
+        sensor.AddObservation(armReachObservations.targetPosition);
+        sensor.AddObservation(transform.position);
+        
+        // sensor.AddObservation(armReachObservations.position);
+        // sensor.AddObservation(armReachObservations.velocity);
+        // sensor.AddObservation(armReachObservations.rotation);
+        // sensor.AddObservation(armReachObservations.angularVelocity);
+    }
+    //ACTIONS
+    public override void OnActionReceived(ActionBuffers actions){
+        float moveX = actions.ContinuousActions[0];
+        float moveY = actions.ContinuousActions[1];
+        float moveZ = actions.ContinuousActions[2];
+
+        //this.transform.position += new Vector3(moveX,moveY,moveZ) * Time.deltaTime * magnitude;
+        //agentRigidBody.velocity = new Vector3(velocityX, velocityY, velocityZ);
+        agentRigidBody.velocity = new Vector3(moveX, moveY, moveZ) * moveMagnitude;
+    }
+    //USER INPUT / HEURISTICS
+    public override void Heuristic(in ActionBuffers actionsOut){
+        DAO dao = DAO.instance;
+        if (DAO.instance){
+            dao = DAO.instance;
+        }
+        ActionSegment<float> continuousActions = actionsOut.ContinuousActions;
+        
+        // continuousActions[0] = Input.GetAxisRaw("Horizontal");
+        // continuousActions[1] = Input.GetAxisRaw("Vertical");
+        // continuousActions[2] = Input.GetAxisRaw("Vertical");
+        
+        continuousActions[0] = dao.motionDataRightWrist.position.x;
+        continuousActions[1] = dao.motionDataRightWrist.position.y;
+        continuousActions[2] = dao.motionDataRightWrist.position.z;
+    }
+    //GOALS AND REWARDS
+    private void OnTriggerEnter(Collider other){
+        if (other.TryGetComponent<AgentReward>(out AgentReward reward)){
+            if (other.GetComponent<AgentReward>().HomePosition()){
+                SetReward(baseReward * bonusMultiplier);
+            }
+            else{
+                SetReward(baseReward);
+            }
+            
+            other.GetComponent<AgentReward>().SetCollider(false);
+            other.GetComponent<AgentReward>().DisplayReward(); 
+            //Maybe dont end here and let the agent get back to home???
+            EndEpisode();
+        }
+        if (other.TryGetComponent<AgentPenatly>(out AgentPenatly penatly)){
+            SetReward(-baseReward);
+            other.GetComponent<AgentPenatly>().DisplayPenatly(); 
+            EndEpisode();
+        }
+
+        if (other.gameObject.GetComponent<AgentReward>()){
+            Debug.Log(other.name);
+        }
+    }
+}

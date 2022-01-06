@@ -4,6 +4,9 @@ using UnityEngine;
 using Enums;
 using Leap.Unity;
 
+/// <summary>
+/// DEPRECIATED CLASS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/// </summary>
 public class ReachTargetManager : MonoBehaviour{
     
     private GameObject reachObject;

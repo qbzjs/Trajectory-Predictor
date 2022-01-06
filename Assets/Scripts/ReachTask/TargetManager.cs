@@ -7,6 +7,7 @@ using UnityEngine;
 using PathologicalGames;
 using DG.Tweening;
 using Leap.Unity;
+using Unity.MLAgents;
 
 public class TargetManager : MonoBehaviour
 {
@@ -22,10 +23,15 @@ public class TargetManager : MonoBehaviour
     public GameObject indicatorPrefab;
     private GameObject indicatior;
 
+    public GameObject targetHomeObject;
+
     public GameObject ghostHandRight;
     public Renderer ghostHandRightMesh;
+
+    
     
     private Renderer targetRenderer;
+    private Renderer homeTargetRenderer;
     private Renderer fixationRenderer;
     private Renderer indicatorHeadRenderer;
     private Renderer indicatorBodyRenderer;
@@ -56,8 +62,16 @@ public class TargetManager : MonoBehaviour
     public int targetIndex;
     public float lifeTime;
     
+    //ML
+    public GameObject agent;
+    public GameObject agentGoal;
+    
     //debugging
     private bool targetsActive;
+    
+    public delegate void TargetActions(bool targetPresent, bool restPresent, Vector3 position);
+    public static event TargetActions OnTargetAction;
+
 
     #region Event Subscriptions
 
@@ -110,11 +124,11 @@ public class TargetManager : MonoBehaviour
         }
 
         if (eventType == GameStatus.VisibleCountdown){
-
+            InitialiseHomeTarget();
         }
 
         if (eventType == GameStatus.CountdownComplete){
-
+            agent.SetActive(true);
         }
 
         if (eventType == GameStatus.BlockStarted){
@@ -124,6 +138,7 @@ public class TargetManager : MonoBehaviour
         if (eventType == GameStatus.BlockComplete){
             RemoveFixation();
             RemoveGhostTargetArray();
+            agent.SetActive(false);
         }
 
         if (eventType == GameStatus.AllBlocksComplete){
@@ -190,6 +205,9 @@ public class TargetManager : MonoBehaviour
     #endregion
 
     void Awake(){
+        //ml
+        //agent.SetActive(false);
+        
         originPoint = this.transform;
         controller = gameObject.GetComponent<TargetController>();
 
@@ -198,6 +216,13 @@ public class TargetManager : MonoBehaviour
         lineRenderer = gameObject.GetComponent<LineRenderer>();
 
         lineToTarget = false;
+
+        targetHomeObject.transform.DOScale(0, 0);
+        
+        defaultColour = Settings.instance.defaultColour;
+        highlightColour = Settings.instance.highlightColour;
+        defaultFixationColour = Settings.instance.defaultFixationColour;
+        highlightFixationColour = Settings.instance.highlightFixationColour;
     }
 
     private void Start(){
@@ -205,6 +230,11 @@ public class TargetManager : MonoBehaviour
             handPosition = DAO.instance.motionDataRightWrist.position;
         }
         InitialisePositions();
+        
+        //observation ml events
+        if (OnTargetAction!=null){
+            OnTargetAction(false, false, targetHomeObject.transform.position);
+        }
     }
 
     private IEnumerator InitialisePositions(){
@@ -232,60 +262,69 @@ public class TargetManager : MonoBehaviour
             lineRenderer.SetPosition(1,handPosition);
         }
 
-        //debugging controls
-        if (Input.GetKeyDown(KeyCode.UpArrow)){
-            InitialiseGhostTargetArray();
-            InitialiseFixation();
-            InitialiseObjects();
-            lifeTime = 1f;
-            targetsActive = true;
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow)){
-            RemoveGhostTargetArray();
-            targetsActive = false;
-        }
+        #region Debugging controls
 
-        if (targetsActive){
-            if (Input.GetKeyDown(KeyCode.Alpha0)){
-                RemoveTarget();
-                DestroyObjects();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha1)){
-                RemoveTarget();
-                DestroyObjects();
-                targetIndex = 0;
-                InitialiseObjects();
-                DisplayIndication();
-                DisplayTarget();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2)){
-                RemoveTarget();
-                DestroyObjects();
-                targetIndex = 1;
-                InitialiseObjects();
-                DisplayIndication();
-                DisplayTarget();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha3)){
-                RemoveTarget();
-                DestroyObjects();
-                targetIndex = 2;
-                InitialiseObjects();
-                DisplayIndication();
-                DisplayTarget();
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha4)){
-                RemoveTarget();
-                DestroyObjects();
-                targetIndex = 3;
-                InitialiseObjects();
-                DisplayIndication();
-                DisplayTarget();
-            }
-        }
+        // //debugging controls
+        // if (Input.GetKeyDown(KeyCode.UpArrow)){
+        //     InitialiseGhostTargetArray();
+        //     InitialiseFixation();
+        //     InitialiseObjects();
+        //     lifeTime = 1f;
+        //     targetsActive = true;
+        // }
+        // if (Input.GetKeyDown(KeyCode.DownArrow)){
+        //     RemoveGhostTargetArray();
+        //     targetsActive = false;
+        // }
+        //
+        // if (targetsActive){
+        //     if (Input.GetKeyDown(KeyCode.Alpha0)){
+        //         RemoveTarget();
+        //         DestroyObjects();
+        //     }
+        //     if (Input.GetKeyDown(KeyCode.Alpha1)){
+        //         RemoveTarget();
+        //         DestroyObjects();
+        //         targetIndex = 0;
+        //         InitialiseObjects();
+        //         DisplayIndication();
+        //         DisplayTarget();
+        //     }
+        //     if (Input.GetKeyDown(KeyCode.Alpha2)){
+        //         RemoveTarget();
+        //         DestroyObjects();
+        //         targetIndex = 1;
+        //         InitialiseObjects();
+        //         DisplayIndication();
+        //         DisplayTarget();
+        //     }
+        //     if (Input.GetKeyDown(KeyCode.Alpha3)){
+        //         RemoveTarget();
+        //         DestroyObjects();
+        //         targetIndex = 2;
+        //         InitialiseObjects();
+        //         DisplayIndication();
+        //         DisplayTarget();
+        //     }
+        //     if (Input.GetKeyDown(KeyCode.Alpha4)){
+        //         RemoveTarget();
+        //         DestroyObjects();
+        //         targetIndex = 3;
+        //         InitialiseObjects();
+        //         DisplayIndication();
+        //         DisplayTarget();
+        //     }
+        // }
+
+        #endregion
+
 
     }
 
+    private void InitialiseHomeTarget(){
+        homeTargetRenderer = targetHomeObject.GetComponent<Renderer>();
+        homeTargetRenderer.material.DOColor(highlightColour, 1f);
+    }
     private void InitialiseFixation(){
         if (fixationCross == null){
             fixationCross = Instantiate(fixationCrossPrefab, originPoint.position, quaternion.identity);
@@ -320,7 +359,8 @@ public class TargetManager : MonoBehaviour
         highlightColour = Settings.instance.highlightColour;
         defaultFixationColour = Settings.instance.defaultFixationColour;
         highlightFixationColour = Settings.instance.highlightFixationColour;
-
+        
+        
         target.SetActive(false);
     }
 
@@ -329,6 +369,13 @@ public class TargetManager : MonoBehaviour
     }
     private void DisplayIndication()
     {
+        //observation ml events
+        if (OnTargetAction!=null){
+            OnTargetAction(false, false, targetHomeObject.transform.position);
+        }
+        
+        homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 4);
+        
         targetGhosts[targetIndex].transform.DOScale(0f, lifeTime/4);
         target.SetActive(true);
         targetMesh.transform.DOScale(0.75f, lifeTime/4);
@@ -346,6 +393,12 @@ public class TargetManager : MonoBehaviour
     }
     private void DisplayTarget()
     {
+        //observation ml events
+        if (OnTargetAction!=null){
+            OnTargetAction(true, false, targetDestination);
+        }
+        SetMLAgentGoal(targetDestination, false);
+        
         //everything in target period
         gameObject.GetComponent<AudioSource>().Play();
         if (useLine){
@@ -356,18 +409,29 @@ public class TargetManager : MonoBehaviour
         ghostHandRightMesh.material.DOFade(0.2f, lifeTime);
         ghostHandRight.transform.DOMove(destinationTransform.position, lifeTime);
 
+        //homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 4);
+        
         targetMesh.transform.DOScale(1, lifeTime/4);
         targetRenderer.material.DOColor(highlightColour, lifeTime / 4);
 
     }
     private void RemoveTarget()
     {
+        //observation ml events
+        if (OnTargetAction!=null){
+            OnTargetAction(false, true, targetHomeObject.transform.position);
+        }
+        SetMLAgentGoal(targetHomeObject.transform.position, true);
+        //SetMLAgentGoal(fixationCross.transform.position);
+        
         // ghostHandRightMesh.material.DOFade(0.05f, lifeTime/4);
+        
+        homeTargetRenderer.material.DOColor(highlightColour, lifeTime / 4);
         
         targetMesh.transform.DOScale(0f, lifeTime/4);
         targetRenderer.material.DOColor(defaultColour, lifeTime / 4);
         
-        targetGhosts[targetIndex].transform.DOScale(0.5f, lifeTime/4);
+        targetGhosts[targetIndex].transform.DOScale(0.75f, lifeTime/4);
         // fixationRenderer.material.DOFade(0,lifeTime/4);
         
         ghostHandRightMesh.material.DOFade(0, lifeTime/4);
@@ -384,8 +448,7 @@ public class TargetManager : MonoBehaviour
             Destroy(target);
         }
     }
-
-
+    
     private void InitialiseGhostTargetArray(){
         if (targetGhosts.Length == 0){
             targetGhosts = new GameObject[GameManager.instance.targetCount];
@@ -400,11 +463,21 @@ public class TargetManager : MonoBehaviour
             targetGhosts[i].transform.DOScale(0.75f, GameManager.instance.SpeedCheck(animationDuration));
             targetGhosts[i].transform.DOMove(GetDestination(i), GameManager.instance.SpeedCheck(animationDuration));
         }
+        
+        targetHomeObject.transform.DOScale(0.05f, GameManager.instance.SpeedCheck(animationDuration));
     }
     private void RemoveGhostTargetArray(){
         for (int i = 0; i < targetGhosts.Length; i++){
             targetGhosts[i].transform.DOScale(0, GameManager.instance.SpeedCheck(animationDuration));
             targetGhosts[i].transform.DOMove(originPoint.transform.position, GameManager.instance.SpeedCheck(animationDuration));
+        }
+        
+        targetHomeObject.transform.DOScale(0.0f, GameManager.instance.SpeedCheck(animationDuration));
+        homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 4);
+        
+        //observation ml events
+        if (OnTargetAction!=null){
+            OnTargetAction(false, false, targetHomeObject.transform.position);
         }
     }
     
@@ -437,5 +510,17 @@ public class TargetManager : MonoBehaviour
         dest = targetDestination;
         
         return dest;
+    }
+
+    private void SetMLAgentGoal(Vector3 goalPosition, bool home){
+        //position a trigger at the target point
+        agentGoal.transform.position = goalPosition;
+        agentGoal.GetComponent<AgentReward>().SetCollider(true);
+        if (!home){
+            agentGoal.GetComponent<AgentReward>().homePosition = false;
+        }
+        else{
+            agentGoal.GetComponent<AgentReward>().homePosition = true;
+        }
     }
 }
