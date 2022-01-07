@@ -51,6 +51,7 @@ mlagents-learn config/ArmReach.yaml --initialize-from=TestParameters --run-id=Ar
 mlagents-learn config/ArmReach.yaml --initialize-from=ArmReach --run-id=ArmReach2
 mlagents-learn config/ArmReach.yaml --initialize-from=ArmReachHeuristic --run-id=ArmReachHeuristic2
 mlagents-learn config/ArmReach.yaml --initialize-from=ArmReachHeuristic2 --run-id=ArmReachHeuristic3
+mlagents-learn config/ArmReach.yaml --initialize-from=ArmReachHeuristic3 --run-id=ArmReachHeuristic4
 
 
 ----------Tensorboard-------------
