@@ -18,5 +18,8 @@ public class AgentEvents : MonoBehaviour
         if (eventType == TrialEventType.Initialise){
             armReachAgent.EndEpisodeExternal();
         }
+        if (eventType == TrialEventType.PostTrialPhase){
+            armReachAgent.EndEpisodeExternal();
+        }
     }
 }

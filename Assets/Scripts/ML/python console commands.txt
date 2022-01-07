@@ -7,6 +7,7 @@ cd C:\Users\siroc>
 d:
 
 cd D:\Unity Projects\ML\ML-Agents
+cd C:\Users\SCAN-iHub\Documents\Unity Projects\BCI\BCI-Trial-Manager-VR_v2
 
 (install/initialise virtual environment) (makes folder and scripts 'venv'->'virtual environment')
 python -m venv venv
@@ -41,9 +42,15 @@ mlagents-learn --run-id=TestName
 
 (to learn from config 'yaml' file)
 mlagents-learn config/MoveToGoal.yaml --run-id=TestParameters
+mlagents-learn config/ArmReach.yaml --run-id=TestParameters
+mlagents-learn config/ArmReach.yaml --run-id=ArmReachHeuristic
 
 (to learn from config 'yaml' file previous brain)
 mlagents-learn config/MoveToGoal.yaml --initialize-from=MoveToGoal --run-id=MoveToGoal2
+mlagents-learn config/ArmReach.yaml --initialize-from=TestParameters --run-id=ArmReach2
+mlagents-learn config/ArmReach.yaml --initialize-from=ArmReach --run-id=ArmReach2
+mlagents-learn config/ArmReach.yaml --initialize-from=ArmReachHeuristic --run-id=ArmReachHeuristic2
+mlagents-learn config/ArmReach.yaml --initialize-from=ArmReachHeuristic2 --run-id=ArmReachHeuristic3
 
 
 ----------Tensorboard-------------
@@ -54,3 +61,11 @@ tensorboard --logdir results  (visualise results in logdirectory)
 
 (to view)
 http://localhost:6006/
+
+
+      gail:
+        strength: 0.95
+        demo_path: Demos/ArmReachDemo.demo
+    behavioral_cloning:
+      strength: 0.75
+      demo_path: Demos/ArmReachDemo.demo

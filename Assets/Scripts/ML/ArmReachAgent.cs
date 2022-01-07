@@ -60,9 +60,17 @@ public class ArmReachAgent : Agent{
         float moveY = actions.ContinuousActions[1];
         float moveZ = actions.ContinuousActions[2];
 
-        //this.transform.position += new Vector3(moveX,moveY,moveZ) * Time.deltaTime * magnitude;
-        //agentRigidBody.velocity = new Vector3(velocityX, velocityY, velocityZ);
-        agentRigidBody.velocity = new Vector3(moveX, moveY, moveZ) * moveMagnitude;
+        //for motion driven 1:1 movement
+        //this.transform.position = new Vector3(moveX, moveY, moveZ);
+        
+        //for independent movement
+        //this.transform.position += new Vector3(moveX,moveY,moveZ) * Time.deltaTime * moveMagnitude;
+        
+        //for velocity driven rigidbody movement
+        agentRigidBody.velocity = new Vector3(moveX, moveY, moveZ);
+        //agentRigidBody.velocity = new Vector3(moveX, moveY, moveZ) * moveMagnitude;
+        
+        //update for angular velocity
         //agentRigidBody.angularVelocity = new Vector3()
     }
     //USER INPUT / HEURISTICS
@@ -77,27 +85,35 @@ public class ArmReachAgent : Agent{
         // continuousActions[1] = Input.GetAxisRaw("Vertical");
         // continuousActions[2] = Input.GetAxisRaw("Vertical");
         
-        continuousActions[0] = dao.motionDataRightWrist.position.x;
-        continuousActions[1] = dao.motionDataRightWrist.position.y;
-        continuousActions[2] = dao.motionDataRightWrist.position.z;
+        // continuousActions[0] = dao.motionDataRightWrist.position.x;
+        // continuousActions[1] = dao.motionDataRightWrist.position.y;
+        // continuousActions[2] = dao.motionDataRightWrist.position.z;
+        
+        continuousActions[0] = dao.motionDataRightWrist.velocity.x;
+        continuousActions[1] = dao.motionDataRightWrist.velocity.y;
+        continuousActions[2] = dao.motionDataRightWrist.velocity.z;
     }
     //GOALS AND REWARDS
     private void OnTriggerEnter(Collider other){
         if (other.TryGetComponent<AgentReward>(out AgentReward reward)){
-            if (other.GetComponent<AgentReward>().HomePosition()){
-                SetReward(baseReward * bonusMultiplier);
-            }
-            else{
-                SetReward(baseReward);
-            }
             
             other.GetComponent<AgentReward>().SetCollider(false);
             other.GetComponent<AgentReward>().DisplayReward(); 
+            if (other.GetComponent<AgentReward>().HomePosition()){
+                
+                SetReward(baseReward);
+                EndEpisode();
+            }
+            else{
+                SetReward(baseReward * bonusMultiplier);
+                
+            }
+
             //Maybe dont end here and let the agent get back to home???
-            EndEpisode();
+            //EndEpisode();
         }
         if (other.TryGetComponent<AgentPenatly>(out AgentPenatly penatly)){
-            SetReward(-baseReward);
+            SetReward(baseReward-(baseReward*4));
             other.GetComponent<AgentPenatly>().DisplayPenatly(); 
             EndEpisode();
         }

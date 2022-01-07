@@ -29,4 +29,8 @@ public class AgentReward : MonoBehaviour{
 		yield return new WaitForSeconds(1f);
 		gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
 	}
+	
+	private void Update(){
+//		Debug.Log(homePosition);
+	}
 }

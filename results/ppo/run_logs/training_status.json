@@ -2,22 +2,22 @@
     "ArmReach": {
         "checkpoints": [
             {
-                "steps": 1725,
-                "file_path": "results\\ppo\\ArmReach\\ArmReach-1725.onnx",
-                "reward": -0.6197183098591549,
-                "creation_time": 1641554989.734596,
+                "steps": 8809,
+                "file_path": "results\\ppo\\ArmReach\\ArmReach-8809.onnx",
+                "reward": 0.3037037037037037,
+                "creation_time": 1641561643.5828044,
                 "auxillary_file_paths": [
-                    "results\\ppo\\ArmReach\\ArmReach-1725.pt"
+                    "results\\ppo\\ArmReach\\ArmReach-8809.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 1725,
+            "steps": 8809,
             "file_path": "results\\ppo\\ArmReach.onnx",
-            "reward": -0.6197183098591549,
-            "creation_time": 1641554989.734596,
+            "reward": 0.3037037037037037,
+            "creation_time": 1641561643.5828044,
             "auxillary_file_paths": [
-                "results\\ppo\\ArmReach\\ArmReach-1725.pt"
+                "results\\ppo\\ArmReach\\ArmReach-8809.pt"
             ]
         }
     },
