@@ -11,8 +11,8 @@ public class ArmReachAgent : Agent{
     public int moveMagnitude = 1;
     [Range(1,10)]
     public float baseReward = 1;
-    [Range(1,10)]
-    public float bonusMultiplier = 10;
+    [Range(1,50)]
+    public float bonusMultiplier = 25;
 
     [SerializeField] private Transform homePosition;
     
@@ -25,10 +25,13 @@ public class ArmReachAgent : Agent{
         agentRigidBody = this.GetComponent<Rigidbody>();
     }
 
-    public override void Initialize(){
+    //for external events from monobehaviour classes
+    public void BeginEpisodeExternal(){
         
     }
-
+    public void EndEpisodeExternal(){
+        EndEpisode();
+    }
     public override void OnEpisodeBegin(){
         transform.position = homePosition.position;
         DAO dao = DAO.instance;
@@ -60,6 +63,7 @@ public class ArmReachAgent : Agent{
         //this.transform.position += new Vector3(moveX,moveY,moveZ) * Time.deltaTime * magnitude;
         //agentRigidBody.velocity = new Vector3(velocityX, velocityY, velocityZ);
         agentRigidBody.velocity = new Vector3(moveX, moveY, moveZ) * moveMagnitude;
+        //agentRigidBody.angularVelocity = new Vector3()
     }
     //USER INPUT / HEURISTICS
     public override void Heuristic(in ActionBuffers actionsOut){

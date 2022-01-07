@@ -64,6 +64,7 @@ public class ArmReachAgentObservations : MonoBehaviour{
         if (dao){
             if (trainFromBCI){
                 //get bci data???
+                velocityPrediction = Vector3.zero;
                 //velocityPrediction = dao?????
             }
 

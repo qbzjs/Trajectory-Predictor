@@ -2,28 +2,28 @@
     "ArmReach": {
         "checkpoints": [
             {
-                "steps": 8547,
-                "file_path": "results\\ppo\\ArmReach\\ArmReach-8547.onnx",
-                "reward": -0.07012987012987013,
-                "creation_time": 1641510890.0264196,
+                "steps": 1725,
+                "file_path": "results\\ppo\\ArmReach\\ArmReach-1725.onnx",
+                "reward": -0.6197183098591549,
+                "creation_time": 1641554989.734596,
                 "auxillary_file_paths": [
-                    "results\\ppo\\ArmReach\\ArmReach-8547.pt"
+                    "results\\ppo\\ArmReach\\ArmReach-1725.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 8547,
+            "steps": 1725,
             "file_path": "results\\ppo\\ArmReach.onnx",
-            "reward": -0.07012987012987013,
-            "creation_time": 1641510890.0264196,
+            "reward": -0.6197183098591549,
+            "creation_time": 1641554989.734596,
             "auxillary_file_paths": [
-                "results\\ppo\\ArmReach\\ArmReach-8547.pt"
+                "results\\ppo\\ArmReach\\ArmReach-1725.pt"
             ]
         }
     },
     "metadata": {
         "stats_format_version": "0.3.0",
         "mlagents_version": "0.27.0",
-        "torch_version": "1.7.1+cu110"
+        "torch_version": "1.7.1+cpu"
     }
 }
