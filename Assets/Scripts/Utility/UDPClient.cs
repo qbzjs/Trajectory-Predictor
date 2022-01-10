@@ -5,6 +5,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.IO;
 
 /// <summary>
 /// Ports need reinitialised when changed in settings!!!
@@ -19,47 +20,33 @@ public class UDPClient : MonoBehaviour
 {
     public static UDPClient instance;
 
-    public bool sendEnabled = true;
-    public bool receiveEnabled = true;
+    // public bool sendEnabled = true;
+    // public bool receiveEnabled = true;
     
     public string ip = "127.0.0.1";
     public int portListen = 3002;
     public int portSend = 3010;
 
-    [Space (10)]
-    public bool debugListen = false;
-
-    [Space(10)]
-    public string received = "";
+    private string received = "";
     
-    [Space(10)]
-    public float dataReceived = 0;
+    [Space(8)]
+    public bool receivedFlag = false;
     
-    private bool receivedFlag = false;
-    
-    [Space(12)]
-    public Vector2 xy;
-    public Vector2 xyLR;
-    public Vector2 xyFR;
-    public Vector2 xyLF;
-    public float LR;
-    public float FR;
-    public float LF;
-    public float TX;
+    [Space(8)]
+    public float x;
+    public float y;
+    public float z;
 
     private UdpClient client;
     private Thread receiveThread;
     private IPEndPoint remoteEndPoint;
 
     //EVENTS/DELAGATES TO SEND DATA ACROSS THE GAME
-    public delegate void dataReceivedString(string dataString);
-    public static event dataReceivedString OnDataReceivedString;
+    public delegate void BCI_Data(float x, float y, float z);
+    public static event BCI_Data OnBCI_Data;
 
-    public delegate void dataReceivedDoubles(float LR, float FR, float LF, float TX);
-    public static event dataReceivedDoubles OnDataReceivedDoubles;
 
-    public delegate void dataReceivedXY(Vector2 xy, Vector2 xy_LR, Vector2 xy_FR, Vector2 xy_LF);
-    public static event dataReceivedXY OnDataReceivedXY;
+    #region Initiaisation
 
     public void Awake()
     {
@@ -87,31 +74,30 @@ public class UDPClient : MonoBehaviour
         receiveThread.Start();
     }
 
+    #endregion
+
     void Update()
     {
-        //Check if a data has been recived
-        // if (receivedFlag)
-        // {
-        //     if (OnDataReceivedXY != null){
-        //         OnDataReceivedXY(xy, xyLR, xyFR, xyLF);
-        //     }
-        //
-        //     if (OnDataReceivedDoubles != null){
-        //         OnDataReceivedDoubles(LR, FR, LF, TX);
-        //     }
-        // }
-
         //Debug.Log(received.ToString());
 
-        //Check if a message has been received
-        if (received != "" && debugListen)
-        {
-            Debug.Log("UDPClient: message received \'" + received + "\'");
-            //Clear message
-            received = "";
+        //Check if a message has been received and broadcast data if true
+        if (received != ""){
+            //Debug.Log("UDPClient: message received \'" + received + "\'");
+            receivedFlag = true; 
+            // received = ""; //makes it flicker on/off - need to buffer frames or add timeout
+        }
+        // else {
+        //     receivedFlag = false;
+        // }
+        
+        if (receivedFlag){
+            if (OnBCI_Data != null){
+                OnBCI_Data(x,y,z);
+            }
         }
     }
 
+    #region Data Sender
     // UDP send: one byte
     public void SendData(byte inputByte)
     {
@@ -151,47 +137,71 @@ public class UDPClient : MonoBehaviour
             Debug.LogError ("Error udp send : " + err.Message);
         }
     }
+    #endregion
+
+    #region Data Receiver
     public void ReceiveData()
     {
         while (true){
-            //----------------------
-            try {
-                // Bytes received
-                IPEndPoint anyIP = new IPEndPoint (IPAddress.Any, portListen);
-                byte[] data = client.Receive (ref anyIP);
+            
+            //data conversion to x y z
+            IPEndPoint receiveIP = new IPEndPoint (IPAddress.Any, portListen);
+            
+            try{
+                byte[] byteArray = new byte[]{}; //length is 24
+                //Debug.Log(byteArray.Length); //length check ro console
+                
+                byteArray = client.Receive(ref receiveIP); //propagate the byte array from the ip endpoint
+                
+                //convert the array to x,y,z
+                int i = 0;
+                x = Convert.ToSingle(BitConverter.ToDouble(byteArray, 8 * i));
 
-                // Bytes into text - not used - bytes need converted
+                i++;
+                y = Convert.ToSingle(BitConverter.ToDouble(byteArray, 8 * i));
+                
+                i++;
+                z = Convert.ToSingle(BitConverter.ToDouble(byteArray, 8 * i));
+            }
+            catch (Exception e){
+                Debug.Log ("Error in UDP Receiver:" + e.ToString ());
+            }
+            
+            //Unconverted data (used to check data is received)
+            try {
+                byte[] data = client.Receive (ref receiveIP);
+                // Bytes into text
                 string text = "";
                 text = Encoding.UTF8.GetString (data);
                 received = text;
-                
-                
-                received = ConvertByteData(data).ToString("F");
-                
-                dataReceived = ConvertByteData(data);
-                dataReceived = dataReceived / 1000;
-
             } 
             catch (Exception err) {
                 Debug.Log ("Error:" + err.ToString ());
             }
-
+            
         }
     }
+    #endregion
+
 
     //NEW FUNCTION - CONVERT DATA TEST!!!
     private float ConvertByteData(byte[] b){
         float d = BitConverter.ToInt16(b, 0);
         return d;
     }
-    // private int ConvertByteData(byte[] b){
-    //     int d = 0;
-    //
-    //     return d;
-    // }
-    
+
     //Exit UDP client
     public void OnDisable()
+    {
+        if (receiveThread != null){
+            receiveThread.Abort();
+            receiveThread = null;
+        }
+        client.Close();
+        Debug.Log("UDPClient: exit");
+    }
+    
+    public void OnApplicationQuit()
     {
         if (receiveThread != null){
             receiveThread.Abort();
