@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Enums;
-
+/// <summary>
+/// This class is a bridge between vive trackers and data access DAO
+/// </summary>
 public class MotionDataStreaming
 {
 
