@@ -199,4 +199,11 @@
 		Sensel
 	}
 
+	public enum BCI_ControlType
+	{
+		Velocity,
+		ForceVelocity,
+		Position
+	}
+
 }

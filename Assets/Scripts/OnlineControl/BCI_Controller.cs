@@ -2,19 +2,44 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 public class BCI_Controller : MonoBehaviour
 {
+    [Header("BCI CONTROL")] 
     public bool controlActive;
     public bool simulatedValues;
-    [Header("BCI Data")] 
-    public Vector3 velocityPrediction;
-    public Vector3 velocitySimulated;
+    public BCI_ControlType controlType;
+    
+    [Header("MODIFIERS")]
+    [Range(0,2f)]
+    public float magnitudeMultiplier = 1f;
 
+    public bool invertX;
+    [Range(0,2f)]
+    public float magnitudeMultiplierX = 1f;
+    public bool invertY;
+    [Range(0,2f)]
+    public float magnitudeMultiplierY = 1f;
+    public bool invertZ;
+    [Range(0,2f)]
+    public float magnitudeMultiplierZ = 1f;
+
+    public bool useGravity;
+    public bool freeze;
+    [Space(4)]
     [Range(0,10f)]
-    public float speedMultiplier = 1f;
+    public float mass = 1;
+    [Range(0,10f)]
+    public float drag = 0;
 
-    public Rigidbody controlObject; //object moved by the BCI - arm will take position from this object
+    [Header("BCI DATA")] 
+    public Vector3 controlVectorRaw;
+    public Vector3 controlVectorModified;
+    private Vector3 cv;
+
+
+    private Rigidbody controlObject; //object moved by the BCI - arm will take position from this object
 
     #region Data Subscribe
     private void OnEnable(){
@@ -24,30 +49,60 @@ public class BCI_Controller : MonoBehaviour
         UDPClient.OnBCI_Data -= UDPClientOnBCI_Data;
     }
     private void UDPClientOnBCI_Data(float x, float y, float z){
-        velocityPrediction = new Vector3(x, y, z);
+        controlVectorRaw = new Vector3(x, y, z);
     }
     #endregion
 
 
-    void Start(){
+    void Awake(){
+        if (gameObject.GetComponent<Rigidbody>()){
+            controlObject = gameObject.GetComponent<Rigidbody>();
+        }
     }
 
     void Update(){
-        if (controlActive && !simulatedValues){
-            //controlObject.velocity += new Vector3(velocityPrediction.x, velocityPrediction.y, velocityPrediction.z) * speedMultiplier;
-            
-            velocityPrediction = velocityPrediction * speedMultiplier;
-            controlObject.AddForce(velocityPrediction.x, velocityPrediction.y, velocityPrediction.z);
+        if (simulatedValues){
+            //get control vector from other location...
+            // controlVector = ....
         }
 
-        if (controlActive && simulatedValues){
-            //controlObject.velocity += new Vector3(velocitySimulated.x, velocitySimulated.y, velocitySimulated.z) * speedMultiplier;
-            velocityPrediction = velocityPrediction * speedMultiplier;
-            controlObject.AddForce(velocitySimulated.x, velocitySimulated.y, velocitySimulated.z);
+        controlObject.useGravity = useGravity;
+        controlObject.isKinematic = freeze;
+        controlObject.mass = mass;
+        controlObject.drag = drag;
+        
+        if (invertX){ magnitudeMultiplierX = -magnitudeMultiplierX; }
+        if (invertY){ magnitudeMultiplierY = -magnitudeMultiplierY; }
+        if (invertZ){ magnitudeMultiplierZ = -magnitudeMultiplierZ; }
+
+
+        if (controlType == BCI_ControlType.Velocity){
+
+            cv = controlVectorRaw * magnitudeMultiplier; //modify the vector
+            cv = new Vector3(cv.x * magnitudeMultiplierX, cv.y * magnitudeMultiplierY, cv.z * magnitudeMultiplierZ);
+            if (controlActive){
+                controlObject.velocity += new Vector3(cv.x, cv.y, cv.z);
+            }
+        }
+
+        if (controlType == BCI_ControlType.ForceVelocity){
+            cv = controlVectorRaw * magnitudeMultiplier; //modify the vector
+            cv = new Vector3(cv.x * magnitudeMultiplierX, cv.y * magnitudeMultiplierY, cv.z * magnitudeMultiplierZ);
+            if (controlActive){
+                controlObject.AddForce(cv.x, cv.y, cv.z);
+            }
+        }
+
+        if (controlType == BCI_ControlType.Position){
+            //controlObject.transform.Translate(cv.x,cv.y,cv.z);
+            cv = controlVectorRaw * magnitudeMultiplier; //modify the vector
+            cv = new Vector3(cv.x * magnitudeMultiplierX, cv.y * magnitudeMultiplierY, cv.z * magnitudeMultiplierZ);
+            if (controlActive){
+                controlObject.transform.position = cv;
+            }
         }
         
-        
-        
-        //try rigidbody velocity with time 
+        controlVectorModified = cv;
+
     }
 }
