@@ -143,6 +143,11 @@ public class Settings : MonoBehaviour {
 	public Color controlRestColour;
 	public Color controlActiveColour;
 
+	[Header("COLOURS UI")] 
+	public Color UI_Orange;
+	public Color UI_Blue;
+	public Color UI_Disabled;
+
 	[Header("OBJECT POOLS")] 
 	public GameObject objectPools;
 	private UI_DisplayObjects displayObjects;
