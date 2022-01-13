@@ -23,10 +23,17 @@ public class KinematicArmController : MonoBehaviour
         TargetManager.OnTargetAction += TargetManagerOnTargetAction;
     }
     private void OnDisable(){
-        
+        GameManager.OnTrialAction -= GameManagerOnTrialAction;
+        TargetManager.OnTargetAction -= TargetManagerOnTargetAction;
     }
     private void GameManagerOnTrialAction(TrialEventType eventType, int targetNum, float lifetime, int index, int total){
         animationDuration = lifetime;
+        if (eventType == TrialEventType.TargetPresentation){
+            //move to target
+        }
+        if (eventType == TrialEventType.Rest){
+            //move to home
+        }
     }
     private void TargetManagerOnTargetAction(bool targetPresent, bool restPresent, Vector3 position){
         if (targetPresent){

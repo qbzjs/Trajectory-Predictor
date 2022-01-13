@@ -63,6 +63,7 @@ public class TargetManager : MonoBehaviour
     public float lifeTime;
     
     //ML
+    public bool trainAgent;
     public GameObject agent;
     public GameObject agentGoal;
     
@@ -128,7 +129,10 @@ public class TargetManager : MonoBehaviour
         }
 
         if (eventType == GameStatus.CountdownComplete){
-            agent.SetActive(true);
+            if (trainAgent){
+                agent.SetActive(true);
+            }
+            
         }
 
         if (eventType == GameStatus.BlockStarted){
