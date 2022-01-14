@@ -6,20 +6,21 @@ using UnityEngine.UI;
 
 public class BCI_ControlManager : MonoBehaviour{
 
+    [Header("HANDS")]
     public HandModelManager leapHandManager;
     public GameObject BCI_leftHand;
     public GameObject BCI_rightHand;
 
-    public bool kinematicHands = false;
-    public bool BCIHands = false;
+    private bool kinematicHands = false;
+    private bool BCIHands = false;
 
+    [Header("UI")]
     public Button kinematicBtn;
     public Button BCI_Btn;
 
-    void Start()
-    {
-        kinematicHands = false;
-        BCIHands = false;
+    void Start(){
+        DisableKinematic();
+        DisableBCI();
         kinematicBtn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
         BCI_Btn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
     }
