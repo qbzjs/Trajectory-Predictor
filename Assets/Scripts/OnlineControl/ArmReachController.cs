@@ -83,6 +83,9 @@ public class ArmReachController : MonoBehaviour
         // needs injected from settings...
         handSide = Settings.instance.handedness;
 
+        rightHandTarget.rotation = rightHandReference.rotation;
+        leftHandTarget.rotation = leftHandReference.rotation;
+        
         if (handSide == Handedness.Left){
             // keep the right tracked/locked if the left is the active trial side
             rightHandTarget.position = rightHandReference.position;
