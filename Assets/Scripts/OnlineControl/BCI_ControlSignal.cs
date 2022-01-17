@@ -30,8 +30,10 @@ public class BCI_ControlSignal : MonoBehaviour
     public Vector3 controlVectorRefined;
     private Vector3 cv;
 
+    public bool brakes = false;
 
-    private Rigidbody controlObject; //object moved by the BCI - arm will take position from this object
+
+    public Rigidbody controlObject; //object moved by the BCI - arm will take position from this object
 
     #region Data Subscribe
 
@@ -54,16 +56,10 @@ public class BCI_ControlSignal : MonoBehaviour
 
     void Awake(){
         instance = this;
-        if (gameObject.GetComponent<Rigidbody>()){
-            controlObject = gameObject.GetComponent<Rigidbody>();
-        }
-        else{
-            controlObject = transform.Find("BCI Control Object").GetComponent<Rigidbody>();
-        }
+    }
 
-        if (controlObject == null){
-            Debug.Log("BCI SIGNAL MISSING CONTROL OBJECT (RIGIDBODY)");
-        }
+    private void Start(){
+        controlObject = BCI_ControlManager.instance.controlObject;
     }
 
     void Update(){
@@ -96,14 +92,27 @@ public class BCI_ControlSignal : MonoBehaviour
                 cv = controlVectorRaw * magnitudeMultiplier; //modify the vector
                 cv = new Vector3(cv.x * magnitudeMultiplierX, cv.y * magnitudeMultiplierY, cv.z * magnitudeMultiplierZ);
 
-                controlObject.velocity += new Vector3(cv.x, cv.y, cv.z);
+                if (!brakes){
+                    controlObject.velocity += new Vector3(cv.x, cv.y, cv.z);
+                }
+                else{
+                    //controlObject.velocity = controlObject.velocity * 0.9f;
+                    //controlObject.velocity = Vector3.zero;
+                    controlObject.velocity -= new Vector3(cv.x, cv.y, cv.z) * 2;
+                }
+                
             }
 
             if (controlType == BCI_ControlType.ForceVelocity){
                 cv = controlVectorRaw * magnitudeMultiplier; //modify the vector
                 cv = new Vector3(cv.x * magnitudeMultiplierX, cv.y * magnitudeMultiplierY, cv.z * magnitudeMultiplierZ);
 
-                controlObject.AddForce(cv.x, cv.y, cv.z);
+                if (!brakes){
+                    controlObject.AddForce(cv.x, cv.y, cv.z);
+                }
+                else{
+                    controlObject.AddForce(-cv.x*2, -cv.y*2, -cv.z*2);
+                }
             }
 
             if (controlType == BCI_ControlType.Position){
