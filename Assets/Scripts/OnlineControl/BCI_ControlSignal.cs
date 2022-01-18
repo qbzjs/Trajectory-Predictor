@@ -11,7 +11,9 @@ public class BCI_ControlSignal : MonoBehaviour
     [Header("BCI CONTROL")] public bool controlActive;
     public bool simulatedValues;
     public BCI_ControlType controlType;
-
+    
+    [Range(0, 0.5f)] public float motionThreshold = 0.1f;
+    
     [Header("MODIFIERS")] [Range(0, 2f)] public float magnitudeMultiplier = 1f;
 
     public bool invertX;
@@ -32,9 +34,13 @@ public class BCI_ControlSignal : MonoBehaviour
 
     public bool brakes = false;
 
-
     public Rigidbody controlObject; //object moved by the BCI - arm will take position from this object
 
+    [Range(0, 1f)] public float assistance;
+    public Vector3 targetVector;
+    public Vector3 controlVectorDiscriminated; //percentage of used predicted
+    private BCI_ControlMixer controlMixer;
+    
     #region Data Subscribe
 
     private void OnEnable(){
@@ -60,9 +66,16 @@ public class BCI_ControlSignal : MonoBehaviour
 
     private void Start(){
         controlObject = BCI_ControlManager.instance.controlObject;
+        controlMixer = new BCI_ControlMixer();
     }
 
     void Update(){
+        float x = controlMixer.DiscriminateAxis(controlVectorRaw.x, targetVector.x, assistance);
+        float y = controlMixer.DiscriminateAxis(controlVectorRaw.y, targetVector.y, assistance);
+        float z = controlMixer.DiscriminateAxis(controlVectorRaw.z, targetVector.z, assistance);
+
+        controlVectorDiscriminated = new Vector3(x, y, z);
+
         if (controlActive){
             if (simulatedValues){
                 //can change raw vector in inspector
@@ -87,6 +100,12 @@ public class BCI_ControlSignal : MonoBehaviour
                 magnitudeMultiplierZ = -magnitudeMultiplierZ;
             }
 
+            if (controlType == BCI_ControlType.Translate){
+                cv = controlVectorRaw * magnitudeMultiplier; //modify the vector
+                cv = new Vector3(cv.x * magnitudeMultiplierX, cv.y * magnitudeMultiplierY, cv.z * magnitudeMultiplierZ);
+                
+                controlObject.transform.position += new Vector3(cv.x,cv.y,cv.x);
+            }
 
             if (controlType == BCI_ControlType.Velocity){
                 cv = controlVectorRaw * magnitudeMultiplier; //modify the vector
