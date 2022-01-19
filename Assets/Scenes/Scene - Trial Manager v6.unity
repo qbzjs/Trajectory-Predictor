@@ -49057,6 +49057,7 @@ GameObject:
   - component: {fileID: 1057949950}
   - component: {fileID: 1057949951}
   - component: {fileID: 1057949953}
+  - component: {fileID: 1057949954}
   - component: {fileID: 1057949952}
   m_Layer: 0
   m_Name: BCI Control Manager
@@ -49095,11 +49096,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba99c6766307de45ae38177c1ea4d5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlObject: {fileID: 30074571}
+  controlObject: {fileID: 30074569}
   leapHandManager: {fileID: 946266226}
   BCI_leftHand: {fileID: 768498552}
   BCI_rightHand: {fileID: 1135361397}
   controlSignal: {fileID: 0}
+  bciController: {fileID: 0}
   armReachController: {fileID: 0}
   kinematicBtn: {fileID: 2092391135}
   BCI_Btn: {fileID: 411048178}
@@ -49144,9 +49146,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f916d9ece8179845a77b2aec54f6435, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlActive: 0
   simulatedValues: 0
   controlType: 1
+  controlVectorRaw: {x: 0, y: 0, z: 0}
+  controlVectorRefined: {x: 0, y: 0, z: 0}
+  controlAssistance: 0
+  targetVector: {x: 0, y: 0, z: 0}
+  controlVectorAssisted: {x: 0, y: 0, z: 0}
   magnitudeMultiplier: 1
   invertX: 0
   magnitudeMultiplierX: 1
@@ -49154,14 +49160,25 @@ MonoBehaviour:
   magnitudeMultiplierY: 1
   invertZ: 0
   magnitudeMultiplierZ: 1
+--- !u!114 &1057949954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057949949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b584bb2631de383439ca622dfece7feb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controlObject: {fileID: 0}
+  rb: {fileID: 0}
   useGravity: 0
   freeze: 0
   mass: 1
   drag: 0
-  controlVectorRaw: {x: 0, y: 0, z: 0}
-  controlVectorRefined: {x: 0, y: 0, z: 0}
-  brakes: 0
-  controlObject: {fileID: 0}
+  motionThreshold: 0.1
 --- !u!1 &1058370655
 GameObject:
   m_ObjectHideFlags: 0

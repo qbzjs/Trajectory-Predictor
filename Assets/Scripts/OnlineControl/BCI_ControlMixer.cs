@@ -6,14 +6,36 @@ public class BCI_ControlMixer {
     
     private float p; //predicted
     private float t; //target
-    private float d; //displayed
+    private float cx; //control
+    private float cy; //control
+    private float cz; //control
     private float a; //assistance
     
-    private float displayed;
+    private float controlAxis;
+    private Vector3 controlVector;
 
-    public float DiscriminateAxis(float predicted, float target, float assistance){
-	    d = p + (t - p) * a;
-	    displayed = d;
-	    return displayed;
+    public float AssistControl(float predicted, float target, float assistance){
+	    
+	    controlAxis = predicted + (target - predicted) * assistance;
+	    return controlAxis;
+    }
+
+    public Vector3 AssistControl(Vector3 predicted, Vector3 target, float assistance){
+	    a = assistance;
+	    
+	    p = predicted.x;
+	    t = target.x;
+	    cx = p + (t - p) * a;
+	    
+	    p = predicted.y;
+	    t = target.y;
+	    cy = p + (t - p) * a;
+	    
+	    p = predicted.z;
+	    t = target.z;
+	    cz = p + (t - p) * a;
+	    
+	    controlVector = new Vector3(cx, cy, cz);
+	    return controlVector;
     }
 }

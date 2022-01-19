@@ -11,7 +11,7 @@ public class BCI_ControlManager : MonoBehaviour
 
     public static BCI_ControlManager instance;
     
-    public Rigidbody controlObject; //object moved by the BCI - arm will take position from this object
+    public GameObject controlObject; //object moved by the BCI - arm will take position from this object
     
     [Header("HANDS")]
     public HandModelManager leapHandManager;
@@ -19,6 +19,7 @@ public class BCI_ControlManager : MonoBehaviour
     public GameObject BCI_rightHand;
 
     [SerializeField] private BCI_ControlSignal controlSignal;
+    [SerializeField] private BCI_Controller bciController;
     [SerializeField] private ArmReachController armReachController;
 
     private bool kinematicHands = false;
@@ -30,20 +31,15 @@ public class BCI_ControlManager : MonoBehaviour
 
     void Awake(){
         instance = this;
-        
-        if (gameObject.GetComponent<Rigidbody>()){
-            controlObject = gameObject.GetComponent<Rigidbody>();
-        }
-        else{
-            controlObject = transform.Find("BCI Control Object").GetComponent<Rigidbody>();
-        }
 
         if (controlObject == null){
             Debug.Log("BCI SIGNAL MISSING CONTROL OBJECT (RIGIDBODY)");
         }
 
         controlSignal = gameObject.GetComponent<BCI_ControlSignal>();
+        bciController = gameObject.GetComponent<BCI_Controller>();
         armReachController = gameObject.GetComponent<ArmReachController>();
+        
     }
     void Start(){
         DisableKinematic();
@@ -54,16 +50,9 @@ public class BCI_ControlManager : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)){
-            ResetControlObject();
-        }
-
-        if (Input.GetKeyDown(KeyCode.B)){
-            controlSignal.brakes = true;
-        }
-        else{
-            controlSignal.brakes = false;
-        }
+        // if (Input.GetKeyDown(KeyCode.R)){
+        //     ResetControlObject();
+        // }
     }
 
     public void ToggleKinematicHands(){

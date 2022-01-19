@@ -35,7 +35,7 @@ public class ArmReachController : MonoBehaviour
     [Range(0,2f)]
     public float smoothTimeDefault = 0.3F;
     private float smoothTimeVariable;
-    private Vector3 velocity = Vector3.zero;
+    private Vector3 v = Vector3.zero; //ref velocity for smoothdamp
     
     #region Subscriptions
     private void OnEnable(){
@@ -111,19 +111,12 @@ public class ArmReachController : MonoBehaviour
             }
         }
 
-        //inject velocity from BCI
-        if (BCI_ControlSignal.instance != null){
-            if (BCI_ControlSignal.instance.controlActive){
-                velocity = BCI_ControlSignal.instance.controlVectorRefined;
-            }
-        }
-
         if (handSide == Handedness.Left){
-            leftHandTarget.position = Vector3.SmoothDamp(leftHandTarget.position, lerpTarget.position, ref velocity, smoothTimeDefault);
+            leftHandTarget.position = Vector3.SmoothDamp(leftHandTarget.position, lerpTarget.position, ref v, smoothTimeDefault);
         }
 
         if (handSide == Handedness.Right){
-            rightHandTarget.position = Vector3.SmoothDamp(rightHandTarget.position, lerpTarget.position, ref velocity, smoothTimeDefault);
+            rightHandTarget.position = Vector3.SmoothDamp(rightHandTarget.position, lerpTarget.position, ref v, smoothTimeDefault);
         }
         
         
