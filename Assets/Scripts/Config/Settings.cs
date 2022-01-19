@@ -43,6 +43,9 @@ public class Settings : MonoBehaviour {
 	public Handedness handedness = Handedness.Left;
 
 	[Header("SESSION SETTINGS")] 
+	
+	public bool[] imaginedRunSequence = new bool[8];
+	
 	[Header("---------SET BY INTERFACE--------------")]
 	[Range(1, 8)] 
 	public int sessionRuns = 2;
