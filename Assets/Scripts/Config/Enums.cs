@@ -201,9 +201,9 @@
 
 	public enum BCI_ControlType
 	{
-		Translate,
 		Velocity,
 		ForceVelocity,
+		Translate,
 		Position
 	}
 

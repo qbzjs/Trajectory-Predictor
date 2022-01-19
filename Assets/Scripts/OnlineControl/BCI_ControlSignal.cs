@@ -14,8 +14,9 @@ public class BCI_ControlSignal : MonoBehaviour
     public bool simulateValues;
     
     [Space(4)]
-    [Range(0, 1f)] 
-    public float controlAssistance; //silder between 0-1 for percentage of used bci signal control
+    [Range(0, 100)] 
+    public int controlAssistPercentage; // silder between 0-1 for percentage of used bci signal control
+    private float assistance; // between 0-1 for percentage of used bci signal control
 
     [Header("BCI DATA")] 
     public Vector3 controlVectorRaw; //raw input signal
@@ -25,6 +26,8 @@ public class BCI_ControlSignal : MonoBehaviour
     private Vector3 cv;
     
     [Header("MODIFIERS")]
+    [Range(0,2f)]
+    public float smoothDamping = 0.3F;
     [Range(0, 2f)] public float magnitudeMultiplier = 1f;
     [Space(4)]
     public bool invertX;
@@ -38,16 +41,19 @@ public class BCI_ControlSignal : MonoBehaviour
 
     private void OnEnable(){
         UDPClient.OnBCI_Data += UDPClientOnBCI_Data;
+        TargetedMotionReference.OnTargetVelocity += ArmReachControllerOnTargetVelocity;
     }
-
     private void OnDisable(){
         UDPClient.OnBCI_Data -= UDPClientOnBCI_Data;
+        TargetedMotionReference.OnTargetVelocity -= ArmReachControllerOnTargetVelocity;
     }
-
     private void UDPClientOnBCI_Data(float x, float y, float z){
         if (!simulateValues){
             controlVectorRaw = new Vector3(x, y, z);
         }
+    }
+    private void ArmReachControllerOnTargetVelocity(Vector3 targetVelocity){
+        targetVector = targetVelocity;
     }
 
     #endregion
@@ -63,6 +69,8 @@ public class BCI_ControlSignal : MonoBehaviour
     void Update(){
         
         #region Control Assistance
+        assistance = controlAssistPercentage / 100;
+        
         //assist control as float
         // float x = controlMixer.AssistControl(controlVectorRaw.x, targetVector.x, assistance);
         // float y = controlMixer.AssistControl(controlVectorRaw.y, targetVector.y, assistance);
@@ -70,7 +78,7 @@ public class BCI_ControlSignal : MonoBehaviour
         // controlVectorAssisted = new Vector3(x, y, z);
 
         //assist control as a vector
-        controlVectorAssisted = controlMixer.AssistControl(controlVectorRaw, targetVector, controlAssistance);
+        controlVectorAssisted = controlMixer.AssistControl(controlVectorRaw, targetVector, assistance);
         #endregion
 
         if (simulateValues){
@@ -93,7 +101,7 @@ public class BCI_ControlSignal : MonoBehaviour
         cv = controlVectorAssisted * magnitudeMultiplier;
         cv = new Vector3(cv.x * magnitudeMultiplierX, cv.y * magnitudeMultiplierY, cv.z * magnitudeMultiplierZ);
         
-        //assign control to a vector for use in pther classes 
+        //assign control to a vector for use in other classes 
         controlVectorRefined = cv;
         
     }

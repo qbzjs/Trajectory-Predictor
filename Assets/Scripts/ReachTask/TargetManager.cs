@@ -249,8 +249,13 @@ public class TargetManager : MonoBehaviour
     }
 
     private void Update(){
-        if (DAO.instance != null){
-            handPosition = DAO.instance.motionDataRightWrist.position;
+        if (DAO.instance != null && Settings.instance!=null){
+            if (Settings.instance.handedness == Handedness.Left){
+                handPosition = DAO.instance.motionDataLeftWrist.position;
+            }
+            if (Settings.instance.handedness == Handedness.Right){
+                handPosition = DAO.instance.motionDataRightWrist.position;
+            }
         }
         // lineRenderer.SetPosition(0,originPoint.position);
 

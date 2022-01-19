@@ -18,9 +18,9 @@ public class BCI_ControlManager : MonoBehaviour
     public GameObject BCI_leftHand;
     public GameObject BCI_rightHand;
 
-    [SerializeField] private BCI_ControlSignal controlSignal;
-    [SerializeField] private BCI_Controller bciController;
-    [SerializeField] private ArmReachController armReachController;
+    private BCI_ControlSignal controlSignal;
+    private BCI_Controller bciController;
+    private TargetedMotionReference targetedMotionReference;
 
     private bool kinematicHands = false;
     private bool BCIHands = false;
@@ -38,7 +38,7 @@ public class BCI_ControlManager : MonoBehaviour
 
         controlSignal = gameObject.GetComponent<BCI_ControlSignal>();
         bciController = gameObject.GetComponent<BCI_Controller>();
-        armReachController = gameObject.GetComponent<ArmReachController>();
+        targetedMotionReference = gameObject.GetComponent<TargetedMotionReference>();
         
     }
     void Start(){
@@ -89,32 +89,32 @@ public class BCI_ControlManager : MonoBehaviour
         BCI_leftHand.SetActive(false);
         BCI_rightHand.SetActive(false);
         BCI_Btn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
-        if (Settings.instance.handedness == Handedness.Left){
-            controlObject.transform.parent = gameObject.transform;
-            controlObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
-        }
-        if (Settings.instance.handedness == Handedness.Right){
-            controlObject.transform.parent = gameObject.transform;
-            controlObject.transform.position = new Vector3(BCI_rightHand.transform.position.x, BCI_rightHand.transform.position.y, BCI_rightHand.transform.position.z);
-        }
+        // if (Settings.instance.handedness == Handedness.Left){
+        //     controlObject.transform.parent = gameObject.transform;
+        //     controlObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
+        // }
+        // if (Settings.instance.handedness == Handedness.Right){
+        //     controlObject.transform.parent = gameObject.transform;
+        //     controlObject.transform.position = new Vector3(BCI_rightHand.transform.position.x, BCI_rightHand.transform.position.y, BCI_rightHand.transform.position.z);
+        // }
     }
     private void EnableBCI(){
         BCIHands = true;
         BCI_leftHand.SetActive(true);
         BCI_rightHand.SetActive(true);
         BCI_Btn.transform.GetComponent<Image>().color = Settings.instance.UI_Orange;
-        if (Settings.instance.handedness == Handedness.Left){
-            controlObject.transform.parent = BCI_leftHand.transform;
-            controlObject.transform.position = new Vector3(BCI_leftHand.transform.position.x, BCI_leftHand.transform.position.y, BCI_leftHand.transform.position.z);
-        }
-        if (Settings.instance.handedness == Handedness.Right){
-            controlObject.transform.parent = BCI_rightHand.transform;
-            controlObject.transform.position = new Vector3(BCI_rightHand.transform.position.x, BCI_rightHand.transform.position.y, BCI_rightHand.transform.position.z);
-        }
+        // if (Settings.instance.handedness == Handedness.Left){
+        //     controlObject.transform.parent = BCI_leftHand.transform;
+        //     controlObject.transform.position = new Vector3(BCI_leftHand.transform.position.x, BCI_leftHand.transform.position.y, BCI_leftHand.transform.position.z);
+        // }
+        // if (Settings.instance.handedness == Handedness.Right){
+        //     controlObject.transform.parent = BCI_rightHand.transform;
+        //     controlObject.transform.position = new Vector3(BCI_rightHand.transform.position.x, BCI_rightHand.transform.position.y, BCI_rightHand.transform.position.z);
+        // }
     }
 
     private void ResetControlObject(){
-        Vector3 homePos = armReachController.homePosition;
+        Vector3 homePos = targetedMotionReference.homePosition;
         controlObject.transform.position = new Vector3(homePos.x, homePos.y, homePos.z);
     }
     

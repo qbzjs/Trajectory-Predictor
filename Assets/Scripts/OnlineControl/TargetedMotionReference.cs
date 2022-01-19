@@ -2,40 +2,38 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Enums;
-using RootMotion.FinalIK;
+using Unity.Labs.SuperScience;
 using UnityEngine;
 
-public class ArmReachController : MonoBehaviour
+public class TargetedMotionReference : MonoBehaviour
 {
     public bool targetActive; 
     
-    public VRIK kinematicVR;
+    private PhysicsTracker physicsData;
+    public Vector3 targetedMotionVector;
     
-    public Transform leftHandReference;
+    public Transform leftHandReference; //reference for the tracked wrist postion
     public Transform rightHandReference;
     
-    public Transform leftHandTarget;
+    public Transform leftHandTarget; //actual motion transform - used to match with predicted
     public Transform rightHandTarget;
-    
     
     public Vector3 targetPosition;
     public Vector3 homePosition;
-    public Vector3 leftTrackerPosition;
-    public Vector3 rightTrackerPosition;
-    public Vector3 leftTrackerRotation;
-    public Vector3 rightTrackerRotation;
 
-    public float lerpDuration;
+    public float trialPhaseLifetime;
 
     public Handedness handSide;
 
     //smooth damp
     public Transform lerpTarget;
     public Vector3 lerpTargetOffset;
-    [Range(0,2f)]
-    public float smoothTimeDefault = 0.3F;
-    private float smoothTimeVariable;
-    private Vector3 v = Vector3.zero; //ref velocity for smoothdamp
+    private float dampTime = 0.45F;
+    private Vector3 v; //ref velocity for smoothdamp
+
+    //EVENTS/DELAGATES TO SEND DATA ACROSS THE GAME
+    public delegate void TargetVelocity(Vector3 targetVelocity);
+    public static event TargetVelocity OnTargetVelocity;
     
     #region Subscriptions
     private void OnEnable(){
@@ -47,7 +45,7 @@ public class ArmReachController : MonoBehaviour
         TargetManager.OnTargetAction -= TargetManagerOnTargetAction;
     }
     private void GameManagerOnTrialAction(TrialEventType eventType, int targetNum, float lifetime, int index, int total){
-        lerpDuration = lifetime;
+        trialPhaseLifetime = lifetime;
         if (eventType == TrialEventType.TargetPresentation){
             //move to target
         }
@@ -58,10 +56,7 @@ public class ArmReachController : MonoBehaviour
     private void TargetManagerOnTargetAction(bool targetPresent, bool restPresent, Vector3 position){
         if (targetPresent){
             targetActive = true;
-            //targetPosition = position;
             targetPosition = position + lerpTargetOffset;
-            // targetPosition = new Vector3(position.x + )
-//            target.position = targetPosition;
         }
         //most likely to be back to tracker position?
         if (restPresent){
@@ -71,14 +66,7 @@ public class ArmReachController : MonoBehaviour
         }
     }
     #endregion
-    
-    void Start()
-    {
-        
-    }
-    
 
-    
     void Update(){
         // needs injected from settings...
         handSide = Settings.instance.handedness;
@@ -111,12 +99,25 @@ public class ArmReachController : MonoBehaviour
             }
         }
 
+        dampTime = BCI_ControlSignal.instance.smoothDamping;
+        
         if (handSide == Handedness.Left){
-            leftHandTarget.position = Vector3.SmoothDamp(leftHandTarget.position, lerpTarget.position, ref v, smoothTimeDefault);
+            leftHandTarget.position = Vector3.SmoothDamp(leftHandTarget.position, lerpTarget.position, ref v, dampTime);
+            //get a tracked velocity
+            physicsData = leftHandTarget.gameObject.GetComponent<PhysicsData>().m_MotionData;
+            targetedMotionVector = physicsData.Velocity;
         }
 
         if (handSide == Handedness.Right){
-            rightHandTarget.position = Vector3.SmoothDamp(rightHandTarget.position, lerpTarget.position, ref v, smoothTimeDefault);
+            rightHandTarget.position = Vector3.SmoothDamp(rightHandTarget.position, lerpTarget.position, ref v, dampTime);
+            //get a tracked velocity
+            physicsData = rightHandTarget.gameObject.GetComponent<PhysicsData>().m_MotionData;
+            targetedMotionVector = physicsData.Velocity;
+        }
+
+        //send the target velocity from arm (wrist tracked position to target position)
+        if (OnTargetVelocity != null){
+            OnTargetVelocity(targetedMotionVector);
         }
         
         
