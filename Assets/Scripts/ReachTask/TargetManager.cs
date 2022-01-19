@@ -249,7 +249,7 @@ public class TargetManager : MonoBehaviour
     }
 
     private void Update(){
-        if (DAO.instance != null && Settings.instance!=null){
+        if (DAO.instance != null && Settings.instance != null){
             if (Settings.instance.handedness == Handedness.Left){
                 handPosition = DAO.instance.motionDataLeftWrist.position;
             }

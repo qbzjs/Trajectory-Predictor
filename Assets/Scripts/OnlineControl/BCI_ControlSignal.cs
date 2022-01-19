@@ -72,13 +72,13 @@ public class BCI_ControlSignal : MonoBehaviour
         assistance = controlAssistPercentage / 100;
         
         //assist control as float
-        // float x = controlMixer.AssistControl(controlVectorRaw.x, targetVector.x, assistance);
-        // float y = controlMixer.AssistControl(controlVectorRaw.y, targetVector.y, assistance);
-        // float z = controlMixer.AssistControl(controlVectorRaw.z, targetVector.z, assistance);
-        // controlVectorAssisted = new Vector3(x, y, z);
+        float x = controlMixer.AssistControl(controlVectorRaw.x, targetVector.x, assistance);
+        float y = controlMixer.AssistControl(controlVectorRaw.y, targetVector.y, assistance);
+        float z = controlMixer.AssistControl(controlVectorRaw.z, targetVector.z, assistance);
+        controlVectorAssisted = new Vector3(x, y, z);
 
         //assist control as a vector
-        controlVectorAssisted = controlMixer.AssistControl(controlVectorRaw, targetVector, assistance);
+        //controlVectorAssisted = controlMixer.AssistControl(controlVectorRaw, targetVector, assistance);
         #endregion
 
         if (simulateValues){

@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using Enums;
 
-public class MotionDebugUI : MonoBehaviour
+public class MotionDisplayUI : MonoBehaviour
 {
     public Handedness hand = Handedness.Left;
     
