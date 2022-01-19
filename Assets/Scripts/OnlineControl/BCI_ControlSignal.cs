@@ -17,6 +17,9 @@ public class BCI_ControlSignal : MonoBehaviour
     [Range(0, 100)] 
     public int controlAssistPercentage; // silder between 0-1 for percentage of used bci signal control
     private float assistance; // between 0-1 for percentage of used bci signal control
+    private float ax;
+    private float ay;
+    private float az;
 
     [Header("BCI DATA")] 
     public Vector3 controlVectorRaw; //raw input signal
@@ -53,7 +56,9 @@ public class BCI_ControlSignal : MonoBehaviour
         }
     }
     private void ArmReachControllerOnTargetVelocity(Vector3 targetVelocity){
-        targetVector = targetVelocity;
+        if (!simulateValues){
+            targetVector = targetVelocity;
+        }
     }
 
     #endregion
@@ -68,23 +73,23 @@ public class BCI_ControlSignal : MonoBehaviour
 
     void Update(){
         
+        if (simulateValues){
+            //override raw control vector
+            //controlVectorRaw = new Vector3(1, 1, 1);
+        }
+        
         #region Control Assistance
-        assistance = controlAssistPercentage / 100;
+        assistance = controlAssistPercentage / 100f;
         
         //assist control as float
-        float x = controlMixer.AssistControl(controlVectorRaw.x, targetVector.x, assistance);
-        float y = controlMixer.AssistControl(controlVectorRaw.y, targetVector.y, assistance);
-        float z = controlMixer.AssistControl(controlVectorRaw.z, targetVector.z, assistance);
-        controlVectorAssisted = new Vector3(x, y, z);
+        ax = controlMixer.AssistControl(controlVectorRaw.x, targetVector.x, assistance);
+        ay = controlMixer.AssistControl(controlVectorRaw.y, targetVector.y, assistance);
+        az = controlMixer.AssistControl(controlVectorRaw.z, targetVector.z, assistance);
+        controlVectorAssisted = new Vector3(ax, ay, az);
 
         //assist control as a vector
         //controlVectorAssisted = controlMixer.AssistControl(controlVectorRaw, targetVector, assistance);
         #endregion
-
-        if (simulateValues){
-            //override raw control vector
-            // controlVectorRaw = ....
-        }
 
         //invert per axis - TODO CHECK THIS WORKS!!!
         if (invertX){
