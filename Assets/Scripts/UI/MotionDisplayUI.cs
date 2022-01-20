@@ -21,11 +21,13 @@ public class MotionDisplayUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (hand == Handedness.Left){
+        if (hand == Handedness.Left)
+        {
             p = DAO.instance.motionDataLeftWrist.position;
             r = DAO.instance.motionDataLeftWrist.rotation;
         }
-        else{
+        else
+        {
             p = DAO.instance.motionDataRightWrist.position;
             r = DAO.instance.motionDataRightWrist.rotation;
         }
