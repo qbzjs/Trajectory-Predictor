@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Enums;
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
+using Leap.Unity;
 
 public class InstructionTextPrototype : MonoBehaviour
 {
@@ -12,8 +14,25 @@ public class InstructionTextPrototype : MonoBehaviour
     public TextMeshPro instructionTextBlockComplete;
     public TextMeshPro instructionTextSessionComplete;
 
+    public TextMeshPro bigInstruction;
+    
+    private RunType runType;
+    private RunType currentRunType; // for saving run type as index increments when a run is started
+
+    private Color UI_Orange;
+    private Color UI_Blue;
+    
     private void Awake(){
         RemoveText();
+    }
+
+    private void Start(){
+        runType = Settings.instance.GetRunType(0); //get run type for first index 
+        
+        UI_Orange = Settings.instance.UI_Orange;
+        UI_Blue = Settings.instance.UI_Blue;
+        
+        bigInstruction.DOFade(0, 0);
     }
 
     void Update(){
@@ -30,6 +49,7 @@ public class InstructionTextPrototype : MonoBehaviour
         GameManager.OnRunAction += GameManagerOnRunAction;
         GameManager.OnBlockAction += GameManagerOnBlockAction;
     }
+    
 
     private void OnDisable(){
         GameManager.OnGameAction -= GameManagerOnGameAction;
@@ -40,8 +60,12 @@ public class InstructionTextPrototype : MonoBehaviour
         if (eventType == GameStatus.Ready){
             DisplayNewRunText();
         }
+
+
     }
-    private void GameManagerOnRunAction(GameStatus eventType, float lifeTime, int runIndex, int runTotal){
+    private void GameManagerOnRunAction(GameStatus eventType, float lifeTime, int runIndex, int runTotal, RunType runType){
+        this.runType = runType;
+        Debug.Log(runIndex);
         if (eventType == GameStatus.RunComplete){
             DisplayNewRunText();
         }
@@ -54,28 +78,78 @@ public class InstructionTextPrototype : MonoBehaviour
         if (eventType == GameStatus.BlockComplete){
             DisplayNewBlockText();
         }
+        if (eventType == GameStatus.Countdown){
+            DisplayBigInstructionText();
+        }
     }
 
     void DisplayNewBlockText(){
+        
+        bigInstruction.DOFade(0, 1f);
+        
         if (GameManager.instance.blockIndex != GameManager.instance.blockTotal){
             instructionTextBlockComplete.gameObject.SetActive(true);
+            gameObject.GetComponent<BoxCollider>().enabled = true;
         }
     }
     
-    void DisplayNewRunText()
-    {
-        if((GameManager.instance.runIndex+1)%2 == 0)
+    //using odd even 
+    // void DisplayNewRunText()
+    // {
+    //     if((GameManager.instance.runIndex+1)%2 == 0)
+    //     {
+    //         Debug.Log("EVEN--------------------");
+    //         instructionTextActual.gameObject.SetActive(false);
+    //         instructionTextImagined.gameObject.SetActive(true);
+    //         gameObject.GetComponent<BoxCollider>().enabled = true;
+    //     }
+    //     else
+    //     {
+    //         Debug.Log("ODD--------------------");
+    //         instructionTextActual.gameObject.SetActive(true);
+    //         instructionTextImagined.gameObject.SetActive(false);
+    //         gameObject.GetComponent<BoxCollider>().enabled = true;
+    //     }
+    // }
+
+    //using enums from settings sent from game manager
+    
+    void DisplayNewRunText(){
+        currentRunType = runType;
+        bigInstruction.DOFade(0, 1f);
+        
+        if(runType == RunType.Imagined)
         {
-            Debug.Log("EVEN--------------------");
+            Debug.Log(" Instructions - RUN TYPE : "+ runType);
             instructionTextActual.gameObject.SetActive(false);
             instructionTextImagined.gameObject.SetActive(true);
+            gameObject.GetComponent<BoxCollider>().enabled = true;
         }
-        else
+        if(runType == RunType.Kinematic)
         {
-            Debug.Log("ODD--------------------");
+            Debug.Log(" Instructions - RUN TYPE : "+ runType);
             instructionTextActual.gameObject.SetActive(true);
             instructionTextImagined.gameObject.SetActive(false);
+            gameObject.GetComponent<BoxCollider>().enabled = true;
         }
+      
+    }
+    void DisplayBigInstructionText(){
+        if(currentRunType == RunType.Imagined){
+            Debug.Log("BIG Instructions - RUN TYPE : "+ runType);
+            bigInstruction.text = "Imagined Arm" + "\n" + "Movement";
+            bigInstruction.color = UI_Blue;
+            bigInstruction.DOFade(0, 0);
+            bigInstruction.DOFade(1, 2f);
+        }
+        if(currentRunType == RunType.Kinematic){
+            Debug.Log("BIG Instructions - RUN TYPE : "+ runType);
+            bigInstruction.text = "Kinematic Arm" + "\n" + "Movement";
+            bigInstruction.color = UI_Orange;
+            bigInstruction.DOFade(0, 0);
+            bigInstruction.DOFade(1, 2f);
+        }
+        
     }
 
     public void RemoveText(){
@@ -84,7 +158,9 @@ public class InstructionTextPrototype : MonoBehaviour
         instructionTextImagined.gameObject.SetActive(false);
         instructionTextBlockComplete.gameObject.SetActive(false);
         instructionTextSessionComplete.gameObject.SetActive(false);
-        
+
+        gameObject.GetComponent<BoxCollider>().enabled = false;
+
         // instructionTextActual.tr
     }
 }

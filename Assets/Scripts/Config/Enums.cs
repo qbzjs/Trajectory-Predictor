@@ -207,4 +207,10 @@
 		Position
 	}
 
+	public enum RunType
+	{
+		Imagined,
+		Kinematic
+	}
+
 }

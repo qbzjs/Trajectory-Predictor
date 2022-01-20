@@ -24,7 +24,8 @@ public class GameManager : MonoBehaviour
     public bool trialsActive;
     public bool paused = false; //embed this into coroutines to pause trials
 
-    [Space(10)]
+    [Space(10)] 
+    public RunType runType; //imagined or kinematic
     public GameStatus gameStatus;
     public GameStatus runStatus;
     public GameStatus blockStatus;
@@ -115,6 +116,7 @@ public class GameManager : MonoBehaviour
         trialSequencer = GetComponent<TrialSequencer>();
     }
     void Start(){
+        runType = Settings.instance.GetRunType(runIndex);
         totalTrialsProgress = 0;
         UpdateGameStatusUI(GameStatus.Ready);
         PauseTrials(false);
@@ -148,7 +150,7 @@ public class GameManager : MonoBehaviour
 
         trialSequencer.actionObservation = actionObservation;
         
-
+        
     }
 
     public void InitialiseComponents(){
@@ -220,6 +222,7 @@ public class GameManager : MonoBehaviour
         UpdateProgressionUI();
         GameEvent(GameStatus.Reset);
         GameEvent(GameStatus.Ready);
+        //initialise run type???
         Debug.Log("----------Trial Session Reset!------------------");
     }
     //function to reset the loaded game (not applicable yet)
@@ -310,11 +313,16 @@ public class GameManager : MonoBehaviour
         runStatus = status;
         runTotal = total;
         runIndex = index;
+        if (runIndex < Settings.instance.runSequence.Length){
+            runType = Settings.instance.GetRunType(runIndex);
+        }
+        Debug.Log(" GAME MANAGER - RUN TYPE : "+ runType);
         if (status == GameStatus.AllRunsComplete){
             Debug.Log("----------All Runs Completed!------------------");
         }
         UpdateProgressionUI();
     }
+    
     public void BlockTracker(GameStatus status, int total, int index){
         blockStatus = status;
         blockTotal = total;
@@ -390,7 +398,7 @@ public class GameManager : MonoBehaviour
     public delegate void GameActions(GameStatus eventType); 
     public static event GameActions OnGameAction;
     
-    public delegate void RunActions(GameStatus eventType,float lifeTime, int runIndex, int runTotal);
+    public delegate void RunActions(GameStatus eventType,float lifeTime, int runIndex, int runTotal, RunType runType);
     public static event RunActions OnRunAction;
     
     public delegate void BlockActions(GameStatus eventType,float lifeTime, int blockIndex, int blockTotal);
@@ -414,7 +422,7 @@ public class GameManager : MonoBehaviour
     public void RunEvent(GameStatus e, float lifeTime){
         Debug.Log("RUN event: " + e);
         if (OnRunAction != null){
-            OnRunAction(e, lifeTime, runIndex, runTotal);
+            OnRunAction(e, lifeTime, runIndex, runTotal, runType);
         }
 
         if (e == GameStatus.RunComplete || e == GameStatus.AllRunsComplete){

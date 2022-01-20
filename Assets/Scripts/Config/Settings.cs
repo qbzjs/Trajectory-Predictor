@@ -44,7 +44,7 @@ public class Settings : MonoBehaviour {
 
 	[Header("SESSION SETTINGS")] 
 	
-	public bool[] imaginedRunSequence = new bool[8];
+	public RunType[] runSequence = new RunType[8];
 	
 	[Header("---------SET BY INTERFACE--------------")]
 	[Range(1, 8)] 
@@ -324,6 +324,24 @@ public class Settings : MonoBehaviour {
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
+	//TODO RUNTYPE SETTINGS
+	public RunType GetRunType(int index)
+	{
+		return runSequence[index]; 
+	}
+
+	public bool CheckImaginedRun(int index){
+		bool b = false;
+		if (runSequence[index] == RunType.Imagined){
+			b = true;
+		}
+		return b;
+	}
+	//not used yet - potentially for user deciding run type
+	public void SetRunType(RunType runType){
+		
+	}
+
 	public void SetBlocksPerRun(int num) {
 		blocksPerRun = num;
 		UpdateSessionTotals();

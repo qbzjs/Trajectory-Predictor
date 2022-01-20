@@ -14,7 +14,7 @@ public class RunManager : MonoBehaviour
     public GameStatus runStatus;
     
     const int startingRunTrigger = 201; // starts from 101 //TODO FIX + 1 TO BLOCK AND RUN
-
+    
     public int runTotal = 2;
     public int runIndex = 0;
     

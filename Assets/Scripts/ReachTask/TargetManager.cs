@@ -104,7 +104,7 @@ public class TargetManager : MonoBehaviour
         }
     }
 
-    private void GameManagerOnRunAction(GameStatus eventType, float lifeTime, int runIndex, int runTotal){
+    private void GameManagerOnRunAction(GameStatus eventType, float lifeTime, int runIndex, int runTotal, RunType runType){
         if (eventType == GameStatus.RunStarted){
 
         }
