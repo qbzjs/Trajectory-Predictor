@@ -209,8 +209,8 @@
 
 	public enum RunType
 	{
-		Imagined,
-		Kinematic
+		Kinematic,
+		Imagined
 	}
 
 }

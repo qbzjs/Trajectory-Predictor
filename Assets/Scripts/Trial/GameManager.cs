@@ -314,9 +314,13 @@ public class GameManager : MonoBehaviour
         runTotal = total;
         runIndex = index;
         if (runIndex < Settings.instance.runSequence.Length){
-            runType = Settings.instance.GetRunType(runIndex);
+            Debug.Log("************RUN STaTUS " + runStatus);
+            if (status == GameStatus.Ready || status == GameStatus.RunComplete){
+                runType = Settings.instance.GetRunType(runIndex);
+                Settings.instance.currentRunType = runType;
+            }
         }
-        Debug.Log(" GAME MANAGER - RUN TYPE : "+ runType);
+        Debug.Log(" GAME MANAGER - RUN TYPE : " + runType);
         if (status == GameStatus.AllRunsComplete){
             Debug.Log("----------All Runs Completed!------------------");
         }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enums;
 
 [System.Serializable]
 public class SettingsDataObject 
@@ -13,6 +14,7 @@ public class SettingsDataObject
 
     public int runs;
     public int blocks;
+    public RunType[] runSequence = new RunType[0];
     public int preBlockCountdown;
     public int visibleCountdown;
     public int interRunRestPeriod;
@@ -46,7 +48,7 @@ public class SettingsDataObject
     
 
     public SettingsDataObject(string trialParadigm, string targets, int repetitions, string handedness, 
-        int blocks, int runs,
+        int blocks, int runs, RunType[] runSequence,
         int trialsPerBlock, int trialsPerRun, int trialsPerSession,
         float estimatedTrialDuration, string estimatedBlockDuration, string estimatedRunDuration, string estimatedSessionDuration,
         int preBlockCountdown,int visibleCountdown,int interRunRestPeriod,
@@ -62,7 +64,9 @@ public class SettingsDataObject
 
         this.blocks = blocks;
         this.runs = runs;
-        
+
+        this.runSequence = runSequence;
+
         this.trialsPerBlock = trialsPerBlock;
         this.trialsPerRun = trialsPerRun;
         this.trialsPerSession = trialsPerSession;

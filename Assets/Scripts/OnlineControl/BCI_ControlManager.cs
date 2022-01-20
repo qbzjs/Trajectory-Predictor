@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Enums;
@@ -12,9 +13,10 @@ public class BCI_ControlManager : MonoBehaviour
     public static BCI_ControlManager instance;
     
     public GameObject controlObject; //object moved by the BCI - arm will take position from this object
-    
-    [Header("HANDS")]
-    public HandModelManager leapHandManager;
+
+    [Header("HANDS")] 
+    public GameObject leapHandManager;
+    public HandModelManager leapModelManager;
     public GameObject BCI_leftHand;
     public GameObject BCI_rightHand;
 
@@ -29,6 +31,54 @@ public class BCI_ControlManager : MonoBehaviour
     public Button kinematicBtn;
     public Button BCI_Btn;
 
+    #region Subscriptions
+
+    private void OnEnable(){
+        GameManager.OnGameAction += GameManagerOnGameAction;
+        GameManager.OnRunAction += GameManagerOnRunAction;
+        GameManager.OnBlockAction += GameManagerOnBlockAction;
+    }
+    private void OnDisable(){
+        GameManager.OnGameAction -= GameManagerOnGameAction;
+        GameManager.OnRunAction -= GameManagerOnRunAction;
+        GameManager.OnBlockAction -= GameManagerOnBlockAction;
+    }
+    private void GameManagerOnGameAction(GameStatus eventType){
+        if (eventType == GameStatus.Ready){
+            
+        }
+    }
+    private void GameManagerOnRunAction(GameStatus eventType, float lifeTime, int runIndex, int runTotal, RunType runType){
+        if (eventType == GameStatus.RunComplete){
+            EnableKinematic();
+            DisableBCI();
+        }
+        if (eventType == GameStatus.AllRunsComplete){
+            EnableKinematic();
+            DisableBCI();
+        }
+    }
+    private void GameManagerOnBlockAction(GameStatus eventType, float lifetime, int blockIndex, int blockTotal){
+        if (eventType==GameStatus.BlockComplete){
+            EnableKinematic();
+            DisableBCI();
+        }
+        if (eventType == GameStatus.Countdown){
+            //SWITCH HANDS ON COUNTDOWN
+            if (Settings.instance.currentRunType == RunType.Imagined){
+                DisableKinematic();
+                EnableBCI();
+            }
+            if (Settings.instance.currentRunType == RunType.Kinematic){
+                EnableKinematic();
+                DisableBCI();
+            }
+        }
+    }
+
+    #endregion
+    
+
     void Awake(){
         instance = this;
 
@@ -39,22 +89,15 @@ public class BCI_ControlManager : MonoBehaviour
         controlSignal = gameObject.GetComponent<BCI_ControlSignal>();
         bciController = gameObject.GetComponent<BCI_Controller>();
         targetedMotionReference = gameObject.GetComponent<TargetedMotionReference>();
-        
+        leapModelManager = leapHandManager.GetComponent<HandModelManager>();
     }
     void Start(){
-        DisableKinematic();
-        DisableBCI();
         kinematicBtn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
         BCI_Btn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
+        EnableKinematic(); //START WITH LEAP HANDS ACTIVE
+        DisableBCI();
     }
     
-    void Update()
-    {
-        // if (Input.GetKeyDown(KeyCode.R)){
-        //     ResetControlObject();
-        // }
-    }
-
     public void ToggleKinematicHands(){
         if (kinematicHands){
             DisableKinematic();
@@ -75,13 +118,15 @@ public class BCI_ControlManager : MonoBehaviour
     
     private void DisableKinematic(){
         kinematicHands = false;
-        leapHandManager.enabled = false;
+        leapHandManager.SetActive(false);
+        //leapModelManager.enabled = false;
         //find leap hands..?
         kinematicBtn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
     }
     private void EnableKinematic(){
         kinematicHands = true;
-        leapHandManager.enabled = true;
+        leapHandManager.SetActive(true);
+        //leapModelManager.enabled = true;
         kinematicBtn.transform.GetComponent<Image>().color = Settings.instance.UI_Orange;
     }
     private void DisableBCI(){
@@ -113,10 +158,5 @@ public class BCI_ControlManager : MonoBehaviour
         // }
     }
 
-    private void ResetControlObject(){
-        Vector3 homePos = targetedMotionReference.homePosition;
-        controlObject.transform.position = new Vector3(homePos.x, homePos.y, homePos.z);
-    }
-    
-    
+
 }

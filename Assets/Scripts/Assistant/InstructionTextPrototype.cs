@@ -44,13 +44,13 @@ public class InstructionTextPrototype : MonoBehaviour
         }
     }
 
+    #region Subscriptions
+
     private void OnEnable(){
         GameManager.OnGameAction += GameManagerOnGameAction;
         GameManager.OnRunAction += GameManagerOnRunAction;
         GameManager.OnBlockAction += GameManagerOnBlockAction;
     }
-    
-
     private void OnDisable(){
         GameManager.OnGameAction -= GameManagerOnGameAction;
         GameManager.OnRunAction -= GameManagerOnRunAction;
@@ -60,8 +60,6 @@ public class InstructionTextPrototype : MonoBehaviour
         if (eventType == GameStatus.Ready){
             DisplayNewRunText();
         }
-
-
     }
     private void GameManagerOnRunAction(GameStatus eventType, float lifeTime, int runIndex, int runTotal, RunType runType){
         this.runType = runType;
@@ -82,6 +80,9 @@ public class InstructionTextPrototype : MonoBehaviour
             DisplayBigInstructionText();
         }
     }
+
+    #endregion
+
 
     void DisplayNewBlockText(){
         

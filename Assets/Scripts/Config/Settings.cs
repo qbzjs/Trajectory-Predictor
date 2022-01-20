@@ -45,6 +45,7 @@ public class Settings : MonoBehaviour {
 	[Header("SESSION SETTINGS")] 
 	
 	public RunType[] runSequence = new RunType[8];
+	public RunType currentRunType; //set at beginning of a run
 	
 	[Header("---------SET BY INTERFACE--------------")]
 	[Range(1, 8)] 
@@ -730,6 +731,8 @@ public class Settings : MonoBehaviour {
 
 		settingsData.blocks = blocksPerRun;
 		settingsData.runs = sessionRuns;
+
+		settingsData.runSequence = runSequence;
 		
 		settingsData.trialsPerBlock = trialsPerBlock;
 		settingsData.trialsPerRun = trialsPerRun;
@@ -750,6 +753,7 @@ public class Settings : MonoBehaviour {
 		settingsData.observationDuration = observationPeriod;
 		settingsData.targetDuration = targetPresentationPeriod;
 		settingsData.restPeriodMin = restPeriodMin;
+		settingsData.restPeriodMax = restPeriodMax;
 		settingsData.postTrialWaitPeriod = postTrialWaitPeriod;
 		settingsData.postBlockWaitPeriod = postBlockWaitPeriod;
 		settingsData.postRunWaitPeriod = postRunWaitPeriod;
