@@ -30,6 +30,17 @@ public class SetMotionVisualDebug : MonoBehaviour
 
     private void Update(){
         if (Input.GetKeyDown(KeyCode.Tab)){
+            if (showMotionDebug){
+                showMotionDebug = false;
+                showReachTargetDebug = false;
+                showKinematicDebug = false;
+            }
+            else{
+                showMotionDebug = true;
+                showReachTargetDebug = true;
+                showKinematicDebug = true;
+            }
+            
             SetVisuals();
         }
     }

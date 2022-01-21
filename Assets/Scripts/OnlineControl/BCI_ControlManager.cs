@@ -97,7 +97,10 @@ public class BCI_ControlManager : MonoBehaviour
         EnableKinematic(); //START WITH LEAP HANDS ACTIVE
         DisableBCI();
     }
-    
+
+    public void SetControlAssistance(int a){
+        
+    }
     public void ToggleKinematicHands(){
         if (kinematicHands){
             DisableKinematic();

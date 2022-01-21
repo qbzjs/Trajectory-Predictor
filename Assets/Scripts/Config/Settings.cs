@@ -42,6 +42,9 @@ public class Settings : MonoBehaviour {
 	public SequenceType sequenceType = SequenceType.Permutation;
 	public Handedness handedness = Handedness.Left;
 
+	[Range(0, 100)] 
+	public int BCI_ControlAssistance; //serialise from bci signal for now -TODO link from settings ui and set for bci controller
+
 	[Header("SESSION SETTINGS")] 
 	
 	public RunType[] runSequence = new RunType[8];
@@ -170,6 +173,8 @@ public class Settings : MonoBehaviour {
 		reachTaskObjects = objectPools.GetComponent<ReachTaskObjects>();
 		//check and load save files
 		LoadSave();
+		
+		
 	}
 
 	private void Start() {
@@ -314,7 +319,15 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 
+	//todo make assistance a ui menu slider and set bci controller from there
+	//todo add assistance to save system
+	public void SetAssistance(int a){
+		BCI_ControlAssistance = a;
+		BCI_ControlSignal.instance.controlAssistPercentage = BCI_ControlAssistance;
+		SaveState();
+	}
 	#endregion
+	
 
 	#region Session Settings
 
@@ -729,6 +742,8 @@ public class Settings : MonoBehaviour {
 		settingsData.repetitions = repetitions;
 		settingsData.handedness = handedness.ToString();
 
+		settingsData.bciControlAssistance = BCI_ControlAssistance;
+		
 		settingsData.blocks = blocksPerRun;
 		settingsData.runs = sessionRuns;
 

@@ -7045,7 +7045,7 @@ MonoBehaviour:
   m_DrawSmoothAcceleration: 0
   m_DrawAngularVelocity: 0
   m_DrawDirectSpeed: 0
-  m_UseDirection: 1
+  m_UseDirection: 0
 --- !u!114 &136490948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10776,11 +10776,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ToTrack: {fileID: 230639062}
-  m_DrawSmoothSpeed: 1
+  m_DrawSmoothSpeed: 0
   m_DrawSmoothAcceleration: 0
   m_DrawAngularVelocity: 0
   m_DrawDirectSpeed: 0
-  m_UseDirection: 1
+  m_UseDirection: 0
 --- !u!1001 &236181891
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14907,7 +14907,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 20}
-  m_SizeDelta: {x: 350, y: 32}
+  m_SizeDelta: {x: 400, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &334649744
 MonoBehaviour:
@@ -18105,6 +18105,7 @@ MonoBehaviour:
     targetCount: 
     repetitions: 0
     handedness: 
+    bciControlAssistance: 0
     runs: 0
     blocks: 0
     runSequence: 
@@ -18131,7 +18132,7 @@ MonoBehaviour:
     actionObservation: 0
     sampleRate: 
   sessionName: NMS_
-  sessionNumber: 4
+  sessionNumber: 1
   trialParadigm: 0
   paradigmTargetCount: 1
   numberOfTargets: 2
@@ -18145,7 +18146,8 @@ MonoBehaviour:
   repetitions: 15
   sequenceType: 1
   handedness: 0
-  runSequence: 0000000001000000000000000100000000000000010000000000000001000000
+  BCI_ControlAssistance: 0
+  runSequence: 0100000001000000000000000100000000000000010000000000000001000000
   currentRunType: 0
   sessionRuns: 2
   blocksPerRun: 4
@@ -19909,7 +19911,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -60}
-  m_SizeDelta: {x: 350, y: 32}
+  m_SizeDelta: {x: 400, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &491563005
 MonoBehaviour:
@@ -20608,7 +20610,7 @@ MonoBehaviour:
   m_DrawSmoothAcceleration: 0
   m_DrawAngularVelocity: 0
   m_DrawDirectSpeed: 0
-  m_UseDirection: 1
+  m_UseDirection: 0
 --- !u!114 &495150323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22982,9 +22984,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88fbb191cd1b5a4590b0dfbcd42d7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showMotionDebug: 0
-  showReachTargetDebug: 0
-  showKinematicDebug: 0
+  showMotionDebug: 1
+  showReachTargetDebug: 1
+  showKinematicDebug: 1
   targetedTrajectoryVisual: {fileID: 199397645}
   wristTrackerCubeRight: {fileID: 1157591415}
   wristTrackerCubeLeft: {fileID: 1288114987}
@@ -36397,31 +36399,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1706825687296397141, guid: 04b5b51c9fa9746439212565d49868ec, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.011991475
+      value: -0.018989006
       objectReference: {fileID: 0}
     - target: {fileID: 1706825687296397141, guid: 04b5b51c9fa9746439212565d49868ec, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.054396693
+      value: -0.052366048
       objectReference: {fileID: 0}
     - target: {fileID: 1706825687296397141, guid: 04b5b51c9fa9746439212565d49868ec, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.78793985
+      value: 0.70115703
       objectReference: {fileID: 0}
     - target: {fileID: 1706825687296397141, guid: 04b5b51c9fa9746439212565d49868ec, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.6132276
+      value: 0.71082777
       objectReference: {fileID: 0}
     - target: {fileID: 1706825687296397141, guid: 04b5b51c9fa9746439212565d49868ec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -105.189
+      value: -95.837
       objectReference: {fileID: 0}
     - target: {fileID: 1706825687296397141, guid: 04b5b51c9fa9746439212565d49868ec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 19.072998
+      value: 96.364
       objectReference: {fileID: 0}
     - target: {fileID: 1706825687296397141, guid: 04b5b51c9fa9746439212565d49868ec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 157.45999
+      value: 80.927
       objectReference: {fileID: 0}
     - target: {fileID: 1707088171524917303, guid: 04b5b51c9fa9746439212565d49868ec, type: 3}
       propertyPath: m_LocalRotation.w
@@ -36586,6 +36588,10 @@ PrefabInstance:
     - target: {fileID: 1707268113702243899, guid: 04b5b51c9fa9746439212565d49868ec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -20.083
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707415342217117769, guid: 04b5b51c9fa9746439212565d49868ec, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04b5b51c9fa9746439212565d49868ec, type: 3}
@@ -38918,6 +38924,18 @@ PrefabInstance:
     - target: {fileID: 5789710802906096742, guid: affeddb9b800f414594ffe7a61df79da, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8493646921948109289, guid: affeddb9b800f414594ffe7a61df79da, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8493646921948109289, guid: affeddb9b800f414594ffe7a61df79da, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 9006338074713301546, guid: affeddb9b800f414594ffe7a61df79da, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.02
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: affeddb9b800f414594ffe7a61df79da, type: 3}
@@ -47328,7 +47346,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1031182532
 Transform:
   m_ObjectHideFlags: 0
@@ -49481,7 +49499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   simulateValues: 0
-  controlAssistPercentage: 100
+  controlAssistPercentage: 50
   controlVectorRaw: {x: 0, y: 0, z: 0}
   targetVector: {x: 0, y: 0, z: 0}
   controlVectorAssisted: {x: 0, y: 0, z: 0}
@@ -59876,31 +59894,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5250471400631231737, guid: 6dba285e581c47b47aee55471e769a8b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.007162804
+      value: 0.01392622
       objectReference: {fileID: 0}
     - target: {fileID: 5250471400631231737, guid: 6dba285e581c47b47aee55471e769a8b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.05228616
+      value: 0.050903928
       objectReference: {fileID: 0}
     - target: {fileID: 5250471400631231737, guid: 6dba285e581c47b47aee55471e769a8b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.78410894
+      value: 0.6966868
       objectReference: {fileID: 0}
     - target: {fileID: 5250471400631231737, guid: 6dba285e581c47b47aee55471e769a8b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.61837524
+      value: 0.7154316
       objectReference: {fileID: 0}
     - target: {fileID: 5250471400631231737, guid: 6dba285e581c47b47aee55471e769a8b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -104.304
+      value: -95.47
       objectReference: {fileID: 0}
     - target: {fileID: 5250471400631231737, guid: 6dba285e581c47b47aee55471e769a8b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -17.890015
+      value: -104.62601
       objectReference: {fileID: 0}
     - target: {fileID: 5250471400631231737, guid: 6dba285e581c47b47aee55471e769a8b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 201.576
+      value: 287.626
       objectReference: {fileID: 0}
     - target: {fileID: 5250480521493475253, guid: 6dba285e581c47b47aee55471e769a8b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -65673,11 +65691,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ToTrack: {fileID: 1868011416}
-  m_DrawSmoothSpeed: 1
+  m_DrawSmoothSpeed: 0
   m_DrawSmoothAcceleration: 0
   m_DrawAngularVelocity: 0
   m_DrawDirectSpeed: 0
-  m_UseDirection: 1
+  m_UseDirection: 0
 --- !u!114 &1285328773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68342,7 +68360,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 60}
-  m_SizeDelta: {x: 350, y: 32}
+  m_SizeDelta: {x: 400, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1343851909
 MonoBehaviour:
@@ -83045,7 +83063,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.172, y: 0.85}
+  m_AnchoredPosition: {x: 0.172, y: 2.0500002}
   m_SizeDelta: {x: 4, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1580382176
@@ -95388,7 +95406,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 180}
+  m_SizeDelta: {x: 440, y: 180}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1891484676
 MonoBehaviour:
@@ -96558,11 +96576,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ToTrack: {fileID: 2074725098}
-  m_DrawSmoothSpeed: 1
+  m_DrawSmoothSpeed: 0
   m_DrawSmoothAcceleration: 0
   m_DrawAngularVelocity: 0
   m_DrawDirectSpeed: 0
-  m_UseDirection: 1
+  m_UseDirection: 0
 --- !u!114 &1933144557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98563,7 +98581,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -20}
-  m_SizeDelta: {x: 350, y: 32}
+  m_SizeDelta: {x: 400, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1989407137
 MonoBehaviour:
@@ -100583,7 +100601,7 @@ MonoBehaviour:
   m_DrawSmoothAcceleration: 0
   m_DrawAngularVelocity: 0
   m_DrawDirectSpeed: 0
-  m_UseDirection: 1
+  m_UseDirection: 0
 --- !u!114 &2013232923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101802,11 +101820,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ToTrack: {fileID: 2046513987}
-  m_DrawSmoothSpeed: 1
+  m_DrawSmoothSpeed: 0
   m_DrawSmoothAcceleration: 0
   m_DrawAngularVelocity: 0
   m_DrawDirectSpeed: 0
-  m_UseDirection: 1
+  m_UseDirection: 0
 --- !u!1 &2049575966
 GameObject:
   m_ObjectHideFlags: 0
@@ -102311,11 +102329,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ToTrack: {fileID: 1216494124}
-  m_DrawSmoothSpeed: 1
+  m_DrawSmoothSpeed: 0
   m_DrawSmoothAcceleration: 0
   m_DrawAngularVelocity: 0
   m_DrawDirectSpeed: 0
-  m_UseDirection: 1
+  m_UseDirection: 0
 --- !u!114 &2068048337
 MonoBehaviour:
   m_ObjectHideFlags: 0

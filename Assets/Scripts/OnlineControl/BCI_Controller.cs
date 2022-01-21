@@ -89,8 +89,16 @@ public class BCI_Controller : MonoBehaviour
         }
 
         if (applyToKinematics){
-            IK_TargetLeft.transform.position = targetedMotionReference.leftHandTarget.position;
-            IK_TargetRight.transform.position = targetedMotionReference.rightHandTarget.position;
+            if (handSide == Handedness.Left){
+                // keep the right tracked/locked if the left is the active trial side
+                IK_TargetRight.transform.position = targetedMotionReference.rightHandTarget.position;
+                IK_TargetLeft.transform.position = controlObject.transform.position; // apply the left to the control object
+            }
+            if (handSide == Handedness.Right){
+                // keep the left tracked/locked if the right is the active trial side
+                IK_TargetLeft.transform.position = targetedMotionReference.leftHandTarget.position;
+                IK_TargetRight.transform.position = controlObject.transform.position; // apply the left to the control object
+            }
         }
     }
 

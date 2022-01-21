@@ -12,13 +12,15 @@ public class SettingsDataObject
     public int repetitions;
     public string handedness;
 
+    public int bciControlAssistance;
+    
     public int runs;
     public int blocks;
     public RunType[] runSequence = new RunType[0];
     public int preBlockCountdown;
     public int visibleCountdown;
     public int interRunRestPeriod;
-    
+
     public float preTrialWaitPeriod;
     public float fixationDuration;
     public float arrowDuration;
@@ -47,7 +49,7 @@ public class SettingsDataObject
     //public float[] timeSigniture / time sequence (target times
     
 
-    public SettingsDataObject(string trialParadigm, string targets, int repetitions, string handedness, 
+    public SettingsDataObject(string trialParadigm, string targets, int repetitions, string handedness, int bciControlAssistance, 
         int blocks, int runs, RunType[] runSequence,
         int trialsPerBlock, int trialsPerRun, int trialsPerSession,
         float estimatedTrialDuration, string estimatedBlockDuration, string estimatedRunDuration, string estimatedSessionDuration,
@@ -62,6 +64,8 @@ public class SettingsDataObject
         this.repetitions = repetitions;
         this.handedness = handedness;
 
+        this.bciControlAssistance = bciControlAssistance;
+        
         this.blocks = blocks;
         this.runs = runs;
 
