@@ -32,7 +32,7 @@ public class ArmReachAgentObservations : MonoBehaviour{
     private void OnDisable(){
         TargetManager.OnTargetAction -= TargetManagerOnTargetAction;
     }
-    private void TargetManagerOnTargetAction(bool targetPresent, bool restPresent, Vector3 targetPosition){
+    private void TargetManagerOnTargetAction(bool targetPresent, bool restPresent, Vector3 targetPosition, Transform activeTarget){
         this.targetPresent = targetPresent;
         this.restPresent = restPresent;
         this.targetPosition = targetPosition;

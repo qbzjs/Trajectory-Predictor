@@ -42,7 +42,7 @@ public class TargetMagnitudeTracker : MonoBehaviour
     void Start()
     {
         //this was to test
-        // startPoint = start.position;
+        //startPoint = start.position;
         
         endPoint = target.position;
         
@@ -58,12 +58,21 @@ public class TargetMagnitudeTracker : MonoBehaviour
             startPoint = handPosition;
         }
     }
+    public void TrackMagnitude(Transform t)
+    {
+        if (DAO.instance != null)
+        {
+            handPosition = DAO.instance.MotionData_RightWrist.position;
+            startPoint = handPosition;
+        }
+    }
     void Update()
     {
         if (DAO.instance != null)
         {
             handPosition = DAO.instance.MotionData_RightWrist.position;
         }
+        
         distanceS = (startPoint - handPosition).magnitude;
         distanceE = (endPoint- handPosition).magnitude;
         difference = distanceS - distanceE;

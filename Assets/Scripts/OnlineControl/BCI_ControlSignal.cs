@@ -53,6 +53,7 @@ public class BCI_ControlSignal : MonoBehaviour
     private void UDPClientOnBCI_Data(float x, float y, float z){
         if (!simulateValues){
             controlVectorRaw = new Vector3(x, y, z);
+            //Debug.Log(controlVectorRaw);
         }
     }
     private void ArmReachControllerOnTargetVelocity(Vector3 targetVelocity){

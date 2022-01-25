@@ -67,7 +67,8 @@
 		LeftPointerFinger_Leap,
 		RightPointerFinger_Leap,
 		Waist,
-		Eyes
+		Eyes,
+		BCI
 	}
 	
 	// public enum TrialParadigm{
@@ -209,6 +210,7 @@
 
 	public enum RunType
 	{
+		Null,
 		Kinematic,
 		Imagined
 	}

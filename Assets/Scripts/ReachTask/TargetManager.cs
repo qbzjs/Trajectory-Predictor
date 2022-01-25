@@ -70,7 +70,7 @@ public class TargetManager : MonoBehaviour
     //debugging
     private bool targetsActive;
     
-    public delegate void TargetActions(bool targetPresent, bool restPresent, Vector3 position);
+    public delegate void TargetActions(bool targetPresent, bool restPresent, Vector3 position, Transform activeTarget);
     public static event TargetActions OnTargetAction;
 
 
@@ -237,7 +237,7 @@ public class TargetManager : MonoBehaviour
         
         //observation ml events
         if (OnTargetAction!=null){
-            OnTargetAction(false, false, targetHomeObject.transform.position);
+            OnTargetAction(false, false, targetHomeObject.transform.position, targetHomeObject.transform);
         }
     }
 
@@ -380,7 +380,7 @@ public class TargetManager : MonoBehaviour
     {
         //observation ml events
         if (OnTargetAction!=null){
-            OnTargetAction(false, false, targetHomeObject.transform.position);
+            OnTargetAction(false, false, targetHomeObject.transform.position, target.transform);
         }
         
         homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 4);
@@ -404,7 +404,7 @@ public class TargetManager : MonoBehaviour
     {
         //observation ml events
         if (OnTargetAction!=null){
-            OnTargetAction(true, false, targetDestination);
+            OnTargetAction(true, false, targetDestination, target.transform);
         }
         SetMLAgentGoal(targetDestination, false);
         
@@ -428,7 +428,7 @@ public class TargetManager : MonoBehaviour
     {
         //observation ml events
         if (OnTargetAction!=null){
-            OnTargetAction(false, true, targetHomeObject.transform.position);
+            OnTargetAction(false, true, targetHomeObject.transform.position, target.transform);
         }
         SetMLAgentGoal(targetHomeObject.transform.position, true);
         //SetMLAgentGoal(fixationCross.transform.position);
@@ -486,7 +486,7 @@ public class TargetManager : MonoBehaviour
         
         //observation ml events
         if (OnTargetAction!=null){
-            OnTargetAction(false, false, targetHomeObject.transform.position);
+            OnTargetAction(false, false, targetHomeObject.transform.position, targetHomeObject.transform);
         }
     }
     

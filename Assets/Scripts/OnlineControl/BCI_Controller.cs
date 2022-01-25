@@ -111,8 +111,7 @@ public class BCI_Controller : MonoBehaviour
                 rb.AddForce(controlSignal.controlVectorRefined.x, controlSignal.controlVectorRefined.y,controlSignal.controlVectorRefined.z);
             }
             if (controlType == BCI_ControlType.Translate){
-                controlObject.transform.position += new Vector3(controlSignal.controlVectorRefined.x,
-                    controlSignal.controlVectorRefined.y, controlSignal.controlVectorRefined.z) * Time.deltaTime;
+                controlObject.transform.position += new Vector3(controlSignal.controlVectorRefined.x, controlSignal.controlVectorRefined.y, controlSignal.controlVectorRefined.z) * Time.deltaTime;
             }
         }
         else{

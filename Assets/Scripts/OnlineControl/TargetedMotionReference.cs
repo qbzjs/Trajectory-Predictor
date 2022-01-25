@@ -53,7 +53,7 @@ public class TargetedMotionReference : MonoBehaviour
             //move to home
         }
     }
-    private void TargetManagerOnTargetAction(bool targetPresent, bool restPresent, Vector3 position){
+    private void TargetManagerOnTargetAction(bool targetPresent, bool restPresent, Vector3 position, Transform activeTarget){
         if (targetPresent){
             targetActive = true;
             targetPosition = position + lerpTargetOffset;
