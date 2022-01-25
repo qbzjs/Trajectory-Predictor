@@ -5,9 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class TargetMagnitudeTracker : MonoBehaviour
-{
+public class TargetMagnitudeTracker : MonoBehaviour{
+    
     [Header("Feedback DEBUG")] 
+    public bool showFeedbackCanvas;
+    public Canvas feedbackUI;
+    
     public Slider feedbackSlider;
     public TextMeshProUGUI feedbackText;
     
@@ -19,12 +22,12 @@ public class TargetMagnitudeTracker : MonoBehaviour
     public Vector3 handPosition;
     
     [Header("Values")] 
-    public Transform start;
     
     public Transform target;
     [Range(0, 2f)] public float feedbackMultiplier = 1;
     public Vector3 startPoint;
     public Vector3 endPoint;
+    public Vector3 endPointOffset = new Vector3(0, 0, -0.15f);
     public float startToEndDistance;
     public float distanceS;
     public float distanceE;
@@ -37,6 +40,11 @@ public class TargetMagnitudeTracker : MonoBehaviour
             //get start point at hand position when enabled
             startPoint = DAO.instance.motionDataRightWrist.position;
         }
+
+        endPoint = target.position - endPointOffset;
+        startToEndDistance = (startPoint-endPoint).magnitude;
+        
+        feedbackUI.gameObject.SetActive(showFeedbackCanvas);
     }
 
     void Start()
@@ -44,8 +52,7 @@ public class TargetMagnitudeTracker : MonoBehaviour
         //this was to test
         //startPoint = start.position;
         
-        endPoint = target.position;
-        
+        endPoint = target.position - endPointOffset;;
         startToEndDistance = (startPoint-endPoint).magnitude;
     }
 
@@ -68,11 +75,15 @@ public class TargetMagnitudeTracker : MonoBehaviour
     }
     void Update()
     {
-        if (DAO.instance != null)
-        {
-            handPosition = DAO.instance.MotionData_RightWrist.position;
+        // if (DAO.instance != null)
+        // {
+        //     handPosition = DAO.instance.MotionData_RightWrist.position;
+        // }
+
+        if (TrackedObjectReference.instance != null){
+            handPosition = TrackedObjectReference.instance.currentTrackedObject.position;
         }
-        
+
         distanceS = (startPoint - handPosition).magnitude;
         distanceE = (endPoint- handPosition).magnitude;
         difference = distanceS - distanceE;
@@ -91,6 +102,7 @@ public class TargetMagnitudeTracker : MonoBehaviour
         feedbackPercentage = percentageToTarget;
         feedbackAmplitude = percentageToTarget / 100;
 
+        
         feedbackSlider.value = feedbackAmplitude;
         feedbackText.text = Mathf.RoundToInt(feedbackPercentage).ToString() + "%";
     }

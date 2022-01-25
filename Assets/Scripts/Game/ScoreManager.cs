@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Enums;
 
-public class ScoreTracker : MonoBehaviour
-{
+public class ScoreManager : MonoBehaviour{
 
+    public static ScoreManager instance;
+    
     public Transform trackedObject;
     public GameObject activeTarget;
     public TargetMagnitudeTracker targetMagnitudeTracker;
@@ -14,6 +16,14 @@ public class ScoreTracker : MonoBehaviour
 
     public float feedbackPercentage;
     public float feedbackAmplitude;
+    
+    public float targetAccuracy;
+    public List<float> trialAccuracy = new List<float>();
+    public float totalAccuracy;
+    public float accuracy;
+    
+    public delegate void ScoreAction(float accuracy);
+    public static event ScoreAction OnScoreAction;
     
     #region Subscriptions
     private void OnEnable(){
@@ -45,38 +55,42 @@ public class ScoreTracker : MonoBehaviour
         }
         if (restPresent){
             targetActive = false;
+            trialAccuracy.Add(targetAccuracy);
+            targetAccuracy = 0;
+            totalAccuracy = 0;
+            for (int i = 0; i < trialAccuracy.Count; i++){
+                totalAccuracy = totalAccuracy + trialAccuracy[i];
+            }
+            
             // this.activeTarget = null;
             // targetMagnitudeTracker = null;
+            
+            //accuracy = totalAccuracy / trialAccuracy.Count; //average of all saved accuracies...
+
+            accuracy = totalAccuracy / trialAccuracy.Count; //percentage from total and count
+
+            if (OnScoreAction != null){
+                OnScoreAction(accuracy);
+            }
         }
     }
     #endregion
-    
-    void Start()
-    {
-        
+
+    private void Awake(){
+        instance = this;
     }
-    void Update()
-    {
-        // if (targetActive){
-        //     if (Settings.instance.currentRunType == RunType.Kinematic){
-        //         if (Settings.instance.handedness == Handedness.Left){
-        //             targetMagnitudeTracker.TrackMagnitude(leftHandTracker, RunType.Kinematic);
-        //         }
-        //         else{
-        //             targetMagnitudeTracker.TrackMagnitude(rightHandTracker, RunType.Kinematic);
-        //             
-        //         }
-        //     }
-        //     if (Settings.instance.currentRunType == RunType.Imagined){
-        //         targetMagnitudeTracker.TrackMagnitude(controlObjectBCI.transform, RunType.Imagined);
-        //         
-        //     }
 
-        // if(targetActive){
-        //     targetMagnitudeTracker.TrackMagnitude(trackedObject);
-        //     feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
-        //     feedbackAmplitude = targetMagnitudeTracker.feedbackAmplitude;
-        // }
+    void Update(){
+        if (targetActive){
+            feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
+            feedbackAmplitude = targetMagnitudeTracker.feedbackAmplitude;
+            if (targetAccuracy < feedbackPercentage){
+                targetAccuracy = feedbackPercentage;
+            }
+        }
+    }
 
+    private void LateUpdate(){
+        
     }
 }

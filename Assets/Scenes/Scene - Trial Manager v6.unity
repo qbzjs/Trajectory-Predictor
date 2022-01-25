@@ -11329,16 +11329,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d991811b0689828449c269ae8fcaa966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showFeedbackCanvas: 0
+  feedbackUI: {fileID: 0}
   feedbackSlider: {fileID: 1072636862}
   feedbackText: {fileID: 1893707216}
   feedbackPercentage: 0
   feedbackAmplitude: 0
   handPosition: {x: 0, y: 0, z: 0}
-  start: {fileID: 0}
   target: {fileID: 247161379}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
   endPoint: {x: 0, y: 0, z: 0}
+  endPointOffset: {x: 0, y: 0, z: -0.15}
   startToEndDistance: 0
   distanceS: 0
   distanceE: 0
@@ -18309,7 +18311,7 @@ MonoBehaviour:
   sequenceType: 1
   handedness: 0
   BCI_ControlAssistance: 0
-  runSequence: 0100000002000000010000000200000001000000020000000100000002000000
+  runSequence: 0200000002000000010000000200000001000000020000000100000002000000
   currentRunType: 0
   sessionRuns: 2
   blocksPerRun: 4
@@ -30724,16 +30726,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d991811b0689828449c269ae8fcaa966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showFeedbackCanvas: 0
+  feedbackUI: {fileID: 0}
   feedbackSlider: {fileID: 353634467}
   feedbackText: {fileID: 1207627177}
   feedbackPercentage: 0
   feedbackAmplitude: 0
   handPosition: {x: 0, y: 0, z: 0}
-  start: {fileID: 0}
   target: {fileID: 650439557}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
   endPoint: {x: 0, y: 0, z: 0}
+  endPointOffset: {x: 0, y: 0, z: -0.15}
   startToEndDistance: 0
   distanceS: 0
   distanceE: 0
@@ -33952,16 +33956,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d991811b0689828449c269ae8fcaa966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showFeedbackCanvas: 0
+  feedbackUI: {fileID: 0}
   feedbackSlider: {fileID: 1097500692}
   feedbackText: {fileID: 999023326}
   feedbackPercentage: 0
   feedbackAmplitude: 0
   handPosition: {x: 0, y: 0, z: 0}
-  start: {fileID: 0}
   target: {fileID: 728717849}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
   endPoint: {x: 0, y: 0, z: 0}
+  endPointOffset: {x: 0, y: 0, z: -0.15}
   startToEndDistance: 0
   distanceS: 0
   distanceE: 0
@@ -44041,6 +44047,7 @@ GameObject:
   m_Component:
   - component: {fileID: 962179658}
   - component: {fileID: 962179659}
+  - component: {fileID: 962179660}
   m_Layer: 5
   m_Name: UI Text
   m_TagString: Untagged
@@ -44107,6 +44114,20 @@ MonoBehaviour:
   scoreDisplay_Wrld: {fileID: 1714093544}
   defaultColour: {r: 1, g: 1, b: 1, a: 1}
   completeColour: {r: 0.018467424, g: 0.7830189, b: 0.068877496, a: 1}
+--- !u!114 &962179660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 962179657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7cd5ecc0d45fc243b836e2066440348, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  accuracyText: {fileID: 1674750215}
+  accuracy: 0
 --- !u!1 &962891871
 GameObject:
   m_ObjectHideFlags: 0
@@ -48182,16 +48203,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d991811b0689828449c269ae8fcaa966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showFeedbackCanvas: 0
+  feedbackUI: {fileID: 0}
   feedbackSlider: {fileID: 1819849253}
   feedbackText: {fileID: 1216125801}
   feedbackPercentage: 0
   feedbackAmplitude: 0
   handPosition: {x: 0, y: 0, z: 0}
-  start: {fileID: 0}
   target: {fileID: 1042561792}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
   endPoint: {x: 0, y: 0, z: 0}
+  endPointOffset: {x: 0, y: 0, z: -0.15}
   startToEndDistance: 0
   distanceS: 0
   distanceE: 0
@@ -61737,16 +61760,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d991811b0689828449c269ae8fcaa966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showFeedbackCanvas: 0
+  feedbackUI: {fileID: 0}
   feedbackSlider: {fileID: 1786450817}
   feedbackText: {fileID: 705637788}
   feedbackPercentage: 0
   feedbackAmplitude: 0
   handPosition: {x: 0, y: 0, z: 0}
-  start: {fileID: 0}
   target: {fileID: 1192122685}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
   endPoint: {x: 0, y: 0, z: 0}
+  endPointOffset: {x: 0, y: 0, z: -0.15}
   startToEndDistance: 0
   distanceS: 0
   distanceE: 0
@@ -85352,16 +85377,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d991811b0689828449c269ae8fcaa966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showFeedbackCanvas: 0
+  feedbackUI: {fileID: 0}
   feedbackSlider: {fileID: 227387641}
   feedbackText: {fileID: 1176879790}
   feedbackPercentage: 0
   feedbackAmplitude: 0
   handPosition: {x: 0, y: 0, z: 0}
-  start: {fileID: 0}
   target: {fileID: 53620305}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
   endPoint: {x: 0, y: 0, z: 0}
+  endPointOffset: {x: 0, y: 0, z: -0.15}
   startToEndDistance: 0
   distanceS: 0
   distanceE: 0
@@ -85861,7 +85888,7 @@ GameObject:
   - component: {fileID: 1674750216}
   - component: {fileID: 1674750215}
   m_Layer: 5
-  m_Name: Score Text
+  m_Name: Score Accuracy Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85906,7 +85933,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Score : n/a'
+  m_text: 'Accuracy : n/a'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -85933,8 +85960,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42
-  m_fontSizeBase: 42
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -89042,6 +89069,10 @@ MonoBehaviour:
   targetActive: 0
   feedbackPercentage: 0
   feedbackAmplitude: 0
+  targetAccuracy: 0
+  trialAccuracy: []
+  totalAccuracy: 0
+  accuracy: 0
 --- !u!1 &1747728898
 GameObject:
   m_ObjectHideFlags: 0
