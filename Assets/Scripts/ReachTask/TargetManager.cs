@@ -250,11 +250,17 @@ public class TargetManager : MonoBehaviour
 
     private void Update(){
         if (DAO.instance != null && Settings.instance != null){
-            if (Settings.instance.handedness == Handedness.Left){
-                handPosition = DAO.instance.motionDataLeftWrist.position;
+            if (Settings.instance.currentRunType == RunType.Kinematic){
+                if (Settings.instance.handedness == Handedness.Left){
+                    handPosition = DAO.instance.motionDataLeftWrist.position;
+                }
+                if (Settings.instance.handedness == Handedness.Right){
+                    handPosition = DAO.instance.motionDataRightWrist.position;
+                }
             }
-            if (Settings.instance.handedness == Handedness.Right){
-                handPosition = DAO.instance.motionDataRightWrist.position;
+
+            if (Settings.instance.currentRunType == RunType.Imagined){
+                handPosition = TrackedObjectReference.instance.currentTrackedObject.position; //todo check this can work in any runtype
             }
         }
         // lineRenderer.SetPosition(0,originPoint.position);
