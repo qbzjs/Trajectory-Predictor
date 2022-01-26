@@ -391,6 +391,7 @@ public class TargetManager : MonoBehaviour
         
         homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 4);
         
+        //add indication here...point to target
         targetGhosts[targetIndex].transform.DOScale(0f, lifeTime/4);
         target.SetActive(true);
         targetMesh.transform.DOScale(0.75f, lifeTime/4);

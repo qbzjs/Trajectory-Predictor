@@ -11339,12 +11339,10 @@ MonoBehaviour:
   target: {fileID: 247161379}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
-  endPoint: {x: 0, y: 0, z: 0}
-  endPointOffset: {x: 0, y: 0, z: -0.15}
-  startToEndDistance: 0
-  distanceS: 0
-  distanceE: 0
-  difference: 0
+  startDistance: 0
+  currentDistance: 0
+  percentageFromTarget: 0
+  percentageToTarget: 0
 --- !u!82 &247161388
 AudioSource:
   m_ObjectHideFlags: 0
@@ -18296,7 +18294,7 @@ MonoBehaviour:
     actionObservation: 0
     sampleRate: 
   sessionName: NMS_
-  sessionNumber: 2
+  sessionNumber: 0
   trialParadigm: 0
   paradigmTargetCount: 1
   numberOfTargets: 2
@@ -23990,6 +23988,75 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 93e86b57e56570d46814839867bf9a52, type: 3}
   m_PrefabInstance: {fileID: 575914296}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &582831669
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2149861021705449358, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266949574462841830, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_RootOrder
+      value: 29
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266949574462841830, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.595
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266949574462841830, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.942
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266949574462841830, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266949574462841830, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266949574462841830, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266949574462841830, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266949574462841830, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266949574462841830, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266949574462841830, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266949574462841830, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5336954870550785462, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6044482135292453527, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_Name
+      value: Reach Target
+      objectReference: {fileID: 0}
+    - target: {fileID: 6044482135292453527, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f76a0b9dcc3d5af4989224683cbfd33c, type: 3}
 --- !u!1 &582832627
 GameObject:
   m_ObjectHideFlags: 0
@@ -30736,12 +30803,10 @@ MonoBehaviour:
   target: {fileID: 650439557}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
-  endPoint: {x: 0, y: 0, z: 0}
-  endPointOffset: {x: 0, y: 0, z: -0.15}
-  startToEndDistance: 0
-  distanceS: 0
-  distanceE: 0
-  difference: 0
+  startDistance: 0
+  currentDistance: 0
+  percentageFromTarget: 0
+  percentageToTarget: 0
 --- !u!82 &650439566
 AudioSource:
   m_ObjectHideFlags: 0
@@ -33966,12 +34031,10 @@ MonoBehaviour:
   target: {fileID: 728717849}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
-  endPoint: {x: 0, y: 0, z: 0}
-  endPointOffset: {x: 0, y: 0, z: -0.15}
-  startToEndDistance: 0
-  distanceS: 0
-  distanceE: 0
-  difference: 0
+  startDistance: 0
+  currentDistance: 0
+  percentageFromTarget: 0
+  percentageToTarget: 0
 --- !u!82 &728717858
 AudioSource:
   m_ObjectHideFlags: 0
@@ -48213,12 +48276,10 @@ MonoBehaviour:
   target: {fileID: 1042561792}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
-  endPoint: {x: 0, y: 0, z: 0}
-  endPointOffset: {x: 0, y: 0, z: -0.15}
-  startToEndDistance: 0
-  distanceS: 0
-  distanceE: 0
-  difference: 0
+  startDistance: 0
+  currentDistance: 0
+  percentageFromTarget: 0
+  percentageToTarget: 0
 --- !u!82 &1042561801
 AudioSource:
   m_ObjectHideFlags: 0
@@ -49684,7 +49745,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   simulateValues: 0
-  controlAssistPercentage: 80
+  controlAssistPercentage: 100
   controlVectorRaw: {x: 0, y: 0, z: 0}
   targetVector: {x: 0, y: 0, z: 0}
   controlVectorAssisted: {x: 0, y: 0, z: 0}
@@ -61770,12 +61831,10 @@ MonoBehaviour:
   target: {fileID: 1192122685}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
-  endPoint: {x: 0, y: 0, z: 0}
-  endPointOffset: {x: 0, y: 0, z: -0.15}
-  startToEndDistance: 0
-  distanceS: 0
-  distanceE: 0
-  difference: 0
+  startDistance: 0
+  currentDistance: 0
+  percentageFromTarget: 0
+  percentageToTarget: 0
 --- !u!82 &1192122694
 AudioSource:
   m_ObjectHideFlags: 0
@@ -85387,12 +85446,10 @@ MonoBehaviour:
   target: {fileID: 53620305}
   feedbackMultiplier: 1
   startPoint: {x: 0, y: 0, z: 0}
-  endPoint: {x: 0, y: 0, z: 0}
-  endPointOffset: {x: 0, y: 0, z: -0.15}
-  startToEndDistance: 0
-  distanceS: 0
-  distanceE: 0
-  difference: 0
+  startDistance: 0
+  currentDistance: 0
+  percentageFromTarget: 0
+  percentageToTarget: 0
 --- !u!4 &1649935975
 Transform:
   m_ObjectHideFlags: 0
