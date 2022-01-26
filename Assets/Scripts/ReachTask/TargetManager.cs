@@ -29,7 +29,6 @@ public class TargetManager : MonoBehaviour
     public Renderer ghostHandRightMesh;
 
     
-    
     private Renderer targetRenderer;
     private Renderer homeTargetRenderer;
     private Renderer fixationRenderer;
@@ -50,14 +49,19 @@ public class TargetManager : MonoBehaviour
     public Vector3 targetDestination;
     public Transform destinationTransform;
     public Transform lineDestinationTransform;
+    public Transform indicatorLineTransform;
+    
     public Transform fallbackTransform;
     public Vector3 handPosition;
+    
+    private Vector3 indicatorlineDestination;
 
     [Range(0, 1)] public float animationDuration = 0.1f;
 
     public bool useLine = true;
     public bool lineToTarget = false;
     private LineRenderer lineRenderer;
+    private LineRenderer indicatorLine;
 
     public int targetIndex;
     public float lifeTime;
@@ -218,6 +222,7 @@ public class TargetManager : MonoBehaviour
         ghostHandRightMesh.material.DOFade(0, 0);
         
         lineRenderer = gameObject.GetComponent<LineRenderer>();
+        indicatorLine = indicatorLineTransform.gameObject.GetComponent<LineRenderer>();
 
         lineToTarget = false;
 
@@ -246,6 +251,7 @@ public class TargetManager : MonoBehaviour
 
         ghostHandRight.transform.DOMove(handPosition, 0);
         lineDestinationTransform.position = handPosition;
+        indicatorLineTransform.position = transform.position;
     }
 
     private void Update(){
@@ -267,7 +273,7 @@ public class TargetManager : MonoBehaviour
 
         lineRenderer.SetPosition(0,handPosition);
         lineRenderer.SetPosition(1,lineDestinationTransform.position);
-        
+
         if (lineToTarget){
             lineRenderer.SetPosition(0,handPosition);
             lineRenderer.SetPosition(1,lineDestinationTransform.position);
@@ -277,6 +283,19 @@ public class TargetManager : MonoBehaviour
             lineRenderer.SetPosition(1,handPosition);
         }
 
+        
+        indicatorLine.SetPosition(0,originPoint.position);
+        indicatorLine.SetPosition(1,indicatorLineTransform.position);
+        
+        // if (indicatorLineToTarget){
+        //     lineRenderer.SetPosition(0,handPosition);
+        //     lineRenderer.SetPosition(1,lineDestinationTransform.position);
+        // }
+        // else{
+        //     lineRenderer.SetPosition(0,handPosition);
+        //     lineRenderer.SetPosition(1,handPosition);
+        // }
+        
         #region Debugging controls
 
         // //debugging controls
@@ -367,13 +386,18 @@ public class TargetManager : MonoBehaviour
         target.transform.position = targetDestination;
         targetMesh = target.transform.Find("Target").gameObject;
         targetMesh.transform.DOScale(0, 0);
-        
+
         targetRenderer = targetMesh.GetComponent<Renderer>();
 
         defaultColour = Settings.instance.defaultColour;
         highlightColour = Settings.instance.highlightColour;
         defaultFixationColour = Settings.instance.defaultFixationColour;
         highlightFixationColour = Settings.instance.highlightFixationColour;
+        
+        float x = target.transform.position.x + (transform.position.x - target.transform.position.x) / 1.5f;
+        float y = target.transform.position.y + (transform.position.y - target.transform.position.y) / 1.5f;
+        float z = target.transform.position.z + (transform.position.z - target.transform.position.z) / 1.5f;
+        indicatorlineDestination = new Vector3(x, y, z);
         
         
         target.SetActive(false);
@@ -392,6 +416,8 @@ public class TargetManager : MonoBehaviour
         homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 4);
         
         //add indication here...point to target
+        indicatorLineTransform.DOMove(indicatorlineDestination, lifeTime);
+        
         targetGhosts[targetIndex].transform.DOScale(0f, lifeTime/4);
         target.SetActive(true);
         targetMesh.transform.DOScale(0.75f, lifeTime/4);
@@ -424,7 +450,7 @@ public class TargetManager : MonoBehaviour
         lineDestinationTransform.DOMove(destinationTransform.position, lifeTime / 4);
         ghostHandRightMesh.material.DOFade(0.2f, lifeTime);
         ghostHandRight.transform.DOMove(destinationTransform.position, lifeTime);
-
+        
         //homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 4);
         
         targetMesh.transform.DOScale(1, lifeTime/4);
@@ -455,6 +481,8 @@ public class TargetManager : MonoBehaviour
         
         lineDestinationTransform.DOMove(handPosition, lifeTime/4);
         lineToTarget = false;
+        
+        indicatorLineTransform.DOMove(transform.position, lifeTime/4);
     }
     private void DestroyObjects()
     {
