@@ -5,10 +5,13 @@ using UnityEngine;
 using TMPro;
 public class ScoreDisplayUI : MonoBehaviour{
     
-    public TextMeshProUGUI accuracyText;
+    public TextMeshProUGUI accuracyTextKinematic;
+    public TextMeshProUGUI accuracyTextBCI;
 
-    private float a;
-    public float accuracy;
+    private float aKin;
+    public float accuracyKin;
+    private float aBCI;
+    public float accuracyBCI;
     
     #region Subscriptions
 
@@ -18,8 +21,9 @@ public class ScoreDisplayUI : MonoBehaviour{
     private void OnDisable(){
         ScoreManager.OnScoreAction -= ScoreManagerOnScoreAction;
     }
-    private void ScoreManagerOnScoreAction(float accuracy){
-        a = accuracy;
+    private void ScoreManagerOnScoreAction(float accuracyKin, float accuracyBCI){
+        aKin = accuracyKin;
+        aBCI = accuracyBCI;
     }
 
     #endregion
@@ -29,7 +33,9 @@ public class ScoreDisplayUI : MonoBehaviour{
     }
     
     void LateUpdate(){
-        accuracy = Mathf.Lerp(accuracy, a, Time.deltaTime*2);
-        accuracyText.text = "Accuracy : " + Mathf.RoundToInt(accuracy).ToString() + "%";
+        accuracyKin = Mathf.Lerp(accuracyKin, aKin, Time.deltaTime*2);
+        accuracyTextKinematic.text = "Motion Accuracy : " + Mathf.RoundToInt(accuracyKin).ToString() + "%";
+        accuracyBCI = Mathf.Lerp(accuracyBCI, aBCI, Time.deltaTime*2);
+        accuracyTextBCI.text = "BCI Accuracy : " + Mathf.RoundToInt(accuracyBCI).ToString() + "%";
     }
 }

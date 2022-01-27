@@ -17,12 +17,17 @@ public class ScoreManager : MonoBehaviour{
     public float feedbackPercentage;
     public float feedbackAmplitude;
     
-    public float targetAccuracy;
-    public List<float> trialAccuracy = new List<float>();
-    public float totalAccuracy;
-    public float accuracy;
+    public float targetAccuracyKin;
+    public List<float> trialAccuracyKin = new List<float>();
+    public float totalAccuracyKin;
+    public float accuracyKin;
     
-    public delegate void ScoreAction(float accuracy);
+    public float targetAccuracyBCI;
+    public List<float> trialAccuracyBCI = new List<float>();
+    public float totalAccuracyBCI;
+    public float accuracyBCI;
+    
+    public delegate void ScoreAction(float accuracyKin, float accuracyBCI);
     public static event ScoreAction OnScoreAction;
     
     #region Subscriptions
@@ -55,22 +60,27 @@ public class ScoreManager : MonoBehaviour{
         }
         if (restPresent){
             targetActive = false;
-            trialAccuracy.Add(targetAccuracy);
-            targetAccuracy = 0;
-            totalAccuracy = 0;
-            for (int i = 0; i < trialAccuracy.Count; i++){
-                totalAccuracy = totalAccuracy + trialAccuracy[i];
+
+            if (Settings.instance.currentRunType == RunType.Kinematic){
+                trialAccuracyKin.Add(targetAccuracyKin);
+                targetAccuracyKin = 0;
+                totalAccuracyKin = 0;
+                for (int i = 0; i < trialAccuracyKin.Count; i++){
+                    totalAccuracyKin = totalAccuracyKin + trialAccuracyKin[i];
+                }
+                accuracyKin = totalAccuracyKin / trialAccuracyKin.Count; //percentage from total and count
             }
-            
-            // this.activeTarget = null;
-            // targetMagnitudeTracker = null;
-            
-            //accuracy = totalAccuracy / trialAccuracy.Count; //average of all saved accuracies...
-
-            accuracy = totalAccuracy / trialAccuracy.Count; //percentage from total and count
-
+            if (Settings.instance.currentRunType == RunType.Imagined){
+                trialAccuracyBCI.Add(targetAccuracyBCI);
+                targetAccuracyBCI = 0;
+                totalAccuracyBCI = 0;
+                for (int i = 0; i < trialAccuracyBCI.Count; i++){
+                    totalAccuracyBCI = totalAccuracyBCI + trialAccuracyBCI[i];
+                }
+                accuracyBCI = totalAccuracyBCI / trialAccuracyBCI.Count; //percentage from total and count
+            }
             if (OnScoreAction != null){
-                OnScoreAction(accuracy);
+                OnScoreAction(accuracyKin, accuracyBCI);
             }
         }
     }
@@ -81,11 +91,18 @@ public class ScoreManager : MonoBehaviour{
     }
 
     void Update(){
-        if (targetActive){
+        if (targetActive && Settings.instance.currentRunType==RunType.Kinematic){
             feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
             feedbackAmplitude = targetMagnitudeTracker.feedbackAmplitude;
-            if (targetAccuracy < feedbackPercentage){
-                targetAccuracy = feedbackPercentage;
+            if (targetAccuracyKin < feedbackPercentage){
+                targetAccuracyKin = feedbackPercentage;
+            }
+        }
+        if (targetActive && Settings.instance.currentRunType==RunType.Imagined){
+            feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
+            feedbackAmplitude = targetMagnitudeTracker.feedbackAmplitude;
+            if (targetAccuracyBCI < feedbackPercentage){
+                targetAccuracyBCI = feedbackPercentage;
             }
         }
     }

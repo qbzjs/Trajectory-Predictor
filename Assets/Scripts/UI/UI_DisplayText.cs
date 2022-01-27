@@ -25,8 +25,8 @@ public class UI_DisplayText : MonoBehaviour {
 
     public TextMeshProUGUI trialPhaseDisplay;
 
-    public TextMeshProUGUI scoreDisplay;
-    public TextMeshPro scoreDisplay_Wrld;
+    //public TextMeshProUGUI scoreDisplay;
+    //public TextMeshPro scoreDisplay_Wrld;
 
     public Color defaultColour = Color.white;
     public Color completeColour = Color.green;
@@ -45,8 +45,8 @@ public class UI_DisplayText : MonoBehaviour {
     private void Awake() {
         instance = this;
         
-        scoreDisplay.text = "Score : n/a";
-        scoreDisplay_Wrld.text = "Score: n/a";
+        //scoreDisplay.text = "Score : n/a";
+        //scoreDisplay_Wrld.text = "Score: n/a";
         blockProgressDisplay.text = "Run: 0 / 0";
         blockProgressDisplay_Wrld.text = "Run: 0 / 0";
         blockProgressDisplay.text = "Block: 0 / 0";
