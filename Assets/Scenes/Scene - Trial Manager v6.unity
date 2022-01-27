@@ -18309,7 +18309,7 @@ MonoBehaviour:
   sequenceType: 1
   handedness: 0
   BCI_ControlAssistance: 0
-  runSequence: 0200000002000000010000000200000001000000020000000100000002000000
+  runSequence: 0100000002000000010000000200000001000000020000000100000002000000
   currentRunType: 0
   sessionRuns: 2
   blocksPerRun: 4
@@ -39737,7 +39737,7 @@ MonoBehaviour:
   automateInput: 0
   debugTimingSimple: 0
   debugTimingDetailed: 0
-  debugUDPTriggers: 0
+  debugUDPTriggers: 1
   debugGameEvents: 0
   trialsActive: 0
   paused: 0

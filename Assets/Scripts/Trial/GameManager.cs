@@ -314,13 +314,13 @@ public class GameManager : MonoBehaviour
         runTotal = total;
         runIndex = index;
         if (runIndex < Settings.instance.runSequence.Length){
-            Debug.Log("************RUN STaTUS " + runStatus);
+//            Debug.Log("************RUN STaTUS " + runStatus);
             if (status == GameStatus.Ready || status == GameStatus.RunComplete){
                 runType = Settings.instance.GetRunType(runIndex);
                 Settings.instance.currentRunType = runType;
             }
         }
-        Debug.Log(" GAME MANAGER - RUN TYPE : " + runType);
+  //      Debug.Log(" GAME MANAGER - RUN TYPE : " + runType);
         if (status == GameStatus.AllRunsComplete){
             Debug.Log("----------All Runs Completed!------------------");
         }
@@ -412,19 +412,19 @@ public class GameManager : MonoBehaviour
     public static event TrialActions OnTrialAction;
 
     public void ProgressEvent(GameStatus e){
-        Debug.Log("Progress event: " + e);
+ //       Debug.Log("Progress event: " + e);
         if (OnProgressAction != null){
             OnProgressAction(e, completionPercentage, runIndex, runTotal, blockIndex, blockTotal, trialSequenceIndex, trialSequenceTotal);
         }
     }
     public void GameEvent(GameStatus e){
-        Debug.Log("GAME event: " + e);
+  //      Debug.Log("GAME event: " + e);
         if (OnGameAction != null){
             OnGameAction(e);
         }
     }
     public void RunEvent(GameStatus e, float lifeTime){
-        Debug.Log("RUN event: " + e);
+  //      Debug.Log("RUN event: " + e);
         if (OnRunAction != null){
             OnRunAction(e, lifeTime, runIndex, runTotal, runType);
         }
@@ -434,7 +434,7 @@ public class GameManager : MonoBehaviour
         }
     }
     public void BlockEvent(GameStatus e, float lifeTime){
-        Debug.Log("RUN event: " + e);
+ //       Debug.Log("RUN event: " + e);
         if (OnBlockAction != null){
             OnBlockAction(e, lifeTime, blockIndex, blockTotal);
         }
@@ -444,7 +444,7 @@ public class GameManager : MonoBehaviour
         }
     }
     public void TrialEvent(TrialEventType e, int tNum, float lifeTime, int i, int tot  ){
-        Debug.Log("TRIAL event: " + e);
+//        Debug.Log("TRIAL event: " + e);
         if (OnTrialAction != null){
             OnTrialAction(e, tNum, lifeTime,i,tot);
         }

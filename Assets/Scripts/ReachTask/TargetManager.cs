@@ -379,7 +379,7 @@ public class TargetManager : MonoBehaviour
     }
     private void InitialiseObjects(){
         targetDestination = GetDestination(targetIndex);
-        Debug.Log(targetDestination);
+//        Debug.Log(targetDestination);
         destinationTransform.position = targetDestination;
         
         target = Instantiate(targetPrefab, originPoint.position, quaternion.identity);

@@ -63,7 +63,7 @@ public class InstructionTextPrototype : MonoBehaviour
     }
     private void GameManagerOnRunAction(GameStatus eventType, float lifeTime, int runIndex, int runTotal, RunType runType){
         this.runType = runType;
-        Debug.Log(runIndex);
+//        Debug.Log(runIndex);
         if (eventType == GameStatus.RunComplete){
             DisplayNewRunText();
         }
@@ -121,14 +121,14 @@ public class InstructionTextPrototype : MonoBehaviour
         
         if(runType == RunType.Imagined)
         {
-            Debug.Log(" Instructions - RUN TYPE : "+ runType);
+//            Debug.Log(" Instructions - RUN TYPE : "+ runType);
             instructionTextActual.gameObject.SetActive(false);
             instructionTextImagined.gameObject.SetActive(true);
             gameObject.GetComponent<BoxCollider>().enabled = true;
         }
         if(runType == RunType.Kinematic)
         {
-            Debug.Log(" Instructions - RUN TYPE : "+ runType);
+ //           Debug.Log(" Instructions - RUN TYPE : "+ runType);
             instructionTextActual.gameObject.SetActive(true);
             instructionTextImagined.gameObject.SetActive(false);
             gameObject.GetComponent<BoxCollider>().enabled = true;
@@ -137,14 +137,14 @@ public class InstructionTextPrototype : MonoBehaviour
     }
     void DisplayBigInstructionText(){
         if(currentRunType == RunType.Imagined){
-            Debug.Log("BIG Instructions - RUN TYPE : "+ runType);
+//            Debug.Log("BIG Instructions - RUN TYPE : "+ runType);
             bigInstruction.text = "Imagined Arm" + "\n" + "Movement";
             bigInstruction.color = UI_Blue;
             bigInstruction.DOFade(0, 0);
             bigInstruction.DOFade(1, 2f);
         }
         if(currentRunType == RunType.Kinematic){
-            Debug.Log("BIG Instructions - RUN TYPE : "+ runType);
+ //           Debug.Log("BIG Instructions - RUN TYPE : "+ runType);
             bigInstruction.text = "Kinematic Arm" + "\n" + "Movement";
             bigInstruction.color = UI_Orange;
             bigInstruction.DOFade(0, 0);
