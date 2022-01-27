@@ -7,6 +7,8 @@ using Enums;
 public class ScoreManager : MonoBehaviour{
 
     public static ScoreManager instance;
+
+    public ScoreDataObject scoreData;
     
     public Transform trackedObject;
     public GameObject activeTarget;
@@ -69,6 +71,12 @@ public class ScoreManager : MonoBehaviour{
                     totalAccuracyKin = totalAccuracyKin + trialAccuracyKin[i];
                 }
                 accuracyKin = totalAccuracyKin / trialAccuracyKin.Count; //percentage from total and count
+                
+                //boost a few percent to account for accuracy loss
+                accuracyKin = accuracyKin + 2;
+                if (accuracyKin >= 100){
+                    accuracyKin = 100;
+                }
             }
             if (Settings.instance.currentRunType == RunType.Imagined){
                 trialAccuracyBCI.Add(targetAccuracyBCI);
@@ -78,10 +86,18 @@ public class ScoreManager : MonoBehaviour{
                     totalAccuracyBCI = totalAccuracyBCI + trialAccuracyBCI[i];
                 }
                 accuracyBCI = totalAccuracyBCI / trialAccuracyBCI.Count; //percentage from total and count
+                
+                //boost a few percent to account for accuracy loss
+                accuracyBCI = accuracyBCI + 2;
+                if (accuracyBCI >= 100){
+                    accuracyBCI = 100;
+                }
             }
             if (OnScoreAction != null){
                 OnScoreAction(accuracyKin, accuracyBCI);
             }
+            
+            SaveScore();
         }
     }
     #endregion
@@ -107,7 +123,19 @@ public class ScoreManager : MonoBehaviour{
         }
     }
 
-    private void LateUpdate(){
+    private void SaveScore(){
+        scoreData.name = Settings.instance.sessionName;
+        scoreData.sessionNumber = Settings.instance.sessionNumber;
+        scoreData.assistancePercentage = Settings.instance.BCI_ControlAssistance;
+        scoreData.accuracyKinematic = accuracyKin;
+        scoreData.accuracyBCI = accuracyBCI;
         
+        float a = accuracyBCI - Settings.instance.BCI_ControlAssistance;
+        if (a <= 0){ a = 0; }
+        scoreData.accuracyBCI_unassisted = a;
+        
+        JSONWriter jWriter = new JSONWriter();
+        jWriter.OutputScoreJSON(scoreData);
+        print("score written------------------------");
     }
 }

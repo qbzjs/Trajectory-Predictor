@@ -18309,7 +18309,7 @@ MonoBehaviour:
   sequenceType: 1
   handedness: 0
   BCI_ControlAssistance: 0
-  runSequence: 0100000002000000010000000200000001000000020000000100000002000000
+  runSequence: 0200000002000000010000000200000001000000020000000100000002000000
   currentRunType: 0
   sessionRuns: 2
   blocksPerRun: 4
@@ -50013,7 +50013,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   simulateValues: 0
-  controlAssistPercentage: 100
+  controlAssistPercentage: 50
   controlVectorRaw: {x: 0, y: 0, z: 0}
   targetVector: {x: 0, y: 0, z: 0}
   controlVectorAssisted: {x: 0, y: 0, z: 0}
@@ -89421,6 +89421,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e540df4b57eb2fc4682fdce4915314ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreData:
+    name: 
+    sessionNumber: 0
+    assistancePercentage: 0
+    accuracyKinematic: 0
+    accuracyBCI: 0
+    accuracyBCI_unassisted: 0
   trackedObject: {fileID: 0}
   activeTarget: {fileID: 0}
   targetMagnitudeTracker: {fileID: 0}

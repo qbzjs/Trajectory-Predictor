@@ -90,7 +90,10 @@ public class InstructionTextPrototype : MonoBehaviour
         
         if (GameManager.instance.blockIndex != GameManager.instance.blockTotal){
             instructionTextBlockComplete.gameObject.SetActive(true);
-            gameObject.GetComponent<BoxCollider>().enabled = true;
+            
+            //gameObject.GetComponent<BoxCollider>().enabled = true;
+            BoxCollider c = gameObject.GetComponent<BoxCollider>();
+            StartCoroutine(WaitAndEnableCollider(c));
         }
     }
     
@@ -124,17 +127,27 @@ public class InstructionTextPrototype : MonoBehaviour
 //            Debug.Log(" Instructions - RUN TYPE : "+ runType);
             instructionTextActual.gameObject.SetActive(false);
             instructionTextImagined.gameObject.SetActive(true);
-            gameObject.GetComponent<BoxCollider>().enabled = true;
+            // gameObject.GetComponent<BoxCollider>().enabled = true;
+            BoxCollider c = gameObject.GetComponent<BoxCollider>();
+            StartCoroutine(WaitAndEnableCollider(c));
         }
         if(runType == RunType.Kinematic)
         {
  //           Debug.Log(" Instructions - RUN TYPE : "+ runType);
             instructionTextActual.gameObject.SetActive(true);
             instructionTextImagined.gameObject.SetActive(false);
-            gameObject.GetComponent<BoxCollider>().enabled = true;
+            // gameObject.GetComponent<BoxCollider>().enabled = true;
+            BoxCollider c = gameObject.GetComponent<BoxCollider>();
+            StartCoroutine(WaitAndEnableCollider(c));
         }
       
     }
+    
+    private IEnumerator WaitAndEnableCollider(Collider c){
+        yield return new WaitForSeconds(2f);
+        c.enabled = true;
+    }
+    
     void DisplayBigInstructionText(){
         if(currentRunType == RunType.Imagined){
 //            Debug.Log("BIG Instructions - RUN TYPE : "+ runType);
