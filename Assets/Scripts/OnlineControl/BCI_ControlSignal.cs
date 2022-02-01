@@ -22,8 +22,8 @@ public class BCI_ControlSignal : MonoBehaviour
     private float az;
 
     [Header("BCI DATA")] 
-    public Vector3 controlVectorRaw; //raw input signal
-    public Vector3 targetVector;
+    public Vector3 controlVectorPredicted; //raw input signal
+    public Vector3 controlVectorTarget;
     public Vector3 controlVectorAssisted; //descriminated of used predicted
     public Vector3 controlVectorRefined; //final output signal
     private Vector3 cv;
@@ -52,13 +52,13 @@ public class BCI_ControlSignal : MonoBehaviour
     }
     private void UDPClientOnBCI_Data(float x, float y, float z){
         if (!simulateValues){
-            controlVectorRaw = new Vector3(x, y, z);
+            controlVectorPredicted = new Vector3(x, y, z);
             //Debug.Log(controlVectorRaw);
         }
     }
     private void ArmReachControllerOnTargetVelocity(Vector3 targetVelocity){
         if (!simulateValues){
-            targetVector = targetVelocity;
+            controlVectorTarget = targetVelocity;
         }
     }
 
@@ -86,9 +86,9 @@ public class BCI_ControlSignal : MonoBehaviour
         assistance = controlAssistPercentage / 100f;
         
         //assist control as float
-        ax = controlMixer.AssistControl(controlVectorRaw.x, targetVector.x, assistance);
-        ay = controlMixer.AssistControl(controlVectorRaw.y, targetVector.y, assistance);
-        az = controlMixer.AssistControl(controlVectorRaw.z, targetVector.z, assistance);
+        ax = controlMixer.AssistControl(controlVectorPredicted.x, controlVectorTarget.x, assistance);
+        ay = controlMixer.AssistControl(controlVectorPredicted.y, controlVectorTarget.y, assistance);
+        az = controlMixer.AssistControl(controlVectorPredicted.z, controlVectorTarget.z, assistance);
         controlVectorAssisted = new Vector3(ax, ay, az);
 
         //assist control as a vector

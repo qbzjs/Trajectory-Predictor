@@ -34,8 +34,8 @@ public class ScoreDisplayUI : MonoBehaviour{
     
     void LateUpdate(){
         accuracyKin = Mathf.Lerp(accuracyKin, aKin, Time.deltaTime*2);
-        accuracyTextKinematic.text = "Motion Accuracy : " + Mathf.RoundToInt(accuracyKin).ToString() + "%";
+        accuracyTextKinematic.text = "Kinematic Distance Accuracy : " + Mathf.RoundToInt(accuracyKin).ToString() + "%";
         accuracyBCI = Mathf.Lerp(accuracyBCI, aBCI, Time.deltaTime*2);
-        accuracyTextBCI.text = "BCI Accuracy : " + Mathf.RoundToInt(accuracyBCI).ToString() + "%";
+        accuracyTextBCI.text = "BCI Distance Accuracy : " + Mathf.RoundToInt(accuracyBCI).ToString() + "%";
     }
 }

@@ -31,6 +31,14 @@ public class BCI_ControlManager : MonoBehaviour
     public Button kinematicBtn;
     public Button BCI_Btn;
 
+    private Vector3 controlVectorPredicted; //raw input signal
+    private Vector3 controlVectorTarget;
+    private Vector3 controlVectorAssisted; //descriminated of used predicted
+    private Vector3 controlVectorRefined; //final output signal
+    
+    public delegate void ControlSignal(Vector3 cvPredicted, Vector3 cvTarget, Vector3 cvAssisted, Vector3 cvRefined);
+    public static event ControlSignal OnControlSignal;
+    
     #region Subscriptions
 
     private void OnEnable(){
@@ -101,6 +109,14 @@ public class BCI_ControlManager : MonoBehaviour
     public void SetControlAssistance(int a){
         
     }
+
+    private void Update(){
+        if (OnControlSignal != null){
+            OnControlSignal(controlSignal.controlVectorPredicted, controlSignal.controlVectorTarget,
+                controlSignal.controlVectorAssisted, controlSignal.controlVectorRefined);
+        }
+    }
+
     public void ToggleKinematicHands(){
         if (kinematicHands){
             DisableKinematic();

@@ -16,8 +16,8 @@ public class ControlVectorDisplayUI : MonoBehaviour
     
     void Update(){
 
-        predicted = BCI_ControlSignal.instance.controlVectorRaw;
-        target = BCI_ControlSignal.instance.targetVector;
+        predicted = BCI_ControlSignal.instance.controlVectorPredicted;
+        target = BCI_ControlSignal.instance.controlVectorTarget;
         control = BCI_ControlSignal.instance.controlVectorRefined;
         assistance = BCI_ControlSignal.instance.controlAssistPercentage;
 
