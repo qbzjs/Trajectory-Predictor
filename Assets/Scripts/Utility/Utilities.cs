@@ -11,13 +11,13 @@ public class Utilities
     public static float ReturnPositive(float v){
         float tmp=0;
         if (v < 0){
-            tmp = -v;
+            return -v;
         }
         else{
-            tmp = v;
+            return v;
         }
-        float pv = tmp;
-        return pv;
+        // float pv = tmp;
+        // return pv;
     }
     
     public static Vector3 ReturnPositive(Vector3 v){
@@ -132,6 +132,56 @@ public class Utilities
         Vector3 d = new Vector3(dz, dy, dz);
         
         return d;
+    }
+
+    #endregion
+
+    #region Value Limiters
+
+    public static float SetUpperLimit(float input, float limit){
+        if (input >= limit){
+            return limit;
+        }
+        else{
+            return input; 
+        }
+        
+    }
+    public static float SetLowerLimit(float input, float limit){
+        if (input <= limit){
+            return limit;
+        }
+        else{
+            return input; 
+        }
+    }
+    public static Vector3 SetUpperLimit(Vector3 input, Vector3 limit){
+        float x = 0; float y = 0; float z = 0;
+        if (input.x >= limit.x){
+            x = limit.x;
+        }
+        if (input.y >= limit.y){
+            y = limit.y;
+        }
+        if (input.z >= limit.z){
+            z = limit.z;
+        }
+        Vector3 r = new Vector3(x, y, z);
+        return r;
+    }
+    public static Vector3 SetLowerLimit(Vector3 input, Vector3 limit){
+        float x = 0; float y = 0; float z = 0;
+        if (input.x <= limit.x){
+            x = limit.x;
+        }
+        if (input.y <= limit.y){
+            y = limit.y;
+        }
+        if (input.z <= limit.z){
+            z = limit.z;
+        }
+        Vector3 r = new Vector3(x, y, z);
+        return r;
     }
 
     #endregion

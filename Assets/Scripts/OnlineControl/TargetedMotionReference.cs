@@ -100,20 +100,28 @@ public class TargetedMotionReference : MonoBehaviour
         }
 
         dampTime = BCI_ControlSignal.instance.smoothDamping;
-        
-        if (handSide == Handedness.Left){
-            leftHandTarget.position = Vector3.SmoothDamp(leftHandTarget.position, lerpTarget.position, ref v, dampTime);
-            //get a tracked velocity
-            physicsData = leftHandTarget.gameObject.GetComponent<PhysicsData>().m_MotionData;
-            targetedMotionVector = physicsData.Velocity;
+
+        //if imagined - take target vector from the reference IK rig hands
+        if (Settings.instance.currentRunType == RunType.Imagined){
+            if (handSide == Handedness.Left){
+                leftHandTarget.position = Vector3.SmoothDamp(leftHandTarget.position, lerpTarget.position, ref v, dampTime);
+                //get a tracked velocity
+                physicsData = leftHandTarget.gameObject.GetComponent<PhysicsData>().m_MotionData;
+                targetedMotionVector = physicsData.Velocity;
+            }
+
+            if (handSide == Handedness.Right){
+                rightHandTarget.position = Vector3.SmoothDamp(rightHandTarget.position, lerpTarget.position, ref v, dampTime);
+                //get a tracked velocity
+                physicsData = rightHandTarget.gameObject.GetComponent<PhysicsData>().m_MotionData;
+                targetedMotionVector = physicsData.Velocity;
+            }
+        }
+        //if kinematic - take target vector from the tracked wrist
+        if (Settings.instance.currentRunType == RunType.Kinematic){
+            targetedMotionVector = DAO.instance.MotionData_ActiveWrist.velocity; // velocity of tracked wrist
         }
 
-        if (handSide == Handedness.Right){
-            rightHandTarget.position = Vector3.SmoothDamp(rightHandTarget.position, lerpTarget.position, ref v, dampTime);
-            //get a tracked velocity
-            physicsData = rightHandTarget.gameObject.GetComponent<PhysicsData>().m_MotionData;
-            targetedMotionVector = physicsData.Velocity;
-        }
 
         //send the target velocity from arm (wrist tracked position to target position)
         if (OnTargetVelocity != null){

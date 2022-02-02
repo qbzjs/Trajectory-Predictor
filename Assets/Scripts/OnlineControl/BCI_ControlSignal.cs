@@ -12,7 +12,7 @@ public class BCI_ControlSignal : MonoBehaviour
     
     [Header("BCI CONTROL")] 
     public bool simulateValues;
-    
+
     [Space(4)]
     [Range(0, 100)] 
     public int controlAssistPercentage; // silder between 0-1 for percentage of used bci signal control
@@ -25,7 +25,8 @@ public class BCI_ControlSignal : MonoBehaviour
     public Vector3 controlVectorPredicted; //raw input signal
     public Vector3 controlVectorTarget;
     public Vector3 controlVectorAssisted; //descriminated of used predicted
-    public Vector3 controlVectorRefined; //final output signal
+    public Vector3 controlVectorRefined; //modified output signal - final
+    //public Vector3 controlVector; //final output
     private Vector3 cv;
     
     [Header("MODIFIERS")]
@@ -112,7 +113,7 @@ public class BCI_ControlSignal : MonoBehaviour
         
         //assign control to a vector for use in other classes 
         controlVectorRefined = cv;
-        
+
     }
 
     //DEPRECIATED CONTROL METHODS

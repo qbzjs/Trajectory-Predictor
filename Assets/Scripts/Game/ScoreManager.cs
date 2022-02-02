@@ -10,8 +10,19 @@ public class ScoreManager : MonoBehaviour{
     public static ScoreManager instance;
 
     public ScoreDataObject scoreData;
+
+    private DAO dao;
     
-    [Header("DISTANCE ACCURACY")]
+    [Header("CONTROL VECTORS (read only)")]
+    [Space(4)]
+    [SerializeField]private Vector3 vectorPredicted;
+    [SerializeField]private Vector3 vectorTarget;
+    [SerializeField]private Vector3 vectorTrackedObject;
+    [SerializeField]private Vector3 vectorAssisted;
+    [SerializeField]private Vector3 vectorRefined;
+    
+    [Header("-- DISTANCE ACCURACY --")]
+    [Space(4)]
     public Transform trackedObject;
     public GameObject activeTarget;
     public TargetMagnitudeTracker targetMagnitudeTracker;
@@ -31,49 +42,44 @@ public class ScoreManager : MonoBehaviour{
     public float totalAccuracyDistanceBCI;
     public float accuracyDistanceBCI;
 
-    [Header("DIFFERENTIAL ACCURACY")]
-    public Vector3 vectorPredicted;
-    public Vector3 vectorTarget;
-    public Vector3 vectorAssisted;
-    public Vector3 vectorRefined;
+    [Header("-- DIFFERENTIAL ACCURACY --")]
+    [Space(4)]
+    public Vector3 predictedAccumulation; //GENERIC - CURRENT TRIAL
+    public Vector3 predictedAssistedAccumulation; //GENERIC - CURRENT TRIAL
+    public Vector3 targetAccumulation; //GENERIC - CURRENT TRIAL
 
-    [Space(4)]
-    public Vector3 predictedTargetedDifference;
-    public Vector3 predictedTargetedDifferenceAccumulated;
+    public List<Vector3> trialPredictedVectorKin = new List<Vector3>();
+    public List<Vector3> trialPredictedAssistedVectorKin = new List<Vector3>();
+    public List<Vector3> trialTargetVectorKin = new List<Vector3>();
+    public Vector3 trialPredictedSumKin;
+    public Vector3 trialPredictedAssistedSumKin;
+    public Vector3 trialTargetSumKin;
+    public Vector3 predictedTargetDifferenceKin;
+    public Vector3 predictedAssistedTargetDifferenceKin;
+    public Vector3 predictedTargetPercentageKin;
+    public Vector3 predictedAssistedTargetPercentageKin;
+    public Vector3 differentialPercentageKin;
+    public Vector3 differentialAssistedPercentageKin;
     
-    [Space(4)]
-    public Vector3 targetAccuracyDifferenceKin;
-    public List<Vector3> trialAccuracyDifferenceKin = new List<Vector3>();
-    public Vector3 totalAccuracyDifferenceKin;
-    public Vector3 accuracyDifferenceKin;
-    
-    public Vector3 highestDifferenceKin;
-    public Vector3 accuracyDifferencePercentageKin;
-    
-    public Vector3 targetAccuracyDifferenceBCI;
-    public List<Vector3> trialAccuracyDifferenceBCI = new List<Vector3>();
-    public Vector3 totalAccuracyDifferenceBCI;
-    public Vector3 accuracyDifferenceAverageBCI;
-    
-    public Vector3 highestDifferenceBCI;
-    public Vector3 accuracyDifferencePercentageBCI;
-    
-    [Space(4)]
     public List<Vector3> trialPredictedVectorBCI = new List<Vector3>();
+    public List<Vector3> trialPredictedAssistedVectorBCI = new List<Vector3>();
     public List<Vector3> trialTargetVectorBCI = new List<Vector3>();
-    public Vector3 predictedAccumulation;
-    public Vector3 targetAccumulation;
-    public Vector3 trialPredictedSum;
-    public Vector3 trialTargetSum;
-    // public Vector3 predictedSumDifference;
-    // public Vector3 targetSumDifference;
-    public Vector3 predictedTargetDifference;
-    public Vector3 predictedTargetPercentage;
+    public Vector3 trialPredictedSumBCI;
+    public Vector3 trialPredictedAssistedSumBCI;
+    public Vector3 trialTargetSumBCI;
+    public Vector3 predictedTargetDifferenceBCI;
+    public Vector3 predictedAssistedTargetDifferenceBCI;
+    public Vector3 predictedTargetPercentageBCI;
+    public Vector3 predictedAssistedTargetPercentageBCI;
+    public Vector3 differentialPercentageBCI;
+    public Vector3 differentialAssistedPercentageBCI;
+
     
-    [Header("MEAN SQUARE")]
-    public Vector3 meanSqError;
-    public Vector3 meanSqErrorAverage;
-    public int frameAccumulation;
+    // [Header("-- MEAN SQUARE --")]
+    // [Space(4)]
+    // public Vector3 meanSqError;
+    // public Vector3 meanSqErrorAverage;
+    // public int frameAccumulation;
     
     public delegate void ScoreAction(float accuracyKin, float accuracyBCI);
     public static event ScoreAction OnScoreAction;
@@ -95,6 +101,10 @@ public class ScoreManager : MonoBehaviour{
         this.trackedObject = trackedObject;
     }
     private void GameManagerOnTrialAction(TrialEventType eventType, int targetNum, float lifetime, int index, int total){
+        if (eventType == TrialEventType.PreTrialPhase){
+            //get hand here for kinematic...or this is the tracked object???
+            
+        }
         if (eventType == TrialEventType.TargetPresentation){
             //move to target
         }
@@ -119,80 +129,84 @@ public class ScoreManager : MonoBehaviour{
     }
     
     private void BCI_ControlManagerOnControlSignal(Vector3 cvPredicted, Vector3 cvTarget, Vector3 cvAssisted, Vector3 cvRefined){
-        vectorPredicted = cvPredicted;
+        vectorPredicted = cvPredicted; //this is the raw signal
         vectorTarget = cvTarget;
-        vectorAssisted = cvAssisted;
-        vectorRefined = cvRefined;
+        vectorTrackedObject = dao.MotionData_ActiveWrist.velocity;
+        vectorAssisted = cvAssisted; 
+        vectorRefined = cvRefined; //todo calculate differential using assisted / refined
     }
     #endregion
+
+    #region Initialise
 
     private void Awake(){
         instance = this;
     }
 
+    private void Start(){
+        dao = DAO.instance;
+        
+    }
+
+    #endregion
+
+
     void Update(){
+        //distance
         if (targetActive && Settings.instance.currentRunType==RunType.Kinematic){
-            //distance
             feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
             feedbackAmplitude = targetMagnitudeTracker.feedbackAmplitude;
             if (targetAccuracyDistanceKin < feedbackPercentage){
                 targetAccuracyDistanceKin = feedbackPercentage;
             }
-            
-            //difference - moved to fixed update
 
         }
         if (targetActive && Settings.instance.currentRunType==RunType.Imagined){
-            //distance
             feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
             feedbackAmplitude = targetMagnitudeTracker.feedbackAmplitude;
             if (targetAccuracyDistanceBCI < feedbackPercentage){
                 targetAccuracyDistanceBCI = feedbackPercentage;
             }
-
-            //difference - moved to fixedupodate
-
-            meanSqError = (vectorTarget - vectorPredicted);
-            meanSqError = new Vector3(meanSqError.x * meanSqError.x, meanSqError.y * meanSqError.y, meanSqError.z * meanSqError.z);
-
-            frameAccumulation++;
-            meanSqErrorAverage = meanSqError / frameAccumulation;
         }
 
-        if (!targetActive){
-            frameAccumulation = 0; 
-        }
+        // if (targetActive){
+        //     meanSqError = (vectorTarget - vectorPredicted);
+        //     meanSqError = new Vector3(meanSqError.x * meanSqError.x, meanSqError.y * meanSqError.y, meanSqError.z * meanSqError.z);
+        //
+        //     frameAccumulation++;
+        //     meanSqErrorAverage = meanSqError / frameAccumulation;
+        // }
+        // else{
+        //     frameAccumulation = 0;
+        // }
         
     }
 
     private void FixedUpdate(){
+        //difference
         if (targetActive && Settings.instance.currentRunType==RunType.Kinematic)
         {
-            //difference
-            Vector3 pa = Utilities.ReturnPositive(vectorPredicted);
-            predictedAccumulation += pa;
-            Vector3 ta = Utilities.ReturnPositive(vectorTarget);
-            targetAccumulation += ta;
+            // Vector3 pa = Utilities.ReturnPositive(vectorPredicted);
+            // predictedAccumulation += pa;
+            // Vector3 ta = Utilities.ReturnPositive(vectorTarget);
+            // targetAccumulation += ta;
             
-            predictedTargetedDifference = vectorPredicted - vectorTarget;
-            if (targetAccuracyDifferenceKin.magnitude < predictedTargetedDifference.magnitude){
-                targetAccuracyDifferenceKin = predictedTargetedDifference;
-            }
+            predictedAccumulation += vectorPredicted;
+            predictedAssistedAccumulation += vectorRefined; //refined is assisted
+            targetAccumulation += vectorTrackedObject; //use tracked hand velocity for kinematic
             
         }
 
         if (targetActive && Settings.instance.currentRunType == RunType.Imagined)
         {
-            //difference
-            Vector3 pa = Utilities.ReturnPositive(vectorPredicted);
-            predictedAccumulation += pa;
-            Vector3 ta = Utilities.ReturnPositive(vectorTarget);
-            targetAccumulation += ta;
-
-            predictedTargetedDifference = vectorPredicted - vectorTarget;
-            if (targetAccuracyDifferenceBCI.magnitude < predictedTargetedDifference.magnitude){
-                targetAccuracyDifferenceBCI = predictedTargetedDifference;
-            }
+            // Vector3 pa = Utilities.ReturnPositive(vectorPredicted);
+            // predictedAccumulation += pa;
+            // Vector3 ta = Utilities.ReturnPositive(vectorTarget);
+            // targetAccumulation += ta;
+            
+            predictedAccumulation += vectorPredicted;
+            predictedAssistedAccumulation += vectorRefined; //refined is assisted
+            targetAccumulation += vectorTarget;
         }
     }
 
@@ -202,6 +216,8 @@ public class ScoreManager : MonoBehaviour{
 
     public void TargetRemoved(){
         if (Settings.instance.currentRunType == RunType.Kinematic){
+            
+            #region DistanceScore
             //DISTANCE----------------
             trialAccuracyDistanceKin.Add(targetAccuracyDistanceKin);
             targetAccuracyDistanceKin = 0;
@@ -218,13 +234,48 @@ public class ScoreManager : MonoBehaviour{
                 accuracyDistanceKin = 100;
             }
             //---------------------------
-
+            #endregion
+            
             //DIFFERENCE----------------
+            trialPredictedVectorKin.Add(predictedAccumulation);
+            trialPredictedAssistedVectorKin.Add(predictedAssistedAccumulation);
+            trialTargetVectorKin.Add(targetAccumulation);
+            
+            predictedAccumulation = Vector3.zero;
+            predictedAssistedAccumulation = Vector3.zero;
+            targetAccumulation = Vector3.zero;
+            trialPredictedSumKin = Vector3.zero;
+            trialPredictedAssistedSumKin = Vector3.zero;
+            trialTargetSumKin = Vector3.zero;
+            
+            //get predicted and predicted assisted to target difference percent
+            for (int i = 0; i < trialPredictedVectorKin.Count; i++){
+                trialPredictedSumKin = trialPredictedSumKin + trialPredictedVectorKin[i];
+                trialPredictedAssistedSumKin = trialPredictedAssistedSumKin + trialPredictedAssistedVectorKin[i];
+                trialTargetSumKin = trialTargetSumKin + trialTargetVectorKin[i];
+            }
 
+            predictedTargetDifferenceKin = trialTargetSumKin - trialPredictedSumKin;
+            predictedAssistedTargetDifferenceKin = trialTargetSumKin - trialPredictedAssistedSumKin;
+            //predictedTargetPercentageKin = Utilities.DivideVector(trialPredictedSumKin, trialTargetSumKin) * 100; //todo check vector division??
+            predictedTargetPercentageKin = new Vector3(trialPredictedSumKin.x / trialTargetSumKin.x, trialPredictedSumKin.y / trialTargetSumKin.y, trialPredictedSumKin.z / trialTargetSumKin.z) * 100;
+            predictedAssistedTargetPercentageKin = new Vector3(trialPredictedAssistedSumKin.x / trialTargetSumKin.x, trialPredictedAssistedSumKin.y / trialTargetSumKin.y, trialPredictedAssistedSumKin.z / trialTargetSumKin.z) * 100;
+
+            //limit % to 200 - 100% is sweet spot for max correlation during a trial
+            differentialPercentageKin = new Vector3(Utilities.SetUpperLimit(predictedTargetPercentageKin.x,200f), Utilities.SetUpperLimit(predictedTargetPercentageKin.y,200f), Utilities.SetUpperLimit(predictedTargetPercentageKin.z,200f));
+            differentialAssistedPercentageKin = new Vector3(Utilities.SetUpperLimit(predictedAssistedTargetPercentageKin.x,200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageKin.y,200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageKin.z,200f));
+
+            //don't allow percentage below 0
+            differentialPercentageBCI = new Vector3(Utilities.SetLowerLimit(predictedTargetPercentageKin.x,0f), Utilities.SetLowerLimit(predictedTargetPercentageKin.y,0f), Utilities.SetLowerLimit(predictedTargetPercentageKin.z,0f));
+            differentialAssistedPercentageBCI = new Vector3(Utilities.SetLowerLimit(predictedAssistedTargetPercentageKin.x,0f), Utilities.SetLowerLimit(predictedAssistedTargetPercentageKin.y,0f), Utilities.SetLowerLimit(predictedAssistedTargetPercentageKin.z,0f));
+            
             //--------------------------
         }
 
         if (Settings.instance.currentRunType == RunType.Imagined){
+            
+            #region DistanceScore
+
             //DISTANCE----------------
             trialAccuracyDistanceBCI.Add(targetAccuracyDistanceBCI);
             targetAccuracyDistanceBCI = 0;
@@ -242,36 +293,59 @@ public class ScoreManager : MonoBehaviour{
             }
             //---------------------------
 
+            #endregion
+            
             //DIFFERENCE----------------
-            targetAccuracyDifferenceBCI = Utilities.ReturnPositive(targetAccuracyDifferenceBCI);
-            trialAccuracyDifferenceBCI.Add(targetAccuracyDifferenceBCI);
-            targetAccuracyDifferenceBCI = Vector3.zero;
-            totalAccuracyDifferenceBCI = Vector3.zero;
-            for (int i = 0; i < trialAccuracyDifferenceBCI.Count; i++){
-                totalAccuracyDifferenceBCI = totalAccuracyDifferenceBCI + trialAccuracyDifferenceBCI[i];
+            trialPredictedVectorBCI.Add(predictedAccumulation);
+            trialPredictedAssistedVectorBCI.Add(predictedAssistedAccumulation);
+            trialTargetVectorBCI.Add(targetAccumulation);
+            
+            predictedAccumulation = Vector3.zero;
+            predictedAssistedAccumulation = Vector3.zero;
+            targetAccumulation = Vector3.zero;
+            trialPredictedSumBCI = Vector3.zero;
+            trialPredictedAssistedSumBCI = Vector3.zero;
+            trialTargetSumBCI = Vector3.zero;
+            
+            //get predicted and predicted assisted to target difference percent
+            for (int i = 0; i < trialPredictedVectorBCI.Count; i++){
+                trialPredictedSumBCI = trialPredictedSumBCI + trialPredictedVectorBCI[i];
+                trialPredictedAssistedSumBCI = trialPredictedAssistedSumBCI + trialPredictedAssistedVectorBCI[i];
+                trialTargetSumBCI = trialTargetSumBCI + trialTargetVectorBCI[i];
             }
 
-            accuracyDifferenceAverageBCI = totalAccuracyDifferenceBCI / trialAccuracyDifferenceBCI.Count;
+            predictedTargetDifferenceBCI = trialTargetSumBCI - trialPredictedSumBCI;
+            predictedAssistedTargetDifferenceBCI = trialTargetSumBCI - trialPredictedAssistedSumBCI;
+            //predictedTargetPercentageBCI = Utilities.DivideVector(trialPredictedSumBCI, trialTargetSumBCI) * 100; //todo check vector division??
+            predictedTargetPercentageBCI = new Vector3(trialPredictedSumBCI.x / trialTargetSumBCI.x, trialPredictedSumBCI.y / trialTargetSumBCI.y, trialPredictedSumBCI.z / trialTargetSumBCI.z) * 100;
+            predictedAssistedTargetPercentageBCI = new Vector3(trialPredictedAssistedSumBCI.x / trialTargetSumBCI.x, trialPredictedAssistedSumBCI.y / trialTargetSumBCI.y, trialPredictedAssistedSumBCI.z / trialTargetSumBCI.z) * 100;
 
-            highestDifferenceBCI = Utilities.ReturnMax(trialAccuracyDifferenceBCI);
+            //limit % to 200 - 100% is sweet spot for max correlation during a trial
+            differentialPercentageBCI = new Vector3(Utilities.SetUpperLimit(predictedTargetPercentageBCI.x, 200f), Utilities.SetUpperLimit(predictedTargetPercentageBCI.y, 200f), Utilities.SetUpperLimit(predictedTargetPercentageBCI.z, 200f));
+            differentialAssistedPercentageBCI = new Vector3(Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.x, 200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.y, 200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.z, 200f));
 
-            //get the percentage from the highest and the average
-            // accuracyDifferencePercentageBCI = accuracyDifferenceAverageBCI / highestDifference;
-            accuracyDifferencePercentageBCI = Utilities.DivideVector(accuracyDifferenceAverageBCI, highestDifferenceBCI) * 100;
+            //don't allow percentage below 0
+            differentialPercentageBCI = new Vector3(Utilities.SetLowerLimit(predictedTargetPercentageBCI.x, 0f), Utilities.SetLowerLimit(predictedTargetPercentageBCI.y, 0f), Utilities.SetLowerLimit(predictedTargetPercentageBCI.z, 0f));
+            differentialAssistedPercentageBCI = new Vector3(Utilities.SetLowerLimit(predictedAssistedTargetPercentageBCI.x, 0f), Utilities.SetLowerLimit(predictedAssistedTargetPercentageBCI.y, 0f), Utilities.SetLowerLimit(predictedAssistedTargetPercentageBCI.z, 0f));
+
+            #region MeanSquare
+
+            //positive
+            // Vector3 p = new Vector3(
+            //     Utilities.ReturnPositive(differentialPercentageBCI.x), 
+            //     Utilities.ReturnPositive(differentialPercentageBCI.y), 
+            //     Utilities.ReturnPositive(differentialPercentageBCI.z));
+            //
+            // differentialPercentageBCI = new Vector3(p.x, p.y, p.z);
+
             //--------------------------
+
+            #endregion
+
         }
         
-        trialPredictedVectorBCI.Add(predictedAccumulation);
-        trialTargetVectorBCI.Add(targetAccumulation);
-        predictedAccumulation = Vector3.zero;
-        targetAccumulation = Vector3.zero;
-        for (int i = 0; i < trialPredictedVectorBCI.Count; i++){
-            trialPredictedSum = trialPredictedSum + trialPredictedVectorBCI[i];
-            trialTargetSum = trialTargetSum + trialTargetVectorBCI[i];
-        }
 
-        predictedTargetDifference = trialTargetSum - trialPredictedSum;
-        predictedTargetPercentage = Utilities.DivideVector(trialPredictedSum, trialTargetSum) * 100;
+        
         //TODO MAKE THE ABOVE FOR BOTH BCI AND KIN...
         //BROADCASST THE SCORE
         //SETUP THE UI
