@@ -17,7 +17,7 @@ public class JSONWriter
         string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Session_" + Settings.instance.sessionNumber.ToString();
         string folderPath = Application.persistentDataPath + "/" + folderName;
         System.IO.Directory.CreateDirectory(folderPath);
-        string path = Application.persistentDataPath + "/" + folderName + "/settings.txt";
+        string path = Application.persistentDataPath + "/" + folderName + "/Session Settings.txt";
         File.WriteAllText(path,output);
         
         //File.WriteAllText(Application.persistentDataPath+"/settings.txt",output);
@@ -25,13 +25,15 @@ public class JSONWriter
     public void OutputScoreJSON(ScoreDataObject score)
     {
         scoreData = score;
+
+        string saveName = "Score R_" + scoreData.run + "_B_" + scoreData.block + ".txt"; 
         
         string output = JsonUtility.ToJson(scoreData,true);
         
         string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Session_" + Settings.instance.sessionNumber.ToString();
         string folderPath = Application.persistentDataPath + "/" + folderName;
         System.IO.Directory.CreateDirectory(folderPath);
-        string path = Application.persistentDataPath + "/" + folderName + "/score.txt";
+        string path = Application.persistentDataPath + "/" + folderName + "/" + saveName;
         File.WriteAllText(path,output);
         
         Debug.Log("score written************************");

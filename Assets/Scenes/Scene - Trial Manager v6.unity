@@ -14130,7 +14130,7 @@ GameObject:
   - component: {fileID: 320465327}
   - component: {fileID: 320465326}
   m_Layer: 0
-  m_Name: FeedbackText Start
+  m_Name: ProgressText Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41648,7 +41648,7 @@ GameObject:
   - component: {fileID: 916412396}
   - component: {fileID: 916412397}
   m_Layer: 0
-  m_Name: Feedback Slider
+  m_Name: Progress Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65545,7 +65545,7 @@ GameObject:
   - component: {fileID: 1263257592}
   - component: {fileID: 1263257591}
   m_Layer: 0
-  m_Name: FeedbackText End
+  m_Name: Progress Text End
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89295,10 +89295,20 @@ MonoBehaviour:
   scoreData:
     name: 
     sessionNumber: 0
+    run: 
+    block: 
+    runType: 
     assistancePercentage: 0
-    accuracyKinematic: 0
-    accuracyBCI: 0
-    accuracyBCI_unassisted: 0
+    distanceAccuracyKinematic: 0
+    distanceAccuracyBCI: 0
+    distanceAccuracyBCI_Unassisted: 0
+    correlationKinematic: {x: 0, y: 0, z: 0}
+    correlationAssistedKinematic: {x: 0, y: 0, z: 0}
+    correlationBCI: {x: 0, y: 0, z: 0}
+    correlationAssistedBCI: {x: 0, y: 0, z: 0}
+  runNumber: 0
+  blockNumber: 0
+  runType: 
   vectorPredicted: {x: 0, y: 0, z: 0}
   vectorTarget: {x: 0, y: 0, z: 0}
   vectorTrackedObject: {x: 0, y: 0, z: 0}
@@ -89331,8 +89341,8 @@ MonoBehaviour:
   predictedAssistedTargetDifferenceKin: {x: 0, y: 0, z: 0}
   predictedTargetPercentageKin: {x: 0, y: 0, z: 0}
   predictedAssistedTargetPercentageKin: {x: 0, y: 0, z: 0}
-  differentialPercentageKin: {x: 0, y: 0, z: 0}
-  differentialAssistedPercentageKin: {x: 0, y: 0, z: 0}
+  correlationPercentageKin: {x: 0, y: 0, z: 0}
+  correlationAssistedPercentageKin: {x: 0, y: 0, z: 0}
   trialPredictedVectorBCI: []
   trialPredictedAssistedVectorBCI: []
   trialTargetVectorBCI: []
@@ -89343,8 +89353,8 @@ MonoBehaviour:
   predictedAssistedTargetDifferenceBCI: {x: 0, y: 0, z: 0}
   predictedTargetPercentageBCI: {x: 0, y: 0, z: 0}
   predictedAssistedTargetPercentageBCI: {x: 0, y: 0, z: 0}
-  differentialPercentageBCI: {x: 0, y: 0, z: 0}
-  differentialAssistedPercentageBCI: {x: 0, y: 0, z: 0}
+  correlationPercentageBCI: {x: 0, y: 0, z: 0}
+  correlationAssistedPercentageBCI: {x: 0, y: 0, z: 0}
 --- !u!1 &1747728898
 GameObject:
   m_ObjectHideFlags: 0
