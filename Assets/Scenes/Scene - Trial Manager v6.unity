@@ -50012,7 +50012,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f916d9ece8179845a77b2aec54f6435, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simulateValues: 0
+  simulateValues: 1
   controlAssistPercentage: 100
   controlVectorPredicted: {x: 0, y: 0, z: 0}
   controlVectorTarget: {x: 0, y: 0, z: 0}
@@ -89448,15 +89448,29 @@ MonoBehaviour:
   vectorRefined: {x: 0, y: 0, z: 0}
   predictedTargetedDifference: {x: 0, y: 0, z: 0}
   predictedTargetedDifferenceAccumulated: {x: 0, y: 0, z: 0}
-  targetAccuracyDifferenceKin: 0
+  targetAccuracyDifferenceKin: {x: 0, y: 0, z: 0}
   trialAccuracyDifferenceKin: []
-  totalAccuracyDifferenceKin: 0
-  accuracyDifferenceKin: 0
-  targetAccuracyDifferenceBCI: 0
+  totalAccuracyDifferenceKin: {x: 0, y: 0, z: 0}
+  accuracyDifferenceKin: {x: 0, y: 0, z: 0}
+  highestDifferenceKin: {x: 0, y: 0, z: 0}
+  accuracyDifferencePercentageKin: {x: 0, y: 0, z: 0}
+  targetAccuracyDifferenceBCI: {x: 0, y: 0, z: 0}
   trialAccuracyDifferenceBCI: []
-  totalAccuracyDifferenceBCI: 0
-  accuracyDifferenceBCI: 0
-  meanSq: 0
+  totalAccuracyDifferenceBCI: {x: 0, y: 0, z: 0}
+  accuracyDifferenceAverageBCI: {x: 0, y: 0, z: 0}
+  highestDifferenceBCI: {x: 0, y: 0, z: 0}
+  accuracyDifferencePercentageBCI: {x: 0, y: 0, z: 0}
+  trialPredictedVectorBCI: []
+  trialTargetVectorBCI: []
+  predictedAccumulation: {x: 0, y: 0, z: 0}
+  targetAccumulation: {x: 0, y: 0, z: 0}
+  trialPredictedSum: {x: 0, y: 0, z: 0}
+  trialTargetSum: {x: 0, y: 0, z: 0}
+  predictedTargetDifference: {x: 0, y: 0, z: 0}
+  predictedTargetPercentage: {x: 0, y: 0, z: 0}
+  meanSqError: {x: 0, y: 0, z: 0}
+  meanSqErrorAverage: {x: 0, y: 0, z: 0}
+  frameAccumulation: 0
 --- !u!1 &1747728898
 GameObject:
   m_ObjectHideFlags: 0

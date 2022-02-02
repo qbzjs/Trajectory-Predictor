@@ -42,17 +42,33 @@ public class ScoreManager : MonoBehaviour{
     public Vector3 predictedTargetedDifferenceAccumulated;
     
     [Space(4)]
-    public float targetAccuracyDifferenceKin;
-    public List<float> trialAccuracyDifferenceKin = new List<float>();
-    public float totalAccuracyDifferenceKin;
-    public float accuracyDifferenceKin;
+    public Vector3 targetAccuracyDifferenceKin;
+    public List<Vector3> trialAccuracyDifferenceKin = new List<Vector3>();
+    public Vector3 totalAccuracyDifferenceKin;
+    public Vector3 accuracyDifferenceKin;
+    
+    public Vector3 highestDifferenceKin;
+    public Vector3 accuracyDifferencePercentageKin;
     
     public Vector3 targetAccuracyDifferenceBCI;
     public List<Vector3> trialAccuracyDifferenceBCI = new List<Vector3>();
     public Vector3 totalAccuracyDifferenceBCI;
     public Vector3 accuracyDifferenceAverageBCI;
-    public Vector3 highestDifference;
+    
+    public Vector3 highestDifferenceBCI;
     public Vector3 accuracyDifferencePercentageBCI;
+    
+    [Space(4)]
+    public List<Vector3> trialPredictedVectorBCI = new List<Vector3>();
+    public List<Vector3> trialTargetVectorBCI = new List<Vector3>();
+    public Vector3 predictedAccumulation;
+    public Vector3 targetAccumulation;
+    public Vector3 trialPredictedSum;
+    public Vector3 trialTargetSum;
+    // public Vector3 predictedSumDifference;
+    // public Vector3 targetSumDifference;
+    public Vector3 predictedTargetDifference;
+    public Vector3 predictedTargetPercentage;
     
     [Header("MEAN SQUARE")]
     public Vector3 meanSqError;
@@ -91,71 +107,14 @@ public class ScoreManager : MonoBehaviour{
             targetActive = true;
             this.activeTarget = activeTarget.gameObject;
             targetMagnitudeTracker = this.activeTarget.GetComponent<TargetMagnitudeTracker>();
+            TargetPresented();
         }
         //Executes after a trial...
         if (restPresent){
             targetActive = false;
 
-            if (Settings.instance.currentRunType == RunType.Kinematic){
-                //DISTANCE----------------
-                trialAccuracyDistanceKin.Add(targetAccuracyDistanceKin);
-                targetAccuracyDistanceKin = 0;
-                totalAccuracyDistanceKin = 0;
-                for (int i = 0; i < trialAccuracyDistanceKin.Count; i++){
-                    totalAccuracyDistanceKin = totalAccuracyDistanceKin + trialAccuracyDistanceKin[i];
-                }
-                accuracyDistanceKin = totalAccuracyDistanceKin / trialAccuracyDistanceKin.Count; //percentage from total and count
-                
-                //boost a few percent to account for accuracy loss
-                accuracyDistanceKin = accuracyDistanceKin + 2;
-                if (accuracyDistanceKin >= 100){
-                    accuracyDistanceKin = 100;
-                }
-                //---------------------------
-                
-                //DIFFERENCE----------------
-                
-                //--------------------------
-            }
-            if (Settings.instance.currentRunType == RunType.Imagined){
-                //DISTANCE----------------
-                trialAccuracyDistanceBCI.Add(targetAccuracyDistanceBCI);
-                targetAccuracyDistanceBCI = 0;
-                totalAccuracyDistanceBCI = 0;
-                for (int i = 0; i < trialAccuracyDistanceBCI.Count; i++){
-                    totalAccuracyDistanceBCI = totalAccuracyDistanceBCI + trialAccuracyDistanceBCI[i];
-                }
-                accuracyDistanceBCI = totalAccuracyDistanceBCI / trialAccuracyDistanceBCI.Count; //percentage from total and count
-                
-                //boost a few percent to account for accuracy loss
-                accuracyDistanceBCI = accuracyDistanceBCI + 2;
-                if (accuracyDistanceBCI >= 100){
-                    accuracyDistanceBCI = 100;
-                }
-                //---------------------------
-                
-                //DIFFERENCE----------------
-                targetAccuracyDifferenceBCI = Utilities.ReturnPositive(targetAccuracyDifferenceBCI);
-                trialAccuracyDifferenceBCI.Add(targetAccuracyDifferenceBCI);
-                targetAccuracyDifferenceBCI=Vector3.zero;
-                totalAccuracyDifferenceBCI = Vector3.zero;
-                for (int i = 0; i < trialAccuracyDifferenceBCI.Count; i++){
-                    totalAccuracyDifferenceBCI = totalAccuracyDifferenceBCI + trialAccuracyDifferenceBCI[i];
-                }
-                accuracyDifferenceAverageBCI = totalAccuracyDifferenceBCI / trialAccuracyDifferenceBCI.Count;
-
-                highestDifference = Utilities.ReturnMax(trialAccuracyDifferenceBCI);
-                
-                //get the percentage from the highest and the average
-                // accuracyDifferencePercentageBCI = accuracyDifferenceAverageBCI / highestDifference;
-                accuracyDifferencePercentageBCI = Utilities.DivideVector(accuracyDifferenceAverageBCI, highestDifference)*100;
-                //--------------------------
-            }
-            if (OnScoreAction != null){
-                OnScoreAction(accuracyDistanceKin, accuracyDistanceBCI);
-            }
-            
-            SaveScore();
+            TargetRemoved();
+            SaveScore(); //after performing score calculation..
         }
     }
     
@@ -173,11 +132,15 @@ public class ScoreManager : MonoBehaviour{
 
     void Update(){
         if (targetActive && Settings.instance.currentRunType==RunType.Kinematic){
+            //distance
             feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
             feedbackAmplitude = targetMagnitudeTracker.feedbackAmplitude;
             if (targetAccuracyDistanceKin < feedbackPercentage){
                 targetAccuracyDistanceKin = feedbackPercentage;
             }
+            
+            //difference - moved to fixed update
+
         }
         if (targetActive && Settings.instance.currentRunType==RunType.Imagined){
             //distance
@@ -187,14 +150,8 @@ public class ScoreManager : MonoBehaviour{
                 targetAccuracyDistanceBCI = feedbackPercentage;
             }
 
-            //difference
-            predictedTargetedDifference = vectorPredicted - vectorTarget;
-            if (targetAccuracyDifferenceBCI.magnitude < predictedTargetedDifference.magnitude){
-                targetAccuracyDifferenceBCI = predictedTargetedDifference;
-            }
-            
-            
-            
+            //difference - moved to fixedupodate
+
             meanSqError = (vectorTarget - vectorPredicted);
             meanSqError = new Vector3(meanSqError.x * meanSqError.x, meanSqError.y * meanSqError.y, meanSqError.z * meanSqError.z);
 
@@ -208,30 +165,121 @@ public class ScoreManager : MonoBehaviour{
         
     }
 
-    // private Vector3 ReturnPositive(Vector3 v){
-    //     float tmpx=0; float tmpy=0; float tmpz=0;
-    //     if (v.x < 0){
-    //         tmpx = -v.x;
-    //     }
-    //     else{
-    //         tmpx = v.x;
-    //     }
-    //     if (v.y < 0){
-    //         tmpy = -v.y;
-    //     }
-    //     else{
-    //         tmpy = v.y;
-    //     }
-    //     if (v.z < 0){
-    //         tmpz = -v.z;
-    //     }
-    //     else{
-    //         tmpz = v.z;
-    //     }
-    //
-    //     Vector3 pv = new Vector3(tmpx, tmpy, tmpz);
-    //     return pv;
-    // }
+    private void FixedUpdate(){
+        if (targetActive && Settings.instance.currentRunType==RunType.Kinematic)
+        {
+            //difference
+            Vector3 pa = Utilities.ReturnPositive(vectorPredicted);
+            predictedAccumulation += pa;
+            Vector3 ta = Utilities.ReturnPositive(vectorTarget);
+            targetAccumulation += ta;
+            
+            predictedTargetedDifference = vectorPredicted - vectorTarget;
+            if (targetAccuracyDifferenceKin.magnitude < predictedTargetedDifference.magnitude){
+                targetAccuracyDifferenceKin = predictedTargetedDifference;
+            }
+            
+        }
+
+        if (targetActive && Settings.instance.currentRunType == RunType.Imagined)
+        {
+            //difference
+            Vector3 pa = Utilities.ReturnPositive(vectorPredicted);
+            predictedAccumulation += pa;
+            Vector3 ta = Utilities.ReturnPositive(vectorTarget);
+            targetAccumulation += ta;
+
+            predictedTargetedDifference = vectorPredicted - vectorTarget;
+            if (targetAccuracyDifferenceBCI.magnitude < predictedTargetedDifference.magnitude){
+                targetAccuracyDifferenceBCI = predictedTargetedDifference;
+            }
+        }
+    }
+
+    public void TargetPresented(){
+        
+    }
+
+    public void TargetRemoved(){
+        if (Settings.instance.currentRunType == RunType.Kinematic){
+            //DISTANCE----------------
+            trialAccuracyDistanceKin.Add(targetAccuracyDistanceKin);
+            targetAccuracyDistanceKin = 0;
+            totalAccuracyDistanceKin = 0;
+            for (int i = 0; i < trialAccuracyDistanceKin.Count; i++){
+                totalAccuracyDistanceKin = totalAccuracyDistanceKin + trialAccuracyDistanceKin[i];
+            }
+
+            accuracyDistanceKin = totalAccuracyDistanceKin / trialAccuracyDistanceKin.Count; //percentage from total and count
+
+            //boost a few percent to account for accuracy loss
+            accuracyDistanceKin = accuracyDistanceKin + 2;
+            if (accuracyDistanceKin >= 100){
+                accuracyDistanceKin = 100;
+            }
+            //---------------------------
+
+            //DIFFERENCE----------------
+
+            //--------------------------
+        }
+
+        if (Settings.instance.currentRunType == RunType.Imagined){
+            //DISTANCE----------------
+            trialAccuracyDistanceBCI.Add(targetAccuracyDistanceBCI);
+            targetAccuracyDistanceBCI = 0;
+            totalAccuracyDistanceBCI = 0;
+            for (int i = 0; i < trialAccuracyDistanceBCI.Count; i++){
+                totalAccuracyDistanceBCI = totalAccuracyDistanceBCI + trialAccuracyDistanceBCI[i];
+            }
+
+            accuracyDistanceBCI = totalAccuracyDistanceBCI / trialAccuracyDistanceBCI.Count; //percentage from total and count
+
+            //boost a few percent to account for accuracy loss
+            accuracyDistanceBCI = accuracyDistanceBCI + 2;
+            if (accuracyDistanceBCI >= 100){
+                accuracyDistanceBCI = 100;
+            }
+            //---------------------------
+
+            //DIFFERENCE----------------
+            targetAccuracyDifferenceBCI = Utilities.ReturnPositive(targetAccuracyDifferenceBCI);
+            trialAccuracyDifferenceBCI.Add(targetAccuracyDifferenceBCI);
+            targetAccuracyDifferenceBCI = Vector3.zero;
+            totalAccuracyDifferenceBCI = Vector3.zero;
+            for (int i = 0; i < trialAccuracyDifferenceBCI.Count; i++){
+                totalAccuracyDifferenceBCI = totalAccuracyDifferenceBCI + trialAccuracyDifferenceBCI[i];
+            }
+
+            accuracyDifferenceAverageBCI = totalAccuracyDifferenceBCI / trialAccuracyDifferenceBCI.Count;
+
+            highestDifferenceBCI = Utilities.ReturnMax(trialAccuracyDifferenceBCI);
+
+            //get the percentage from the highest and the average
+            // accuracyDifferencePercentageBCI = accuracyDifferenceAverageBCI / highestDifference;
+            accuracyDifferencePercentageBCI = Utilities.DivideVector(accuracyDifferenceAverageBCI, highestDifferenceBCI) * 100;
+            //--------------------------
+        }
+        
+        trialPredictedVectorBCI.Add(predictedAccumulation);
+        trialTargetVectorBCI.Add(targetAccumulation);
+        predictedAccumulation = Vector3.zero;
+        targetAccumulation = Vector3.zero;
+        for (int i = 0; i < trialPredictedVectorBCI.Count; i++){
+            trialPredictedSum = trialPredictedSum + trialPredictedVectorBCI[i];
+            trialTargetSum = trialTargetSum + trialTargetVectorBCI[i];
+        }
+
+        predictedTargetDifference = trialTargetSum - trialPredictedSum;
+        predictedTargetPercentage = Utilities.DivideVector(trialPredictedSum, trialTargetSum) * 100;
+        //TODO MAKE THE ABOVE FOR BOTH BCI AND KIN...
+        //BROADCASST THE SCORE
+        //SETUP THE UI
+
+        if (OnScoreAction != null){
+            OnScoreAction(accuracyDistanceKin, accuracyDistanceBCI);
+        }
+    }
 
     private void SaveScore(){
         scoreData.name = Settings.instance.sessionName;
