@@ -7,7 +7,9 @@ using UnityEngine;
 
 public class TargetedMotionReference : MonoBehaviour
 {
-    public bool targetActive; 
+    public bool targetActive;
+
+    private Settings settings;
     
     private PhysicsTracker physicsData;
     public Vector3 targetedMotionVector;
@@ -67,9 +69,13 @@ public class TargetedMotionReference : MonoBehaviour
     }
     #endregion
 
+    private void Start(){
+        settings = Settings.instance;
+    }
+
     void Update(){
         // needs injected from settings...
-        handSide = Settings.instance.handedness;
+        handSide = settings.handedness;
 
         rightHandTarget.rotation = rightHandReference.rotation;
         leftHandTarget.rotation = leftHandReference.rotation;
@@ -102,7 +108,7 @@ public class TargetedMotionReference : MonoBehaviour
         dampTime = BCI_ControlSignal.instance.smoothDamping;
 
         //if imagined - take target vector from the reference IK rig hands
-        if (Settings.instance.currentRunType == RunType.Imagined){
+        if (settings.currentRunType == RunType.Imagined){
             if (handSide == Handedness.Left){
                 leftHandTarget.position = Vector3.SmoothDamp(leftHandTarget.position, lerpTarget.position, ref v, dampTime);
                 //get a tracked velocity
@@ -118,7 +124,7 @@ public class TargetedMotionReference : MonoBehaviour
             }
         }
         //if kinematic - take target vector from the tracked wrist
-        if (Settings.instance.currentRunType == RunType.Kinematic){
+        if (settings.currentRunType == RunType.Kinematic){
             targetedMotionVector = DAO.instance.MotionData_ActiveWrist.velocity; // velocity of tracked wrist
         }
 
