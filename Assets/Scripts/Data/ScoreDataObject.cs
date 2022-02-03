@@ -18,7 +18,7 @@ public class ScoreDataObject
     
     //DISTANCE
     public float distanceAccuracyKinematic;
-    public float distanceAccuracyBCI;
+    public float distanceAccuracyBCI_Assisted;
     public float distanceAccuracyBCI_Unassisted;
     
     //DIFFERENCE / CORRELATION
@@ -29,7 +29,7 @@ public class ScoreDataObject
     public Vector3 correlationAssistedDisplay; //limited to ui
  
     public ScoreDataObject(string name, int sessionNumber, string run, string block, string runType,
-        int assistancePercentage, float distanceAccuracyKinematic,float distanceAccuracyBci, float distanceAccuracyBCI_Unassisted,
+        int assistancePercentage, float distanceAccuracyKinematic,float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted,
         Vector3 correlation, Vector3 correlationAssisted, Vector3 correlationDisplay, Vector3 correlationAssistedDisplay)
     {
         this.name = name;
@@ -40,8 +40,9 @@ public class ScoreDataObject
         this.runType = runType;
         
         this.assistancePercentage = assistancePercentage;
+        
         this.distanceAccuracyKinematic = distanceAccuracyKinematic;
-        this.distanceAccuracyBCI = distanceAccuracyBci;
+        this.distanceAccuracyBCI_Assisted = distanceAccuracyBCI_Assisted;
         this.distanceAccuracyBCI_Unassisted = distanceAccuracyBCI_Unassisted;
 
         this.correlation = correlation;

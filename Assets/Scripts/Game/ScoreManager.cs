@@ -31,7 +31,7 @@ public class ScoreManager : MonoBehaviour{
     [SerializeField]private Vector3 vectorAssisted;
     [SerializeField]private Vector3 vectorRefined;
     
-    [Header("-- DISTANCE ACCURACY --")]
+    [Header("-- DISTANCE TO TARGET --")]
     [Space(4)]
     public Transform trackedObject;
     public GameObject activeTarget;
@@ -40,18 +40,18 @@ public class ScoreManager : MonoBehaviour{
     [Header("----workings-----------------------")]
     public float feedbackPercentage;
 
-    public float targetAccuracyDistanceKin;
-    public List<float> trialAccuracyDistanceKin = new List<float>();
-    public float totalAccuracyDistanceKin;
+    public float targetDistanceKin;
+    public List<float> trialDistanceKin = new List<float>();
+    public float totalDistanceKin;
 
-    public float targetAccuracyDistanceBCI;
-    public List<float> trialAccuracyDistanceBCI = new List<float>();
-    public float totalAccuracyDistanceBCI;
+    public float targetDistanceBCI;
+    public List<float> trialDistanceBCI = new List<float>();
+    public float totalDistanceBCI;
     
     [Header("----scores-----------------------")]
-    public float accuracyDistanceKin;
-    public float accuracyDistanceBCI;
-    public float accuracyDistance;
+    public float DistanceKin;
+    public float distanceBCI_assisted;
+    public float distanceBCI_unassisted;
 
     [Header("-- Correlation ACCURACY --")]
     [Space(4)]
@@ -190,22 +190,17 @@ public class ScoreManager : MonoBehaviour{
         //distance
         if (targetActive && settings.currentRunType==RunType.Kinematic){
             feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
-            if (targetAccuracyDistanceKin < feedbackPercentage){
-                targetAccuracyDistanceKin = feedbackPercentage;
+            if (targetDistanceKin < feedbackPercentage){
+                targetDistanceKin = feedbackPercentage;
             }
 
         }
         if (targetActive && settings.currentRunType==RunType.Imagined){
             feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
-            if (targetAccuracyDistanceBCI < feedbackPercentage){
-                targetAccuracyDistanceBCI = feedbackPercentage;
+            if (targetDistanceBCI < feedbackPercentage){
+                targetDistanceBCI = feedbackPercentage;
             }
         }
-        
-
-        
-
-        
     }
 
     private void FixedUpdate(){
@@ -313,21 +308,21 @@ public class ScoreManager : MonoBehaviour{
         if (settings.currentRunType == RunType.Kinematic){
 
             //DISTANCE----------------
-            trialAccuracyDistanceKin.Add(targetAccuracyDistanceKin);
-            targetAccuracyDistanceKin = 0;
-            totalAccuracyDistanceKin = 0;
-            for (int i = 0; i < trialAccuracyDistanceKin.Count; i++){
-                totalAccuracyDistanceKin = totalAccuracyDistanceKin + trialAccuracyDistanceKin[i];
+            trialDistanceKin.Add(targetDistanceKin);
+            targetDistanceKin = 0;
+            totalDistanceKin = 0;
+            for (int i = 0; i < trialDistanceKin.Count; i++){
+                totalDistanceKin = totalDistanceKin + trialDistanceKin[i];
             }
-            accuracyDistanceKin = totalAccuracyDistanceKin / trialAccuracyDistanceKin.Count; //percentage from total and count
+            DistanceKin = totalDistanceKin / trialDistanceKin.Count; //percentage from total and count
 
             //boost a few percent to account for accuracy loss
-            accuracyDistanceKin = accuracyDistanceKin + 2;
-            if (accuracyDistanceKin >= 100){
-                accuracyDistanceKin = 100;
+            DistanceKin = DistanceKin + 2;
+            if (DistanceKin >= 100){
+                DistanceKin = 100;
             }
-            if (accuracyDistanceKin <= 0){
-                accuracyDistanceKin = 0;
+            if (DistanceKin <= 0){
+                DistanceKin = 0;
             }
             //---------------------------
         }
@@ -335,24 +330,30 @@ public class ScoreManager : MonoBehaviour{
         if (settings.currentRunType == RunType.Imagined){
 
             //DISTANCE----------------
-            trialAccuracyDistanceBCI.Add(targetAccuracyDistanceBCI);
-            targetAccuracyDistanceBCI = 0;
-            totalAccuracyDistanceBCI = 0;
-            for (int i = 0; i < trialAccuracyDistanceBCI.Count; i++){
-                totalAccuracyDistanceBCI = totalAccuracyDistanceBCI + trialAccuracyDistanceBCI[i];
+            trialDistanceBCI.Add(targetDistanceBCI);
+            targetDistanceBCI = 0;
+            totalDistanceBCI = 0;
+            for (int i = 0; i < trialDistanceBCI.Count; i++){
+                totalDistanceBCI = totalDistanceBCI + trialDistanceBCI[i];
             }
-            accuracyDistanceBCI = totalAccuracyDistanceBCI / trialAccuracyDistanceBCI.Count; //percentage from total and count
+            distanceBCI_assisted = totalDistanceBCI / trialDistanceBCI.Count; //percentage from total and count
 
             //boost a few percent to account for accuracy loss
-            accuracyDistanceBCI = accuracyDistanceBCI + 2;
-            if (accuracyDistanceBCI >= 100){
-                accuracyDistanceBCI = 100;
-            }
-            if (accuracyDistanceBCI <= 0){
-                accuracyDistanceBCI = 0;
-            }
-            //---------------------------
+            distanceBCI_assisted = distanceBCI_assisted + 2;
+            //minus assistance for unassisted distance
+            distanceBCI_unassisted = distanceBCI_assisted - settings.BCI_ControlAssistance;
             
+            if (distanceBCI_assisted >= 100){
+                distanceBCI_assisted = 100;
+            }
+            if (distanceBCI_assisted <= 0){
+                distanceBCI_assisted = 0;
+            }
+
+            distanceBCI_unassisted = Utilities.SetLowerLimit(distanceBCI_unassisted, 0);
+            
+            //---------------------------
+
         }
         
         #endregion
@@ -380,7 +381,7 @@ public class ScoreManager : MonoBehaviour{
         
         //broadcast the score
         if (OnScoreAction != null){
-            OnScoreAction(accuracyDistanceKin, accuracyDistanceBCI,
+            OnScoreAction(DistanceKin, distanceBCI_assisted,
                 correlationPercentage, correlationAssistedPercentage,
                  correlationPercentage_Display, correlationAssistedPercentage_Display);
         }
@@ -389,15 +390,15 @@ public class ScoreManager : MonoBehaviour{
     #region Reset Scores
 
     private void ResetScores(){
-        targetAccuracyDistanceKin = 0;
-        trialAccuracyDistanceKin.Clear();
-        totalAccuracyDistanceKin = 0;
-        accuracyDistanceKin = 0;
+        targetDistanceKin = 0;
+        trialDistanceKin.Clear();
+        totalDistanceKin = 0;
+        DistanceKin = 0;
 
-        targetAccuracyDistanceBCI = 0;
-        trialAccuracyDistanceBCI.Clear();
-        totalAccuracyDistanceBCI = 0;
-        accuracyDistanceBCI = 0;
+        targetDistanceBCI = 0;
+        trialDistanceBCI.Clear();
+        totalDistanceBCI = 0;
+        distanceBCI_assisted = 0;
 
         predictedAccumulation = Vector3.zero;
         predictedAssistedAccumulation = Vector3.zero;
@@ -431,12 +432,11 @@ public class ScoreManager : MonoBehaviour{
 
         scoreData.assistancePercentage = Settings.instance.BCI_ControlAssistance;
         
-        scoreData.distanceAccuracyKinematic = accuracyDistanceKin;
-        scoreData.distanceAccuracyBCI = accuracyDistanceBCI;
+        scoreData.distanceAccuracyKinematic = DistanceKin;
+        scoreData.distanceAccuracyBCI_Assisted = distanceBCI_assisted;
         
-        float a = accuracyDistanceBCI - Settings.instance.BCI_ControlAssistance;
-        if (a <= 0){ a = 0; }
-        scoreData.distanceAccuracyBCI_Unassisted = a;
+        scoreData.distanceAccuracyBCI_Unassisted = distanceBCI_unassisted;
+        scoreData.distanceAccuracyBCI_Assisted = distanceBCI_assisted;
 
         scoreData.correlation = correlationPercentage;
         scoreData.correlationAssisted = correlationAssistedPercentage;
