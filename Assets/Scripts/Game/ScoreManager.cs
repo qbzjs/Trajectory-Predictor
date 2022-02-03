@@ -22,7 +22,7 @@ public class ScoreManager : MonoBehaviour{
     [Space(4)]
     [SerializeField]private Vector3 vectorPredicted;
     [SerializeField]private Vector3 vectorTarget;
-    [SerializeField]private Vector3 vectorTrackedObject;
+    //[SerializeField]private Vector3 vectorTrackedObject;
     [SerializeField]private Vector3 vectorAssisted;
     [SerializeField]private Vector3 vectorRefined;
     
@@ -46,56 +46,49 @@ public class ScoreManager : MonoBehaviour{
     public List<float> trialAccuracyDistanceBCI = new List<float>();
     public float totalAccuracyDistanceBCI;
     public float accuracyDistanceBCI;
+    
+    public float targetAccuracyDistance;
+    public List<float> trialAccuracyDistance = new List<float>();
+    public float totalAccuracyDistance;
+    public float accuracyDistance;
 
     [Header("-- Correlation ACCURACY --")]
     [Space(4)]
     //generic accumulation vectors per trial
     public Vector3 predictedAccumulation; 
     public Vector3 predictedAssistedAccumulation; 
-    public Vector3 targetAccumulation; 
+    public Vector3 targetAccumulation;
 
-    //workings kin
-    public List<Vector3> trialPredictedVectorKin = new List<Vector3>();
-    public List<Vector3> trialPredictedAssistedVectorKin = new List<Vector3>();
-    public List<Vector3> trialTargetVectorKin = new List<Vector3>();
-    public Vector3 trialPredictedSumKin;
-    public Vector3 trialPredictedAssistedSumKin;
-    public Vector3 trialTargetSumKin;
-    public Vector3 predictedTargetDifferenceKin;
-    public Vector3 predictedAssistedTargetDifferenceKin;
-    
-    //scores kin
-    public Vector3 correlationPercentageKin; //ACTUAL SCORE %
-    public Vector3 correlationAssistedPercentageKin; //ACTUAL SCORE %
-    public Vector3 correlationPercentageKin_Display; //DISPLAY 
-    public Vector3 correlationAssistedPercentageKin_Display; //DISPLAY
-    
+    [Header("workings-----------------------")]
     //workings BCI
-    public List<Vector3> trialPredictedVectorBCI = new List<Vector3>();
-    public List<Vector3> trialPredictedAssistedVectorBCI = new List<Vector3>();
-    public List<Vector3> trialTargetVectorBCI = new List<Vector3>();
-    public Vector3 trialPredictedSumBCI;
-    public Vector3 trialPredictedAssistedSumBCI;
-    public Vector3 trialTargetSumBCI;
-    public Vector3 predictedTargetDifferenceBCI;
-    public Vector3 predictedAssistedTargetDifferenceBCI;
+    public List<Vector3> trialPredictedVector = new List<Vector3>();
+    public List<Vector3> trialPredictedAssistedVector = new List<Vector3>();
+    public List<Vector3> trialTargetVector = new List<Vector3>();
+    public Vector3 trialPredictedSum;
+    public Vector3 trialPredictedAssistedSum;
+    public Vector3 trialTargetSum;
+    public Vector3 predictedTargetDifference;
+    public Vector3 predictedAssistedTargetDifference;
     
+    [Header("scores-----------------------")]
     //scores BCI
-    public Vector3 correlationPercentageBCI; //ACTUAL SCORE %
-    public Vector3 correlationAssistedPercentageBCI; //ACTUAL SCORE %
-    public Vector3 correlationPercentageBCI_Display; //DISPLAY
-    public Vector3 correlationAssistedPercentageBCI_Display; //DISPLAY
-
-
-    // [Header("-- MEAN SQUARE --")]
-    // [Space(4)]
-    // public Vector3 meanSqError;
-    // public Vector3 meanSqErrorAverage;
-    // public int frameAccumulation;
+    public Vector3 correlationPercentage; //ACTUAL SCORE %
+    public Vector3 correlationAssistedPercentage; //ACTUAL SCORE %
+    public Vector3 correlationPercentage_Display; //DISPLAY
+    public Vector3 correlationAssistedPercentage_Display; //DISPLAY
+    
+    [Header("-- MEAN SQUARE --")]
+    [Space(4)]
+    public Vector3 meanSqError;
+    public Vector3 meanSqErrorAssisted;
+    public Vector3 meanSqErrorAccumulated;
+    public List<Vector3> meanSqErrorFrames = new List<Vector3>();
+    public Vector3 meanSqErrorAverage;
+    public int frameAccumulation;
     
     public delegate void ScoreAction(float distanceAccuracyKin, float distanceAccuracyBCI, 
-        Vector3 correlationPercentageKin,Vector3 correlationAssistedPercentageKin,
-        Vector3 correlationPercentageBCI,Vector3 correlationAssistedPercentageBCI);
+        Vector3 correlationPercentage,Vector3 correlationAssistedPercentage,
+        Vector3 correlationPercentageDisplay,Vector3 correlationAssistedPercentageDisplay);
     public static event ScoreAction OnScoreAction;
     
     #region Subscriptions
@@ -155,7 +148,6 @@ public class ScoreManager : MonoBehaviour{
         //Executes after a trial...
         if (restPresent){
             targetActive = false;
-
             TargetRemoved();
             SaveScore(); //after performing score calculation..
         }
@@ -164,9 +156,9 @@ public class ScoreManager : MonoBehaviour{
     private void BCI_ControlManagerOnControlSignal(Vector3 cvPredicted, Vector3 cvTarget, Vector3 cvAssisted, Vector3 cvRefined){
         vectorPredicted = cvPredicted; //this is the raw signal
         vectorTarget = cvTarget;
-        vectorTrackedObject = dao.MotionData_ActiveWrist.velocity;
+        //vectorTrackedObject = dao.MotionData_ActiveWrist.velocity;
         vectorAssisted = cvAssisted; 
-        vectorRefined = cvRefined; //todo calculate differential using assisted / refined
+        vectorRefined = cvRefined; 
     }
     #endregion
 
@@ -186,7 +178,7 @@ public class ScoreManager : MonoBehaviour{
 
     void Update(){
         //distance
-        if (targetActive && Settings.instance.currentRunType==RunType.Kinematic){
+        if (targetActive && settings.currentRunType==RunType.Kinematic){
             feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
             feedbackAmplitude = targetMagnitudeTracker.feedbackAmplitude;
             if (targetAccuracyDistanceKin < feedbackPercentage){
@@ -194,7 +186,7 @@ public class ScoreManager : MonoBehaviour{
             }
 
         }
-        if (targetActive && Settings.instance.currentRunType==RunType.Imagined){
+        if (targetActive && settings.currentRunType==RunType.Imagined){
             feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
             feedbackAmplitude = targetMagnitudeTracker.feedbackAmplitude;
             if (targetAccuracyDistanceBCI < feedbackPercentage){
@@ -202,46 +194,42 @@ public class ScoreManager : MonoBehaviour{
             }
         }
 
+        if (targetActive){
+            feedbackPercentage = targetMagnitudeTracker.feedbackPercentage;
+            feedbackAmplitude = targetMagnitudeTracker.feedbackAmplitude;
+            if (targetAccuracyDistance < feedbackPercentage){
+                targetAccuracyDistance = feedbackPercentage;
+            }
+        }
+
         
-        //mean square
-        // if (targetActive){
-        //     meanSqError = (vectorTarget - vectorPredicted);
-        //     meanSqError = new Vector3(meanSqError.x * meanSqError.x, meanSqError.y * meanSqError.y, meanSqError.z * meanSqError.z);
-        //
-        //     frameAccumulation++;
-        //     meanSqErrorAverage = meanSqError / frameAccumulation;
-        // }
-        // else{
-        //     frameAccumulation = 0;
-        // }
+
         
     }
 
     private void FixedUpdate(){
-        //difference
-        if (targetActive && Settings.instance.currentRunType==RunType.Kinematic)
+        
+        if (targetActive)
         {
-            // Vector3 pa = Utilities.ReturnPositive(vectorPredicted);
-            // predictedAccumulation += pa;
-            // Vector3 ta = Utilities.ReturnPositive(vectorTarget);
-            // targetAccumulation += ta;
-            
-            predictedAccumulation += vectorPredicted;
-            predictedAssistedAccumulation += vectorRefined; //refined is assisted
-            targetAccumulation += vectorTrackedObject; //use tracked hand velocity for kinematic
-            
-        }
-
-        if (targetActive && Settings.instance.currentRunType == RunType.Imagined)
-        {
-            // Vector3 pa = Utilities.ReturnPositive(vectorPredicted);
-            // predictedAccumulation += pa;
-            // Vector3 ta = Utilities.ReturnPositive(vectorTarget);
-            // targetAccumulation += ta;
-            
+            //accumulate velocities..
             predictedAccumulation += vectorPredicted;
             predictedAssistedAccumulation += vectorRefined; //refined is assisted
             targetAccumulation += vectorTarget;
+            
+            //mean square error
+            if (targetActive){
+                meanSqError = (vectorTarget - vectorPredicted);
+                meanSqError = new Vector3(meanSqError.x * meanSqError.x, meanSqError.y * meanSqError.y, meanSqError.z * meanSqError.z);
+                
+                meanSqErrorAssisted = (vectorTarget - vectorRefined);
+                meanSqErrorAssisted = new Vector3(meanSqErrorAssisted.x * meanSqErrorAssisted.x, meanSqErrorAssisted.y * meanSqErrorAssisted.y, meanSqErrorAssisted.z * meanSqErrorAssisted.z);
+                
+                //todo log mean square error in list and average
+                meanSqErrorAccumulated += meanSqError;
+                
+                meanSqErrorFrames.Add(meanSqError);
+                //meanSqError = 
+            }
         }
     }
 
@@ -250,11 +238,68 @@ public class ScoreManager : MonoBehaviour{
     }
 
     public void TargetRemoved(){
-        
-        float x = 0; float y = 0; float z = 0;
+
+        #region Correlation
+
+                float x = 0; float y = 0; float z = 0;
         float xa = 0; float ya = 0; float za = 0;
         
-        if (Settings.instance.currentRunType == RunType.Kinematic){
+        
+        //DIFFERENCE----------------
+        trialPredictedVector.Add(predictedAccumulation);
+        trialPredictedAssistedVector.Add(predictedAssistedAccumulation);
+        trialTargetVector.Add(targetAccumulation);
+            
+        predictedAccumulation = Vector3.zero;
+        predictedAssistedAccumulation = Vector3.zero;
+        targetAccumulation = Vector3.zero;
+        trialPredictedSum = Vector3.zero;
+        trialPredictedAssistedSum = Vector3.zero;
+        trialTargetSum = Vector3.zero;
+        
+        //get predicted and predicted assisted to target difference percent
+        for (int i = 0; i < trialPredictedVector.Count; i++){
+            trialPredictedSum = trialPredictedSum + trialPredictedVector[i];
+            trialPredictedAssistedSum = trialPredictedAssistedSum + trialPredictedAssistedVector[i];
+            trialTargetSum = trialTargetSum + trialTargetVector[i];
+        }
+
+        predictedTargetDifference = trialTargetSum - trialPredictedSum;
+        predictedAssistedTargetDifference = trialTargetSum - trialPredictedAssistedSum;
+        //predictedTargetPercentageBCI = Utilities.DivideVector(trialPredictedSumBCI, trialTargetSumBCI) * 100; //todo check vector division??
+        correlationPercentage = new Vector3(trialPredictedSum.x / trialTargetSum.x, trialPredictedSum.y / trialTargetSum.y, trialPredictedSum.z / trialTargetSum.z);
+        correlationPercentage = correlationPercentage * 100;
+        correlationAssistedPercentage = new Vector3(trialPredictedAssistedSum.x / trialTargetSum.x, trialPredictedAssistedSum.y / trialTargetSum.y, trialPredictedAssistedSum.z / trialTargetSum.z);
+        correlationAssistedPercentage = correlationAssistedPercentage * 100;
+
+        //limit % to 200 - 100% is sweet spot for max correlation during a trial // PROBLEMS CASTING IN VECTOR3!! -done with floats now
+//            correlationPercentageBCI = new Vector3(Utilities.SetUpperLimit(predictedTargetPercentageBCI.x, 200f), Utilities.SetUpperLimit(predictedTargetPercentageBCI.y, 200f), Utilities.SetUpperLimit(predictedTargetPercentageBCI.z, 200f));
+//            correlationAssistedPercentageBCI = new Vector3(Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.x, 200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.y, 200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.z, 200f));
+
+        //Limits and casting
+        x = correlationPercentage.x; y = correlationPercentage.y; z = correlationPercentage.z;
+        
+        xa = correlationAssistedPercentage.x; ya = correlationAssistedPercentage.y; za = correlationAssistedPercentage.z;
+        
+        x = Utilities.SetUpperLimit(x, 200f); y = Utilities.SetUpperLimit(y, 200f); z = Utilities.SetUpperLimit(z, 200f);
+
+        xa = Utilities.SetUpperLimit(xa, 200f); ya = Utilities.SetUpperLimit(ya, 200f); za = Utilities.SetUpperLimit(za, 200f);
+        
+        correlationPercentage_Display = new Vector3(x, y, z);
+        correlationAssistedPercentage_Display = new Vector3(xa, ya, za);
+        
+        x = Utilities.SetLowerLimit(x, 0f); y = Utilities.SetLowerLimit(y, 0f); z = Utilities.SetLowerLimit(z, 0f);
+        
+        xa = Utilities.SetLowerLimit(xa, 0f); ya = Utilities.SetLowerLimit(ya, 0f); za = Utilities.SetLowerLimit(za, 0f);
+
+        correlationPercentage_Display = new Vector3(x, y, z);
+        correlationAssistedPercentage_Display = new Vector3(xa, ya, za);
+
+        #endregion
+
+        
+        
+        if (settings.currentRunType == RunType.Kinematic){
             
             #region DistanceScore Kin
             //DISTANCE----------------
@@ -277,64 +322,64 @@ public class ScoreManager : MonoBehaviour{
             
             #region CorrelationScore BCI
             //DIFFERENCE----------------
-            trialPredictedVectorKin.Add(predictedAccumulation);
-            trialPredictedAssistedVectorKin.Add(predictedAssistedAccumulation);
-            trialTargetVectorKin.Add(targetAccumulation);
-            
-            predictedAccumulation = Vector3.zero;
-            predictedAssistedAccumulation = Vector3.zero;
-            targetAccumulation = Vector3.zero;
-            trialPredictedSumKin = Vector3.zero;
-            trialPredictedAssistedSumKin = Vector3.zero;
-            trialTargetSumKin = Vector3.zero;
-            
-            //get predicted and predicted assisted to target difference percent
-            for (int i = 0; i < trialPredictedVectorKin.Count; i++){
-                trialPredictedSumKin = trialPredictedSumKin + trialPredictedVectorKin[i];
-                trialPredictedAssistedSumKin = trialPredictedAssistedSumKin + trialPredictedAssistedVectorKin[i];
-                trialTargetSumKin = trialTargetSumKin + trialTargetVectorKin[i];
-            }
-
-            predictedTargetDifferenceKin = trialTargetSumKin - trialPredictedSumKin;
-            predictedAssistedTargetDifferenceKin = trialTargetSumKin - trialPredictedAssistedSumKin;
-            //predictedTargetPercentageKin = Utilities.DivideVector(trialPredictedSumKin, trialTargetSumKin) * 100; //todo check vector division??
-            correlationPercentageKin = new Vector3(trialPredictedSumKin.x / trialTargetSumKin.x, trialPredictedSumKin.y / trialTargetSumKin.y, trialPredictedSumKin.z / trialTargetSumKin.z);
-            correlationPercentageKin = correlationPercentageKin * 100;
-            correlationAssistedPercentageKin = new Vector3(trialPredictedAssistedSumKin.x / trialTargetSumKin.x, trialPredictedAssistedSumKin.y / trialTargetSumKin.y, trialPredictedAssistedSumKin.z / trialTargetSumKin.z);
-            correlationAssistedPercentageKin = correlationAssistedPercentageKin * 100;
-
-            //limit % to 200 - 100% is sweet spot for max correlation during a trial
-            // correlationPercentageKin = new Vector3(Utilities.SetUpperLimit(predictedTargetPercentageKin.x,200f), Utilities.SetUpperLimit(predictedTargetPercentageKin.y,200f), Utilities.SetUpperLimit(predictedTargetPercentageKin.z,200f));
-            // correlationAssistedPercentageKin = new Vector3(Utilities.SetUpperLimit(predictedAssistedTargetPercentageKin.x,200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageKin.y,200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageKin.z,200f));
+            // trialPredictedVectorKin.Add(predictedAccumulation);
+            // trialPredictedAssistedVectorKin.Add(predictedAssistedAccumulation);
+            // trialTargetVectorKin.Add(targetAccumulation);
             //
-            // //don't allow percentage below 0
-            // correlationPercentageBCI = new Vector3(Utilities.SetLowerLimit(predictedTargetPercentageKin.x,0f), Utilities.SetLowerLimit(predictedTargetPercentageKin.y,0f), Utilities.SetLowerLimit(predictedTargetPercentageKin.z,0f));
-            // correlationAssistedPercentageBCI = new Vector3(Utilities.SetLowerLimit(predictedAssistedTargetPercentageKin.x,0f), Utilities.SetLowerLimit(predictedAssistedTargetPercentageKin.y,0f), Utilities.SetLowerLimit(predictedAssistedTargetPercentageKin.z,0f));
-            
-            //Limits and casting
-            x = correlationPercentageKin.x; y = correlationPercentageKin.y; z = correlationPercentageKin.z;
-            
-            xa = correlationAssistedPercentageKin.x; ya = correlationAssistedPercentageKin.y; za = correlationAssistedPercentageKin.z;
-            
-            x = Utilities.SetUpperLimit(x, 200f); y = Utilities.SetUpperLimit(y, 200f); z = Utilities.SetUpperLimit(z, 200f);
-
-            xa = Utilities.SetUpperLimit(xa, 200f); ya = Utilities.SetUpperLimit(ya, 200f); za = Utilities.SetUpperLimit(za, 200f);
-            
-            correlationPercentageKin_Display = new Vector3(x, y, z);
-            correlationAssistedPercentageKin_Display = new Vector3(xa, ya, za);
-            
-            x = Utilities.SetLowerLimit(x, 0f); y = Utilities.SetLowerLimit(y, 0f); z = Utilities.SetLowerLimit(z, 0f);
-            
-            xa = Utilities.SetLowerLimit(xa, 0f); ya = Utilities.SetLowerLimit(ya, 0f); za = Utilities.SetLowerLimit(za, 0f);
-
-            correlationPercentageKin_Display = new Vector3(x, y, z);
-            correlationAssistedPercentageKin_Display = new Vector3(xa, ya, za);
+            // predictedAccumulation = Vector3.zero;
+            // predictedAssistedAccumulation = Vector3.zero;
+            // targetAccumulation = Vector3.zero;
+            // trialPredictedSumKin = Vector3.zero;
+            // trialPredictedAssistedSumKin = Vector3.zero;
+            // trialTargetSumKin = Vector3.zero;
+            //
+            // //get predicted and predicted assisted to target difference percent
+            // for (int i = 0; i < trialPredictedVectorKin.Count; i++){
+            //     trialPredictedSumKin = trialPredictedSumKin + trialPredictedVectorKin[i];
+            //     trialPredictedAssistedSumKin = trialPredictedAssistedSumKin + trialPredictedAssistedVectorKin[i];
+            //     trialTargetSumKin = trialTargetSumKin + trialTargetVectorKin[i];
+            // }
+            //
+            // predictedTargetDifferenceKin = trialTargetSumKin - trialPredictedSumKin;
+            // predictedAssistedTargetDifferenceKin = trialTargetSumKin - trialPredictedAssistedSumKin;
+            // //predictedTargetPercentageKin = Utilities.DivideVector(trialPredictedSumKin, trialTargetSumKin) * 100; //todo check vector division??
+            // correlationPercentageKin = new Vector3(trialPredictedSumKin.x / trialTargetSumKin.x, trialPredictedSumKin.y / trialTargetSumKin.y, trialPredictedSumKin.z / trialTargetSumKin.z);
+            // correlationPercentageKin = correlationPercentageKin * 100;
+            // correlationAssistedPercentageKin = new Vector3(trialPredictedAssistedSumKin.x / trialTargetSumKin.x, trialPredictedAssistedSumKin.y / trialTargetSumKin.y, trialPredictedAssistedSumKin.z / trialTargetSumKin.z);
+            // correlationAssistedPercentageKin = correlationAssistedPercentageKin * 100;
+            //
+            // //limit % to 200 - 100% is sweet spot for max correlation during a trial
+            // // correlationPercentageKin = new Vector3(Utilities.SetUpperLimit(predictedTargetPercentageKin.x,200f), Utilities.SetUpperLimit(predictedTargetPercentageKin.y,200f), Utilities.SetUpperLimit(predictedTargetPercentageKin.z,200f));
+            // // correlationAssistedPercentageKin = new Vector3(Utilities.SetUpperLimit(predictedAssistedTargetPercentageKin.x,200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageKin.y,200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageKin.z,200f));
+            // //
+            // // //don't allow percentage below 0
+            // // correlationPercentageBCI = new Vector3(Utilities.SetLowerLimit(predictedTargetPercentageKin.x,0f), Utilities.SetLowerLimit(predictedTargetPercentageKin.y,0f), Utilities.SetLowerLimit(predictedTargetPercentageKin.z,0f));
+            // // correlationAssistedPercentageBCI = new Vector3(Utilities.SetLowerLimit(predictedAssistedTargetPercentageKin.x,0f), Utilities.SetLowerLimit(predictedAssistedTargetPercentageKin.y,0f), Utilities.SetLowerLimit(predictedAssistedTargetPercentageKin.z,0f));
+            //
+            // //Limits and casting
+            // x = correlationPercentageKin.x; y = correlationPercentageKin.y; z = correlationPercentageKin.z;
+            //
+            // xa = correlationAssistedPercentageKin.x; ya = correlationAssistedPercentageKin.y; za = correlationAssistedPercentageKin.z;
+            //
+            // x = Utilities.SetUpperLimit(x, 200f); y = Utilities.SetUpperLimit(y, 200f); z = Utilities.SetUpperLimit(z, 200f);
+            //
+            // xa = Utilities.SetUpperLimit(xa, 200f); ya = Utilities.SetUpperLimit(ya, 200f); za = Utilities.SetUpperLimit(za, 200f);
+            //
+            // correlationPercentageKin_Display = new Vector3(x, y, z);
+            // correlationAssistedPercentageKin_Display = new Vector3(xa, ya, za);
+            //
+            // x = Utilities.SetLowerLimit(x, 0f); y = Utilities.SetLowerLimit(y, 0f); z = Utilities.SetLowerLimit(z, 0f);
+            //
+            // xa = Utilities.SetLowerLimit(xa, 0f); ya = Utilities.SetLowerLimit(ya, 0f); za = Utilities.SetLowerLimit(za, 0f);
+            //
+            // correlationPercentageKin_Display = new Vector3(x, y, z);
+            // correlationAssistedPercentageKin_Display = new Vector3(xa, ya, za);
             
             //--------------------------
             #endregion
         }
 
-        if (Settings.instance.currentRunType == RunType.Imagined){
+        if (settings.currentRunType == RunType.Imagined){
             
             #region DistanceScore BCI
 
@@ -359,85 +404,65 @@ public class ScoreManager : MonoBehaviour{
 
             #region CorrelationScore BCI
 
-            //DIFFERENCE----------------
-            trialPredictedVectorBCI.Add(predictedAccumulation);
-            trialPredictedAssistedVectorBCI.Add(predictedAssistedAccumulation);
-            trialTargetVectorBCI.Add(targetAccumulation);
-            
-            predictedAccumulation = Vector3.zero;
-            predictedAssistedAccumulation = Vector3.zero;
-            targetAccumulation = Vector3.zero;
-            trialPredictedSumBCI = Vector3.zero;
-            trialPredictedAssistedSumBCI = Vector3.zero;
-            trialTargetSumBCI = Vector3.zero;
-            
-            //get predicted and predicted assisted to target difference percent
-            for (int i = 0; i < trialPredictedVectorBCI.Count; i++){
-                trialPredictedSumBCI = trialPredictedSumBCI + trialPredictedVectorBCI[i];
-                trialPredictedAssistedSumBCI = trialPredictedAssistedSumBCI + trialPredictedAssistedVectorBCI[i];
-                trialTargetSumBCI = trialTargetSumBCI + trialTargetVectorBCI[i];
-            }
-
-            predictedTargetDifferenceBCI = trialTargetSumBCI - trialPredictedSumBCI;
-            predictedAssistedTargetDifferenceBCI = trialTargetSumBCI - trialPredictedAssistedSumBCI;
-            //predictedTargetPercentageBCI = Utilities.DivideVector(trialPredictedSumBCI, trialTargetSumBCI) * 100; //todo check vector division??
-            correlationPercentageBCI = new Vector3(trialPredictedSumBCI.x / trialTargetSumBCI.x, trialPredictedSumBCI.y / trialTargetSumBCI.y, trialPredictedSumBCI.z / trialTargetSumBCI.z);
-            correlationPercentageBCI = correlationPercentageBCI * 100;
-            correlationAssistedPercentageBCI = new Vector3(trialPredictedAssistedSumBCI.x / trialTargetSumBCI.x, trialPredictedAssistedSumBCI.y / trialTargetSumBCI.y, trialPredictedAssistedSumBCI.z / trialTargetSumBCI.z);
-            correlationAssistedPercentageBCI = correlationAssistedPercentageBCI * 100;
-
-            //limit % to 200 - 100% is sweet spot for max correlation during a trial // PROBLEMS CASTING IN VECTOR3!! -done with floats now
-//            correlationPercentageBCI = new Vector3(Utilities.SetUpperLimit(predictedTargetPercentageBCI.x, 200f), Utilities.SetUpperLimit(predictedTargetPercentageBCI.y, 200f), Utilities.SetUpperLimit(predictedTargetPercentageBCI.z, 200f));
-//            correlationAssistedPercentageBCI = new Vector3(Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.x, 200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.y, 200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.z, 200f));
-
-            //Limits and casting
-            x = correlationPercentageBCI.x; y = correlationPercentageBCI.y; z = correlationPercentageBCI.z;
-            
-            xa = correlationAssistedPercentageBCI.x; ya = correlationAssistedPercentageBCI.y; za = correlationAssistedPercentageBCI.z;
-            
-            x = Utilities.SetUpperLimit(x, 200f); y = Utilities.SetUpperLimit(y, 200f); z = Utilities.SetUpperLimit(z, 200f);
-
-            xa = Utilities.SetUpperLimit(xa, 200f); ya = Utilities.SetUpperLimit(ya, 200f); za = Utilities.SetUpperLimit(za, 200f);
-            
-            correlationPercentageBCI_Display = new Vector3(x, y, z);
-            correlationAssistedPercentageBCI_Display = new Vector3(xa, ya, za);
-            
-            x = Utilities.SetLowerLimit(x, 0f); y = Utilities.SetLowerLimit(y, 0f); z = Utilities.SetLowerLimit(z, 0f);
-            
-            xa = Utilities.SetLowerLimit(xa, 0f); ya = Utilities.SetLowerLimit(ya, 0f); za = Utilities.SetLowerLimit(za, 0f);
-
-            correlationPercentageBCI_Display = new Vector3(x, y, z);
-            correlationAssistedPercentageBCI_Display = new Vector3(xa, ya, za);
-
-            #endregion
-
-            
-            #region MeanSquare
-
-            //positive
-            // Vector3 p = new Vector3(
-            //     Utilities.ReturnPositive(differentialPercentageBCI.x), 
-            //     Utilities.ReturnPositive(differentialPercentageBCI.y), 
-            //     Utilities.ReturnPositive(differentialPercentageBCI.z));
-            //
-            // differentialPercentageBCI = new Vector3(p.x, p.y, p.z);
-
-            //--------------------------
+//             //DIFFERENCE----------------
+//             trialPredictedVectorBCI.Add(predictedAccumulation);
+//             trialPredictedAssistedVectorBCI.Add(predictedAssistedAccumulation);
+//             trialTargetVectorBCI.Add(targetAccumulation);
+//             
+//             predictedAccumulation = Vector3.zero;
+//             predictedAssistedAccumulation = Vector3.zero;
+//             targetAccumulation = Vector3.zero;
+//             trialPredictedSumBCI = Vector3.zero;
+//             trialPredictedAssistedSumBCI = Vector3.zero;
+//             trialTargetSumBCI = Vector3.zero;
+//             
+//             //get predicted and predicted assisted to target difference percent
+//             for (int i = 0; i < trialPredictedVectorBCI.Count; i++){
+//                 trialPredictedSumBCI = trialPredictedSumBCI + trialPredictedVectorBCI[i];
+//                 trialPredictedAssistedSumBCI = trialPredictedAssistedSumBCI + trialPredictedAssistedVectorBCI[i];
+//                 trialTargetSumBCI = trialTargetSumBCI + trialTargetVectorBCI[i];
+//             }
+//
+//             predictedTargetDifferenceBCI = trialTargetSumBCI - trialPredictedSumBCI;
+//             predictedAssistedTargetDifferenceBCI = trialTargetSumBCI - trialPredictedAssistedSumBCI;
+//             //predictedTargetPercentageBCI = Utilities.DivideVector(trialPredictedSumBCI, trialTargetSumBCI) * 100; //todo check vector division??
+//             correlationPercentageBCI = new Vector3(trialPredictedSumBCI.x / trialTargetSumBCI.x, trialPredictedSumBCI.y / trialTargetSumBCI.y, trialPredictedSumBCI.z / trialTargetSumBCI.z);
+//             correlationPercentageBCI = correlationPercentageBCI * 100;
+//             correlationAssistedPercentageBCI = new Vector3(trialPredictedAssistedSumBCI.x / trialTargetSumBCI.x, trialPredictedAssistedSumBCI.y / trialTargetSumBCI.y, trialPredictedAssistedSumBCI.z / trialTargetSumBCI.z);
+//             correlationAssistedPercentageBCI = correlationAssistedPercentageBCI * 100;
+//
+//             //limit % to 200 - 100% is sweet spot for max correlation during a trial // PROBLEMS CASTING IN VECTOR3!! -done with floats now
+// //            correlationPercentageBCI = new Vector3(Utilities.SetUpperLimit(predictedTargetPercentageBCI.x, 200f), Utilities.SetUpperLimit(predictedTargetPercentageBCI.y, 200f), Utilities.SetUpperLimit(predictedTargetPercentageBCI.z, 200f));
+// //            correlationAssistedPercentageBCI = new Vector3(Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.x, 200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.y, 200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.z, 200f));
+//
+//             //Limits and casting
+//             x = correlationPercentageBCI.x; y = correlationPercentageBCI.y; z = correlationPercentageBCI.z;
+//             
+//             xa = correlationAssistedPercentageBCI.x; ya = correlationAssistedPercentageBCI.y; za = correlationAssistedPercentageBCI.z;
+//             
+//             x = Utilities.SetUpperLimit(x, 200f); y = Utilities.SetUpperLimit(y, 200f); z = Utilities.SetUpperLimit(z, 200f);
+//
+//             xa = Utilities.SetUpperLimit(xa, 200f); ya = Utilities.SetUpperLimit(ya, 200f); za = Utilities.SetUpperLimit(za, 200f);
+//             
+//             correlationPercentageBCI_Display = new Vector3(x, y, z);
+//             correlationAssistedPercentageBCI_Display = new Vector3(xa, ya, za);
+//             
+//             x = Utilities.SetLowerLimit(x, 0f); y = Utilities.SetLowerLimit(y, 0f); z = Utilities.SetLowerLimit(z, 0f);
+//             
+//             xa = Utilities.SetLowerLimit(xa, 0f); ya = Utilities.SetLowerLimit(ya, 0f); za = Utilities.SetLowerLimit(za, 0f);
+//
+//             correlationPercentageBCI_Display = new Vector3(x, y, z);
+//             correlationAssistedPercentageBCI_Display = new Vector3(xa, ya, za);
 
             #endregion
-
+            
         }
         
-
-        
-        //TODO MAKE THE ABOVE FOR BOTH BCI AND KIN...
-        //BROADCASST THE SCORE
-        //SETUP THE UI
-
+        //broadcast the score
         if (OnScoreAction != null){
             OnScoreAction(accuracyDistanceKin, accuracyDistanceBCI,
-                correlationPercentageKin_Display, correlationAssistedPercentageKin_Display,
-                 correlationPercentageBCI_Display, correlationAssistedPercentageBCI_Display);
+                correlationPercentage, correlationAssistedPercentage,
+                 correlationPercentage_Display, correlationAssistedPercentage_Display);
         }
     }
 
@@ -457,32 +482,20 @@ public class ScoreManager : MonoBehaviour{
         predictedAccumulation = Vector3.zero;
         predictedAssistedAccumulation = Vector3.zero;
         targetAccumulation = Vector3.zero;
-
-        trialPredictedVectorKin.Clear();
-        trialPredictedAssistedVectorKin.Clear();
-        trialTargetVectorKin.Clear();
-        trialPredictedSumKin = Vector3.zero;
-        trialPredictedAssistedSumKin = Vector3.zero;
-        trialTargetSumKin = Vector3.zero;
-        predictedTargetDifferenceKin = Vector3.zero;
-        predictedAssistedTargetDifferenceKin = Vector3.zero;
-        correlationPercentageKin = Vector3.zero;
-        correlationAssistedPercentageKin = Vector3.zero;
-        correlationPercentageKin_Display = Vector3.zero; //SCORE 
-        correlationAssistedPercentageKin_Display = Vector3.zero; //SCORE
-
-        trialPredictedVectorBCI.Clear();
-        trialPredictedAssistedVectorBCI.Clear();
-        trialTargetVectorBCI.Clear();
-        trialPredictedSumBCI = Vector3.zero;
-        trialPredictedAssistedSumBCI = Vector3.zero;
-        trialTargetSumBCI = Vector3.zero;
-        predictedTargetDifferenceBCI = Vector3.zero;
-        predictedAssistedTargetDifferenceBCI = Vector3.zero;
-        correlationPercentageBCI = Vector3.zero;
-        correlationAssistedPercentageBCI = Vector3.zero;
-        correlationPercentageBCI_Display = Vector3.zero; //SCORE
-        correlationAssistedPercentageBCI_Display = Vector3.zero; //SCORE
+        
+        trialPredictedVector.Clear();
+        trialPredictedAssistedVector.Clear();
+        trialTargetVector.Clear();
+        trialPredictedSum = Vector3.zero;
+        trialPredictedAssistedSum = Vector3.zero;
+        trialTargetSum = Vector3.zero;
+        predictedTargetDifference = Vector3.zero;
+        predictedAssistedTargetDifference = Vector3.zero;
+        correlationPercentage = Vector3.zero; //SCORE
+        correlationAssistedPercentage = Vector3.zero; //SCORE
+        correlationPercentage_Display = Vector3.zero; //SCORE
+        correlationAssistedPercentage_Display = Vector3.zero; //SCORE
+        
     }
 
     #endregion
@@ -505,11 +518,11 @@ public class ScoreManager : MonoBehaviour{
         if (a <= 0){ a = 0; }
         scoreData.distanceAccuracyBCI_Unassisted = a;
 
-        scoreData.correlationKinematic = correlationPercentageKin_Display;
-        scoreData.correlationAssistedKinematic = correlationAssistedPercentageKin_Display;
+        scoreData.correlation = correlationPercentage;
+        scoreData.correlationAssisted = correlationAssistedPercentage;
         
-        scoreData.correlationBCI = correlationPercentageBCI_Display;
-        scoreData.correlationAssistedBCI = correlationAssistedPercentageBCI_Display;
+        scoreData.correlationDisplay = correlationPercentage_Display;
+        scoreData.correlationAssistedDisplay = correlationAssistedPercentage_Display;
         
         JSONWriter jWriter = new JSONWriter();
         jWriter.OutputScoreJSON(scoreData);
