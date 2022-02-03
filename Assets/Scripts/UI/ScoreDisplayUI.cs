@@ -12,6 +12,11 @@ public class ScoreDisplayUI : MonoBehaviour{
     public float accuracyKin;
     private float aBCI;
     public float accuracyBCI;
+
+    //todo hook up the ui....
+    public Vector3 cKin;
+    public Vector3 caKin;
+    
     
     #region Subscriptions
 
@@ -21,7 +26,7 @@ public class ScoreDisplayUI : MonoBehaviour{
     private void OnDisable(){
         ScoreManager.OnScoreAction -= ScoreManagerOnScoreAction;
     }
-    private void ScoreManagerOnScoreAction(float accuracyKin, float accuracyBCI){
+    private void ScoreManagerOnScoreAction(float accuracyKin, float accuracyBCI, Vector3 correlationKinematic, Vector3 correlationAssistedKinematic, Vector3 correlationBCI, Vector3 correlationAssistedBCI){
         aKin = accuracyKin;
         aBCI = accuracyBCI;
     }

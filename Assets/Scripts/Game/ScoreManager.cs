@@ -85,7 +85,9 @@ public class ScoreManager : MonoBehaviour{
     // public Vector3 meanSqErrorAverage;
     // public int frameAccumulation;
     
-    public delegate void ScoreAction(float accuracyKin, float accuracyBCI);
+    public delegate void ScoreAction(float distanceAccuracyKin, float distanceAccuracyBCI, 
+        Vector3 correlationPercentageKin,Vector3 correlationAssistedPercentageKin,
+        Vector3 correlationPercentageBCI,Vector3 correlationAssistedPercentageBCI);
     public static event ScoreAction OnScoreAction;
     
     #region Subscriptions
@@ -192,6 +194,7 @@ public class ScoreManager : MonoBehaviour{
             }
         }
 
+        
         //mean square
         // if (targetActive){
         //     meanSqError = (vectorTarget - vectorPredicted);
@@ -375,7 +378,9 @@ public class ScoreManager : MonoBehaviour{
         //SETUP THE UI
 
         if (OnScoreAction != null){
-            OnScoreAction(accuracyDistanceKin, accuracyDistanceBCI);
+            OnScoreAction(accuracyDistanceKin, accuracyDistanceBCI,
+                correlationPercentageKin, correlationAssistedPercentageKin,
+                 correlationPercentageBCI, correlationAssistedPercentageBCI);
         }
     }
 
