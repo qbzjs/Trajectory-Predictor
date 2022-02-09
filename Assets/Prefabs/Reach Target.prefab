@@ -1245,7 +1245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d991811b0689828449c269ae8fcaa966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showFeedbackCanvas: 1
+  showFeedbackCanvas: 0
   feedbackUI: {fileID: 3526270488555701538}
   feedbackSlider: {fileID: 450481205124822230}
   feedbackText: {fileID: 6376782203281828968}

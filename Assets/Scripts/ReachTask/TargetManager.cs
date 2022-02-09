@@ -177,12 +177,12 @@ public class TargetManager : MonoBehaviour
 
         if (eventType == TrialEventType.Indication){
             Debug.Log("Display Indication");
-            // DisplayIndication();
+            DisplayIndication();
         }
 
         if (eventType == TrialEventType.Observation){
             Debug.Log("Display Observation");
-            DisplayIndication();
+            // DisplayIndication();
             DisplayObservation();
         }
 
@@ -394,12 +394,12 @@ public class TargetManager : MonoBehaviour
         defaultFixationColour = Settings.instance.defaultFixationColour;
         highlightFixationColour = Settings.instance.highlightFixationColour;
         
-        float x = target.transform.position.x + (transform.position.x - target.transform.position.x) / 1.5f;
-        float y = target.transform.position.y + (transform.position.y - target.transform.position.y) / 1.5f;
-        float z = target.transform.position.z + (transform.position.z - target.transform.position.z) / 1.5f;
+        float x = target.transform.position.x + (transform.position.x - target.transform.position.x) / 1.25f;
+        float y = target.transform.position.y + (transform.position.y - target.transform.position.y) / 1.25f;
+        float z = target.transform.position.z + (transform.position.z - target.transform.position.z) / 1.25f;
         indicatorlineDestination = new Vector3(x, y, z);
         
-        
+
         target.SetActive(false);
     }
 
@@ -413,18 +413,20 @@ public class TargetManager : MonoBehaviour
             OnTargetAction(false, false, targetHomeObject.transform.position, target.transform);
         }
         
-        homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 4);
+        homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 2);
         
-        //add indication here...point to target
-        indicatorLineTransform.DOMove(indicatorlineDestination, lifeTime);
+
         
-        targetGhosts[targetIndex].transform.DOScale(0f, lifeTime/4);
+        targetGhosts[targetIndex].transform.DOScale(0f, lifeTime/2);
         target.SetActive(true);
-        targetMesh.transform.DOScale(0.75f, lifeTime/4);
+        targetMesh.transform.DOScale(0.75f, lifeTime/2);
         
         // ghostHandRightMesh.material.DOFade(0.05f, lifeTime);
         ghostHandRightMesh.material.DOFade(0, lifeTime);
         ghostHandRight.transform.DOMove(handPosition, lifeTime/2);
+        
+        //add indication here...point to target
+        indicatorLineTransform.DOMove(indicatorlineDestination, lifeTime);
     }
     private void DisplayObservation()
     {
@@ -443,11 +445,15 @@ public class TargetManager : MonoBehaviour
         
         //everything in target period
         gameObject.GetComponent<AudioSource>().Play();
+        
+
+        //draw the line
         if (useLine){
             lineToTarget = true;
         }
         lineDestinationTransform.position = handPosition;
         lineDestinationTransform.DOMove(destinationTransform.position, lifeTime / 4);
+        
         ghostHandRightMesh.material.DOFade(0.2f, lifeTime);
         ghostHandRight.transform.DOMove(destinationTransform.position, lifeTime);
         
