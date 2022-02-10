@@ -31,7 +31,7 @@ public class BCI_ControlSignal : MonoBehaviour
     
     [Header("MODIFIERS")]
     [Range(0,2f)]
-    public float smoothDamping = 0.3F;
+    public float smoothDamping = 0.45F;
     [Range(0, 10f)] public float magnitudeMultiplier = 1f;
     [Space(4)]
     public bool invertX;
@@ -82,7 +82,7 @@ public class BCI_ControlSignal : MonoBehaviour
         
         #region Control Assistance
 
-        Settings.instance.SetAssistance(controlAssistPercentage);//do this for now but change to make settings ui set control value
+        //Settings.instance.SetAssistance(controlAssistPercentage);//do this for now but change to make settings ui set control value
         
         assistance = controlAssistPercentage / 100f;
         

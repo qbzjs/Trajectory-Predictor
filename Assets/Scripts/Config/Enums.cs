@@ -128,6 +128,17 @@
 		PostRunWaitPeriod
 	}
 
+	public enum SliderValue
+	{
+		Assistance,
+		AssistanceDecrease,
+		ControlMagnitude,
+		MagnitudeX,
+		MagnitudeY,
+		MagnitudeZ,
+		SmoothingSpeed
+	}
+
 	public enum SessionMetric{
 		TrialsPerBlock,
 		TrialsPerRun,

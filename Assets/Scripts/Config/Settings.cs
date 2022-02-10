@@ -43,8 +43,20 @@ public class Settings : MonoBehaviour {
 	public Handedness handedness = Handedness.Left;
 
 	[Range(0, 100)] 
-	public int BCI_ControlAssistance; //serialise from bci signal for now -TODO link from settings ui and set for bci controller
-
+	public float BCI_ControlAssistance; //serialise from bci signal for now -TODO link from settings ui and set for bci controller
+	[Range(0, 20)] 
+	public float assistanceDecrease;
+	[Range(0, 4)] 
+	public float controlMagnitude;
+	[Range(0, 4)] 
+	public float controlMagnitudeX;
+	[Range(0, 4)] 
+	public float controlMagnitudeY;
+	[Range(0, 4)] 
+	public float controlMagnitudeZ;
+	[Range(0, 1)] 
+	public float smoothingSpeed;
+	
 	[Header("SESSION SETTINGS")] 
 	
 	public RunType[] runSequence = new RunType[8];
@@ -319,15 +331,50 @@ public class Settings : MonoBehaviour {
 		SaveState();
 	}
 
+
+	#endregion
+
+	#region Control Setup
+
 	//todo make assistance a ui menu slider and set bci controller from there
 	//todo add assistance to save system
-	public void SetAssistance(int a){
-		BCI_ControlAssistance = a;
-		BCI_ControlSignal.instance.controlAssistPercentage = BCI_ControlAssistance;
+	public void SetAssistance(float v){
+		BCI_ControlAssistance = v;
+		//BCI_ControlSignal.instance.controlAssistPercentage = BCI_ControlAssistance;
 		SaveState();
 	}
+	public void SetAssistanceDecrease(float v){
+		assistanceDecrease = v;
+		
+		SaveState();
+	}
+	public void SetMagnitude(float v){
+		controlMagnitude = v;
+		
+		SaveState();
+	}
+	public void SetMagnitudeX(float v){
+		controlMagnitudeX = v;
+		
+		SaveState();
+	}
+	public void SetMagnitudeY(float v){
+		controlMagnitudeY = v;
+		
+		SaveState();
+	}
+	public void SetMagnitudeZ(float v){
+		controlMagnitudeZ = v;
+		
+		SaveState();
+	}
+	public void SetSmoothingSpeed(float v){
+		smoothingSpeed = v;
+		
+		SaveState();
+	}
+
 	#endregion
-	
 
 	#region Session Settings
 
@@ -699,6 +746,15 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("recordTrajectory", recordMotionData);
 		EasySave.Save("sampleRate", sampleRate.ToString());
 		EasySave.Save("actionObservation", actionObservation);
+		
+		EasySave.Save("BCI_ControlAssistance", BCI_ControlAssistance);
+		EasySave.Save("assistanceDecrease", assistanceDecrease);
+		EasySave.Save("controlMagnitude", controlMagnitude);
+		EasySave.Save("controlMagnitudeX", controlMagnitudeX);
+		EasySave.Save("controlMagnitudeY", controlMagnitudeY);
+		EasySave.Save("controlMagnitudeZ", controlMagnitudeZ);
+		EasySave.Save("smoothingSpeed", smoothingSpeed);
+
 		#endregion
 		
 
@@ -742,8 +798,6 @@ public class Settings : MonoBehaviour {
 		settingsData.repetitions = repetitions;
 		settingsData.handedness = handedness.ToString();
 
-		settingsData.bciControlAssistance = BCI_ControlAssistance;
-		
 		settingsData.blocks = blocksPerRun;
 		settingsData.runs = sessionRuns;
 
@@ -775,6 +829,16 @@ public class Settings : MonoBehaviour {
 
 		settingsData.actionObservation = actionObservation;
 		settingsData.sampleRate = sampleRate.ToString();
+		
+		//control
+		settingsData.BCI_ControlAssistance = BCI_ControlAssistance;
+		settingsData.assistanceDecrease = assistanceDecrease;
+		settingsData.controlMagnitude = controlMagnitude;
+		settingsData.controlMagnitudeX = controlMagnitudeX;
+		settingsData.controlMagnitudeY = controlMagnitudeY;
+		settingsData.controlMagnitudeZ = controlMagnitudeZ;
+		settingsData.smoothingSpeed = smoothingSpeed;
+		
 		#endregion
 
 
@@ -887,6 +951,20 @@ public class Settings : MonoBehaviour {
 
 			#endregion
 
+			#region Control Settings
+
+			BCI_ControlAssistance = EasySave.Load<float>("BCI_ControlAssistance");
+			assistanceDecrease = EasySave.Load<float>("assistanceDecrease");
+			controlMagnitude = EasySave.Load<float>("controlMagnitude");
+			controlMagnitudeX = EasySave.Load<float>("controlMagnitudeX");
+			controlMagnitudeY = EasySave.Load<float>("controlMagnitudeY");
+			controlMagnitudeZ = EasySave.Load<float>("controlMagnitudeZ");
+			smoothingSpeed = EasySave.Load<float>("smoothingSpeed");
+			
+			Debug.Log(BCI_ControlAssistance);
+			
+			#endregion
+
 			
 			
 			//environment
@@ -970,6 +1048,18 @@ public class Settings : MonoBehaviour {
 			actionObservation = false;
 			#endregion
 			
+			#region Control Settings
+
+			BCI_ControlAssistance = 100f;
+			assistanceDecrease = 0;
+			controlMagnitude = 1f;
+			controlMagnitudeX = 1f;
+			controlMagnitudeY = 1f;
+			controlMagnitudeZ = 1f;
+			smoothingSpeed = 0.45f;
+			
+			#endregion
+			
 			//environment 3d
 			environment3D = false;
 			
@@ -1002,6 +1092,8 @@ public class Settings : MonoBehaviour {
 			colourSpeed = 15;
 			characterSmoothing = true;
 			smoothSpeed = 15;
+			
+			
 		}
 	}
 	private void InitialiseInterface() {
@@ -1046,6 +1138,18 @@ public class Settings : MonoBehaviour {
 		SetRecordTrajectory(recordMotionData);
 		SetSampleRate(sampleRate);
 		SetActionObservation(actionObservation);
+		#endregion
+		
+		#region Control Settings
+
+		SetAssistance(BCI_ControlAssistance);
+		SetAssistanceDecrease(assistanceDecrease);
+		SetMagnitude(controlMagnitude);
+		SetMagnitudeX(controlMagnitudeX);
+		SetMagnitudeY(controlMagnitudeY);
+		SetMagnitudeZ(controlMagnitudeZ);
+		SetSmoothingSpeed(smoothingSpeed);
+
 		#endregion
 
 		//Environment 3D

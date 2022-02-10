@@ -14,7 +14,7 @@ public class ScoreDataObject
     public string block;
     public string runType;
     
-    public int assistancePercentage;
+    public float assistancePercentage;
     
     //DISTANCE
     public float distanceAccuracyKinematic;
