@@ -49,6 +49,8 @@ public class GameManager : MonoBehaviour
     public int activeTarget;
     public float activePhaseDuration;
 
+    [Space(5)]
+    public int sessionBlockIndex;
 
     [Header("-- PARADIGM & SESSION SETUP ----")] 
     public TrialParadigm trialParadigm;

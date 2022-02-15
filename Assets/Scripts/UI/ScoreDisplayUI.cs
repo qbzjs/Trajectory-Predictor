@@ -21,16 +21,16 @@ public class ScoreDisplayUI : MonoBehaviour{
     
     #region Subscriptions
 
-    private void OnEnable(){
-        ScoreManager.OnScoreAction += ScoreManagerOnScoreAction;
-    }
-    private void OnDisable(){
-        ScoreManager.OnScoreAction -= ScoreManagerOnScoreAction;
-    }
-    private void ScoreManagerOnScoreAction(float accuracyKin, float accuracyBCI, Vector3 correlationKinematic, Vector3 correlationAssistedKinematic, Vector3 correlationBCI, Vector3 correlationAssistedBCI){
-        aKin = accuracyKin;
-        aBCI = accuracyBCI;
-    }
+    // private void OnEnable(){
+    //     ScoreManager.OnScoreAction += ScoreManagerOnScoreAction;
+    // }
+    // private void OnDisable(){
+    //     ScoreManager.OnScoreAction -= ScoreManagerOnScoreAction;
+    // }
+    // private void ScoreManagerOnScoreAction(float accuracyKin, float accuracyBCI, Vector3 correlationKinematic, Vector3 correlationAssistedKinematic, Vector3 correlationBCI, Vector3 correlationAssistedBCI){
+    //     aKin = accuracyKin;
+    //     aBCI = accuracyBCI;
+    // }
 
     #endregion
     void Start()

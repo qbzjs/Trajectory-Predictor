@@ -29,7 +29,7 @@ public class BlockManager : MonoBehaviour
 
     [HideInInspector] 
     public BlockSequenceGenerator blockSequence;
-    
+
     public delegate void BlockAction(GameStatus status, int blockTotal,int blockIndex);
     public static event BlockAction OnBlockAction;
 
@@ -61,6 +61,9 @@ public class BlockManager : MonoBehaviour
             blocksComplete = false;
             InitialiseBlock();
             StartCoroutine(RunTrialSequence());
+            
+            //add 1 to the session block index (for calculating scores)
+            gameManager.sessionBlockIndex = gameManager.sessionBlockIndex +1; 
         }
     }
     #endregion

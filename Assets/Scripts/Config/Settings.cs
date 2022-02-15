@@ -383,6 +383,7 @@ public class Settings : MonoBehaviour {
 		UpdateSessionTotals();
 		GameManager.instance.runTotal = sessionRuns;
 		GameManager.instance.InitialiseSession();
+		//ScoreManager.instance.ResetSession(sessionRuns, blocksPerRun);
 		SaveState();
 	}
 	//TODO RUNTYPE SETTINGS
@@ -408,6 +409,7 @@ public class Settings : MonoBehaviour {
 		UpdateSessionTotals();
 		GameManager.instance.blockTotal = blocksPerRun;
 		GameManager.instance.InitialiseSession();
+		//ScoreManager.instance.ResetSession(sessionRuns, blocksPerRun);
 		SaveState();
 	}
 	public void SetBlockCountdown(int num) {

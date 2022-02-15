@@ -49,7 +49,7 @@ public class ScoreManager : MonoBehaviour{
     public float totalDistanceBCI;
     
     [Header("----scores-----------------------")]
-    public float DistanceKin;
+    public float distanceKin;
     public float distanceBCI_assisted;
     public float distanceBCI_unassisted;
 
@@ -96,7 +96,26 @@ public class ScoreManager : MonoBehaviour{
     public Vector3 meanSquareErrorAverage;
     public Vector3 meanSquareErrorAverageAssisted;
 
-    public delegate void ScoreAction(float distanceAccuracyKin, float distanceAccuracyBCI, 
+    [Header("-- SESSION TOTALS DIFFERENCE --")] [Space(4)]
+    public List<float> sdak = new List<float>();
+    public List<float> sdaba = new List<float>();
+    public List<float> sdabu = new List<float>();
+    public float sessionDistanceAccuracyKin;
+    public float sessionDistanceAccuracyBCI_Assisted;
+    public float sessionDistanceAccuracyBCI_Unassisted;
+
+    [Header("-- SESSION TOTALS CORRELATION --")] [Space(4)]
+    public List<Vector3> sck = new List<Vector3>();
+    public List<Vector3> scba = new List<Vector3>();
+    public List<Vector3> scbu = new List<Vector3>();
+    public Vector3 sessionCorrelationKin;
+    public float sessionCorrelationKinAvg;
+    public Vector3 sessionCorrelationBCI_Assisted;
+    public float sessionCorrelationBCIAvg_Assisted;
+    public Vector3 sessionCorrelationBCI_Unassisted;
+    public float sessionCorrelationBCIAvg_Unassisted;
+    
+    public delegate void ScoreAction(float distanceAccuracyKin, float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted, 
         Vector3 correlationPercentage,Vector3 correlationAssistedPercentage,
         Vector3 correlationPercentageDisplay,Vector3 correlationAssistedPercentageDisplay);
     public static event ScoreAction OnScoreAction;
@@ -111,11 +130,20 @@ public class ScoreManager : MonoBehaviour{
         GameManager.OnProgressAction += GameManagerOnProgressAction;
     }
 
+    private void OnDisable(){
+        GameManager.OnBlockAction -= GameManagerOnBlockAction;
+        GameManager.OnTrialAction -= GameManagerOnTrialAction;
+        TargetManager.OnTargetAction -= TargetManagerOnTargetAction;
+        TrackedObjectReference.OnTrackedObject -= TrackedObjectReferenceOnTrackedObject;
+        BCI_ControlManager.OnControlSignal -= BCI_ControlManagerOnControlSignal;
+        GameManager.OnProgressAction -= GameManagerOnProgressAction;
+    }
     private void GameManagerOnBlockAction(GameStatus eventType, float lifetime, int blockIndex, int blockTotal){
         if (eventType == GameStatus.Countdown){
             ResetScores();
         }
         if (eventType == GameStatus.BlockComplete){
+            SessionTotals();
             ResetScores();
         }
     }
@@ -126,13 +154,7 @@ public class ScoreManager : MonoBehaviour{
         runType = Settings.instance.currentRunType.ToString();
     }
 
-    private void OnDisable(){
-        
-        GameManager.OnTrialAction -= GameManagerOnTrialAction;
-        TargetManager.OnTargetAction -= TargetManagerOnTargetAction;
-        TrackedObjectReference.OnTrackedObject -= TrackedObjectReferenceOnTrackedObject;
-        BCI_ControlManager.OnControlSignal -= BCI_ControlManagerOnControlSignal;
-    }
+
     private void TrackedObjectReferenceOnTrackedObject(Transform trackedObject){
         this.trackedObject = trackedObject;
     }
@@ -181,6 +203,7 @@ public class ScoreManager : MonoBehaviour{
     private void Start(){
         dao = DAO.instance;
         settings = Settings.instance;
+        //ResetSession();
     }
 
     #endregion
@@ -314,16 +337,17 @@ public class ScoreManager : MonoBehaviour{
             for (int i = 0; i < trialDistanceKin.Count; i++){
                 totalDistanceKin = totalDistanceKin + trialDistanceKin[i];
             }
-            DistanceKin = totalDistanceKin / trialDistanceKin.Count; //percentage from total and count
+            distanceKin = totalDistanceKin / trialDistanceKin.Count; //percentage from total and count
 
             //boost a few percent to account for accuracy loss
-            DistanceKin = DistanceKin + 2;
-            if (DistanceKin >= 100){
-                DistanceKin = 100;
+            distanceKin = distanceKin + 2;
+            if (distanceKin >= 100){
+                distanceKin = 100;
             }
-            if (DistanceKin <= 0){
-                DistanceKin = 0;
+            if (distanceKin <= 0){
+                distanceKin = 0;
             }
+            
             //---------------------------
         }
 
@@ -351,7 +375,7 @@ public class ScoreManager : MonoBehaviour{
             }
 
             distanceBCI_unassisted = Utilities.SetLowerLimit(distanceBCI_unassisted, 0);
-            
+
             //---------------------------
 
         }
@@ -377,23 +401,62 @@ public class ScoreManager : MonoBehaviour{
         meanSquareErrorAverageAssisted = meanSqErrorSumAssisted / meanSqErrorTrialAverage.Count;
             
         #endregion
-        
+
+        //SessionTotals();
         
         //broadcast the score
         if (OnScoreAction != null){
-            OnScoreAction(DistanceKin, distanceBCI_assisted,
+            OnScoreAction(distanceKin, distanceBCI_assisted, distanceBCI_unassisted,
                 correlationPercentage, correlationAssistedPercentage,
                  correlationPercentage_Display, correlationAssistedPercentage_Display);
         }
     }
 
+    #region Session Totals
+
+    public void SessionTotals(){
+        if (settings.currentRunType == RunType.Kinematic){
+            //distance
+            sdak.Add(distanceKin);
+            sessionDistanceAccuracyKin = 0;
+            for (int i = 0; i < sdak.Count; i++){
+                sessionDistanceAccuracyKin = sessionDistanceAccuracyKin + sdak[i];
+            }
+            sessionDistanceAccuracyKin = sessionDistanceAccuracyKin / sdak.Count;
+            
+            //correlation
+            sck.Add(correlationPercentage);
+        }
+
+        if (settings.currentRunType == RunType.Imagined){
+            //distance
+            sdaba.Add(distanceBCI_assisted);
+            sdabu.Add(distanceBCI_unassisted);
+            sessionDistanceAccuracyBCI_Assisted = 0;
+            sessionDistanceAccuracyBCI_Unassisted = 0;
+            for (int i = 0; i < sdaba.Count; i++){
+                sessionDistanceAccuracyBCI_Assisted = sessionDistanceAccuracyBCI_Assisted + sdaba[i];
+                sessionDistanceAccuracyBCI_Unassisted = sessionDistanceAccuracyBCI_Unassisted + sdabu[i];
+            }
+            sessionDistanceAccuracyBCI_Assisted = sessionDistanceAccuracyBCI_Assisted / sdaba.Count;
+            sessionDistanceAccuracyBCI_Unassisted = sessionDistanceAccuracyBCI_Unassisted / sdabu.Count;
+            
+            //correlation
+            scba.Add(correlationAssistedPercentage);
+            scbu.Add(correlationPercentage);
+            //todo - add up the metrics.....................
+        }
+    }
+
+    #endregion
+    
     #region Reset Scores
 
     private void ResetScores(){
         targetDistanceKin = 0;
         trialDistanceKin.Clear();
         totalDistanceKin = 0;
-        DistanceKin = 0;
+        distanceKin = 0;
 
         targetDistanceBCI = 0;
         trialDistanceBCI.Clear();
@@ -419,6 +482,21 @@ public class ScoreManager : MonoBehaviour{
         
     }
 
+
+    public void ResetSession(){
+        // sdak = new float[0];
+        // sdaba = new float[0];
+        // sdabu = new float[0];
+        // sdak = new float[settings.sessionRuns * settings.blocksPerRun];
+        // sdaba = new float[settings.sessionRuns * settings.blocksPerRun];
+        // sdabu = new float[settings.sessionRuns * settings.blocksPerRun];
+        // for (int i = 0; i < sdak.Length; i++){
+        //     sdak[i] = 0;
+        //     sdaba[i] = 0;
+        //     sdabu[i] = 0;
+        // }
+    }
+
     #endregion
 
     
@@ -432,7 +510,7 @@ public class ScoreManager : MonoBehaviour{
 
         scoreData.assistancePercentage = Settings.instance.BCI_ControlAssistance;
         
-        scoreData.distanceAccuracyKinematic = DistanceKin;
+        scoreData.distanceAccuracyKinematic = distanceKin;
         scoreData.distanceAccuracyBCI_Assisted = distanceBCI_assisted;
         
         scoreData.distanceAccuracyBCI_Unassisted = distanceBCI_unassisted;

@@ -21,7 +21,8 @@ public class SetControlSliderSettings : MonoBehaviour
 
     private void Initialise(){
         if (sliderValue == SliderValue.Assistance){
-            slider.value = Settings.instance.BCI_ControlAssistance;
+            //todo figure this out??
+//            slider.value = Settings.instance.BCI_ControlAssistance;
         }
         if (sliderValue == SliderValue.AssistanceDecrease){
             slider.value = Settings.instance.assistanceDecrease;
