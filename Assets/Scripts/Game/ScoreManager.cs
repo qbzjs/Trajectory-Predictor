@@ -426,6 +426,18 @@ public class ScoreManager : MonoBehaviour{
             
             //correlation
             sck.Add(correlationPercentage);
+
+            float x = 0; float y = 0; float z = 0;
+            
+            sessionCorrelationKin = Vector3.zero;
+            
+            for (int i = 0; i < sck.Count; i++){
+                x = x + sck[i].x;
+                y = y + sck[i].y;
+                z = z + sck[i].z;
+            }
+            sessionCorrelationKin = new Vector3(x / sck.Count, y / sck.Count, z / sck.Count);
+            sessionCorrelationKinAvg = (sessionCorrelationKin.x + sessionCorrelationKin.y + sessionCorrelationKin.z) / 3;
         }
 
         if (settings.currentRunType == RunType.Imagined){
@@ -444,7 +456,25 @@ public class ScoreManager : MonoBehaviour{
             //correlation
             scba.Add(correlationAssistedPercentage);
             scbu.Add(correlationPercentage);
-            //todo - add up the metrics.....................
+            
+            float xa = 0; float ya = 0; float za = 0;
+            float xu = 0; float yu = 0; float zu = 0;
+            
+            sessionCorrelationBCI_Assisted = Vector3.zero;
+            sessionCorrelationBCI_Unassisted = Vector3.zero;
+            
+            for (int i = 0; i < scba.Count; i++){
+                xa = xa + scba[i].x;
+                ya = ya + scba[i].y;
+                za = za + scba[i].z;
+                xu = xu + scbu[i].x;
+                yu = yu + scbu[i].y;
+                zu = zu + scbu[i].z;
+            }
+            sessionCorrelationBCI_Assisted = new Vector3(xa / scba.Count, ya / scba.Count, za / scba.Count);
+            sessionCorrelationBCIAvg_Assisted = (sessionCorrelationBCI_Assisted.x + sessionCorrelationBCI_Assisted.y + sessionCorrelationBCI_Assisted.z) / 3;
+            sessionCorrelationBCI_Unassisted = new Vector3(xu / scbu.Count, yu / scbu.Count, zu / scbu.Count);
+            sessionCorrelationBCIAvg_Unassisted = (sessionCorrelationBCI_Unassisted.x + sessionCorrelationBCI_Unassisted.y + sessionCorrelationBCI_Unassisted.z) / 3;
         }
     }
 
