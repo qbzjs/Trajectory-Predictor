@@ -118,6 +118,11 @@ public class ScoreManager : MonoBehaviour{
 
     #region Broadcast Score Events
 
+    public delegate void ScoreBlockObjectAction(ScoreBlockDataObject sessionScoreData);
+    public static event ScoreBlockObjectAction OnScoreBlockObjectAction;
+    public delegate void ScoreSessionObjectAction(ScoreSessionDataObject sessionScoreData);
+    public static event ScoreSessionObjectAction OnScoreSessionObjectAction;
+        
     public delegate void ScoreBlockAction(float distanceAccuracyKin, float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted, 
         Vector3 correlationPercentage,Vector3 correlationAssistedPercentage,
         Vector3 correlationPercentageDisplay,Vector3 correlationAssistedPercentageDisplay);
@@ -629,12 +634,21 @@ public class ScoreManager : MonoBehaviour{
         scoreSessionData.meanSquareErrorAverageAssisted = meanSquareErrorAverageAssisted;
         scoreSessionData.meanSquareErrorAverageAssisted = meanSquareErrorAverageAssisted;
 
+        //write JSON
         JSONWriter jWriter = new JSONWriter();
         jWriter.OutputScoreBlockJSON(scoreBlockData);
         print("block score written------------------------");
         //jWriter = new JSONWriter();
         jWriter.OutputScoreSessionJSON(scoreSessionData);
         print("session score written------------------------");
+        
+        //SEND SCORE DATA OBJECTS
+        if (OnScoreBlockObjectAction!=null){
+            OnScoreBlockObjectAction(scoreBlockData);
+        }
+        if (OnScoreSessionObjectAction!=null){
+            OnScoreSessionObjectAction(scoreSessionData);
+        }
     }
     
     

@@ -45,7 +45,7 @@ public class JSONWriter
     {
         scoreSessionData = scoreSession;
     
-        string saveName = "Score Session" + ".txt"; 
+        string saveName = "Session Score" + ".txt"; 
         
         string output = JsonUtility.ToJson(scoreSessionData,true);
         
