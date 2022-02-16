@@ -9,7 +9,8 @@ public class ScoreManager : MonoBehaviour{
 
     public static ScoreManager instance;
 
-    public ScoreDataObject scoreData;
+    public ScoreSessionDataObject scoreSessionData;
+    public ScoreBlockDataObject scoreBlockData;
 
     private DAO dao;
     private Settings settings;
@@ -90,9 +91,9 @@ public class ScoreManager : MonoBehaviour{
     
     public List<Vector3> meanSqErrorTrialAverage = new List<Vector3>();
     public List<Vector3> meanSqErrorTrialAverageAssisted = new List<Vector3>();
+    
     public Vector3 meanSqErrorSum;
     public Vector3 meanSqErrorSumAssisted;
-    
     public Vector3 meanSquareErrorAverage;
     public Vector3 meanSquareErrorAverageAssisted;
 
@@ -114,20 +115,41 @@ public class ScoreManager : MonoBehaviour{
     public float sessionCorrelationBCIAvg_Assisted;
     public Vector3 sessionCorrelationBCI_Unassisted;
     public float sessionCorrelationBCIAvg_Unassisted;
-    
-    public delegate void ScoreAction(float distanceAccuracyKin, float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted, 
+
+    #region Broadcast Score Events
+
+    public delegate void ScoreBlockAction(float distanceAccuracyKin, float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted, 
         Vector3 correlationPercentage,Vector3 correlationAssistedPercentage,
         Vector3 correlationPercentageDisplay,Vector3 correlationAssistedPercentageDisplay);
-    public static event ScoreAction OnScoreAction;
+    public static event ScoreBlockAction OnScoreBlockAction;
+
+    public delegate void ScoreSessionAction(float distanceAccuracyKin, float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted,
+        Vector3 correlationKin,float correlationKinAvg,
+        Vector3 correlationBCI_Assisted,float correlationBCI_AssistedAvg,
+        Vector3 correlationBCI_Unassisted,float correlationBCI_UnassistedAvg,
+        Vector3 meanSqErrorSum,Vector3 meanSqErrorSumAssisted,
+        Vector3 meanSquareErrorAverage,Vector3 meanSquareErrorAverageAssisted);
+    public static event ScoreSessionAction OnScoreSessionAction;
+
+    #endregion
+
     
     #region Subscriptions
     private void OnEnable(){
+        InputManager.OnUserInputAction += InputManagerOnUserInputAction;
         GameManager.OnBlockAction += GameManagerOnBlockAction;
         GameManager.OnTrialAction += GameManagerOnTrialAction;
         TargetManager.OnTargetAction += TargetManagerOnTargetAction;
         TrackedObjectReference.OnTrackedObject += TrackedObjectReferenceOnTrackedObject;
         BCI_ControlManager.OnControlSignal += BCI_ControlManagerOnControlSignal;
         GameManager.OnProgressAction += GameManagerOnProgressAction;
+    }
+
+    private void InputManagerOnUserInputAction(UserInputType inputType){
+        if (inputType == UserInputType.Reset){
+            ResetScores();
+            ResetSession();
+        }
     }
 
     private void OnDisable(){
@@ -203,7 +225,7 @@ public class ScoreManager : MonoBehaviour{
     private void Start(){
         dao = DAO.instance;
         settings = Settings.instance;
-        //ResetSession();
+        ResetSession();
     }
 
     #endregion
@@ -405,8 +427,8 @@ public class ScoreManager : MonoBehaviour{
         //SessionTotals();
         
         //broadcast the score
-        if (OnScoreAction != null){
-            OnScoreAction(distanceKin, distanceBCI_assisted, distanceBCI_unassisted,
+        if (OnScoreBlockAction != null){
+            OnScoreBlockAction(distanceKin, distanceBCI_assisted, distanceBCI_unassisted,
                 correlationPercentage, correlationAssistedPercentage,
                  correlationPercentage_Display, correlationAssistedPercentage_Display);
         }
@@ -476,12 +498,21 @@ public class ScoreManager : MonoBehaviour{
             sessionCorrelationBCI_Unassisted = new Vector3(xu / scbu.Count, yu / scbu.Count, zu / scbu.Count);
             sessionCorrelationBCIAvg_Unassisted = (sessionCorrelationBCI_Unassisted.x + sessionCorrelationBCI_Unassisted.y + sessionCorrelationBCI_Unassisted.z) / 3;
         }
+
+        if (OnScoreSessionAction != null){
+            OnScoreSessionAction(sessionDistanceAccuracyKin, sessionDistanceAccuracyBCI_Assisted,sessionDistanceAccuracyBCI_Unassisted,
+                sessionCorrelationKin,sessionCorrelationKinAvg,
+                sessionCorrelationBCI_Assisted,sessionCorrelationBCIAvg_Assisted,
+                sessionCorrelationBCI_Unassisted,sessionCorrelationBCIAvg_Unassisted,
+            meanSqErrorSum,meanSqErrorSumAssisted,meanSquareErrorAverage,meanSquareErrorAverageAssisted);
+        }
     }
 
     #endregion
     
     #region Reset Scores
 
+    //after a block
     private void ResetScores(){
         targetDistanceKin = 0;
         trialDistanceKin.Clear();
@@ -512,49 +543,98 @@ public class ScoreManager : MonoBehaviour{
         
     }
 
-
+    //after a session
     public void ResetSession(){
-        // sdak = new float[0];
-        // sdaba = new float[0];
-        // sdabu = new float[0];
-        // sdak = new float[settings.sessionRuns * settings.blocksPerRun];
-        // sdaba = new float[settings.sessionRuns * settings.blocksPerRun];
-        // sdabu = new float[settings.sessionRuns * settings.blocksPerRun];
-        // for (int i = 0; i < sdak.Length; i++){
-        //     sdak[i] = 0;
-        //     sdaba[i] = 0;
-        //     sdabu[i] = 0;
-        // }
+        //DISTANCE
+        sdak.Clear();
+        sdaba.Clear();
+        sdabu.Clear();
+        sessionDistanceAccuracyKin = 0;
+        sessionDistanceAccuracyBCI_Assisted = 0;
+        sessionDistanceAccuracyBCI_Unassisted = 0;
+
+        //CORRELATION
+        sck.Clear();
+        scba.Clear();
+        scbu.Clear();
+        sessionCorrelationKin = Vector3.zero;
+        sessionCorrelationKinAvg = 0;
+        sessionCorrelationBCI_Assisted = Vector3.zero;
+        sessionCorrelationBCIAvg_Assisted = 0;
+        sessionCorrelationBCI_Unassisted = Vector3.zero;
+        sessionCorrelationBCIAvg_Unassisted = 0;
+        
+        //MEAN SQUARE
+        frameAccumulation = 0;
+        meanSqErrorCurrent = Vector3.zero;
+        meanSqErrorCurrentAssisted = Vector3.zero;
+        meanSqErrorAccumulated = Vector3.zero;
+        meanSqErrorAccumulatedAssisted = Vector3.zero;
+        meanSqErrorAverage = Vector3.zero;
+        meanSqErrorAverageAssisted = Vector3.zero;
+        meanSqErrorTrialAverage.Clear();
+        meanSqErrorTrialAverageAssisted.Clear();
+        meanSqErrorSum = Vector3.zero;
+        meanSqErrorSumAssisted = Vector3.zero;
+        meanSquareErrorAverage = Vector3.zero;
+        meanSquareErrorAverageAssisted = Vector3.zero;
     }
 
     #endregion
 
     
     private void SaveScore(){
-        scoreData.name = Settings.instance.sessionName;
-        scoreData.sessionNumber = Settings.instance.sessionNumber;
+        //--------BLOCK
+        scoreBlockData.name = Settings.instance.sessionName;
+        scoreBlockData.sessionNumber = Settings.instance.sessionNumber;
 
-        scoreData.run = runNumber.ToString();
-        scoreData.block = blockNumber.ToString();
-        scoreData.runType = runType;
+        scoreBlockData.run = runNumber.ToString();
+        scoreBlockData.block = blockNumber.ToString();
+        scoreBlockData.runType = runType;
 
-        scoreData.assistancePercentage = Settings.instance.BCI_ControlAssistance;
+        scoreBlockData.assistancePercentage = Settings.instance.BCI_ControlAssistance;
         
-        scoreData.distanceAccuracyKinematic = distanceKin;
-        scoreData.distanceAccuracyBCI_Assisted = distanceBCI_assisted;
+        scoreBlockData.distanceAccuracyKinematic = distanceKin;
+        scoreBlockData.distanceAccuracyBCI_Assisted = distanceBCI_assisted;
         
-        scoreData.distanceAccuracyBCI_Unassisted = distanceBCI_unassisted;
-        scoreData.distanceAccuracyBCI_Assisted = distanceBCI_assisted;
+        scoreBlockData.distanceAccuracyBCI_Unassisted = distanceBCI_unassisted;
+        scoreBlockData.distanceAccuracyBCI_Assisted = distanceBCI_assisted;
 
-        scoreData.correlation = correlationPercentage;
-        scoreData.correlationAssisted = correlationAssistedPercentage;
+        scoreBlockData.correlationUnassisted = correlationPercentage;
+        scoreBlockData.correlationAssisted = correlationAssistedPercentage;
         
-        scoreData.correlationDisplay = correlationPercentage_Display;
-        scoreData.correlationAssistedDisplay = correlationAssistedPercentage_Display;
+        scoreBlockData.correlationDisplay = correlationPercentage_Display;
+        scoreBlockData.correlationAssistedDisplay = correlationAssistedPercentage_Display;
         
+        //---------SESSION
+        scoreSessionData.name = Settings.instance.sessionName;
+        scoreSessionData.sessionNumber = Settings.instance.sessionNumber;
+        
+        scoreSessionData.assistanceDecrease = Settings.instance.assistanceDecrease;
+
+        scoreSessionData.distanceAccuracyKin = sessionDistanceAccuracyKin;
+        scoreSessionData.distanceAccuracyBCI_Assisted = sessionDistanceAccuracyBCI_Assisted;
+        scoreSessionData.distanceAccuracyBCI_Unassisted = sessionDistanceAccuracyBCI_Unassisted;
+
+        scoreSessionData.correlationKin = sessionCorrelationKin;
+        scoreSessionData.correlationKinAvg = sessionCorrelationKinAvg;
+        scoreSessionData.correlationBCI_Assisted = sessionCorrelationBCI_Assisted;
+        scoreSessionData.correlationBCIAvg_Assisted = sessionCorrelationBCIAvg_Assisted;
+        scoreSessionData.correlationBCI_Unassisted = sessionCorrelationBCI_Unassisted;
+        scoreSessionData.correlationBCIAvg_Unassisted = sessionCorrelationBCIAvg_Unassisted;
+
+        scoreSessionData.meanSqErrorSum = meanSqErrorSum;
+        scoreSessionData.meanSqErrorSumAssisted = meanSqErrorSumAssisted;
+        scoreSessionData.meanSquareErrorAverage = meanSquareErrorAverage;
+        scoreSessionData.meanSquareErrorAverageAssisted = meanSquareErrorAverageAssisted;
+        scoreSessionData.meanSquareErrorAverageAssisted = meanSquareErrorAverageAssisted;
+
         JSONWriter jWriter = new JSONWriter();
-        jWriter.OutputScoreJSON(scoreData);
-        print("score written------------------------");
+        jWriter.OutputScoreBlockJSON(scoreBlockData);
+        print("block score written------------------------");
+        //jWriter = new JSONWriter();
+        jWriter.OutputScoreSessionJSON(scoreSessionData);
+        print("session score written------------------------");
     }
     
     

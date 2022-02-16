@@ -6,7 +6,8 @@ using System.IO;
 public class JSONWriter
 {
     private SettingsDataObject settingsData;
-    private ScoreDataObject scoreData;
+    private ScoreBlockDataObject scoreBlockData;
+    private ScoreSessionDataObject scoreSessionData;
 
     public void OutputSettingsJSON(SettingsDataObject settings)
     {
@@ -22,13 +23,13 @@ public class JSONWriter
         
         //File.WriteAllText(Application.persistentDataPath+"/settings.txt",output);
     }
-    public void OutputScoreJSON(ScoreDataObject score)
+    public void OutputScoreBlockJSON(ScoreBlockDataObject scoreBlock)
     {
-        scoreData = score;
+        scoreBlockData = scoreBlock;
 
-        string saveName = "Score R_" + scoreData.run + "_B_" + scoreData.block + ".txt"; 
+        string saveName = "Score R_" + scoreBlockData.run + "_B_" + scoreBlockData.block + ".txt"; 
         
-        string output = JsonUtility.ToJson(scoreData,true);
+        string output = JsonUtility.ToJson(scoreBlockData,true);
         
         string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Session_" + Settings.instance.sessionNumber.ToString();
         string folderPath = Application.persistentDataPath + "/" + folderName;
@@ -36,7 +37,25 @@ public class JSONWriter
         string path = Application.persistentDataPath + "/" + folderName + "/" + saveName;
         File.WriteAllText(path,output);
         
-        Debug.Log("score written************************");
+        Debug.Log("score written **** BLOCK ****");
+        
+        //File.WriteAllText(Application.persistentDataPath+"/settings.txt",output);
+    }
+    public void OutputScoreSessionJSON(ScoreSessionDataObject scoreSession)
+    {
+        scoreSessionData = scoreSession;
+    
+        string saveName = "Score Session" + ".txt"; 
+        
+        string output = JsonUtility.ToJson(scoreSessionData,true);
+        
+        string folderName = "MotionData" + "_" + Settings.instance.sessionName + "_Session_" + Settings.instance.sessionNumber.ToString();
+        string folderPath = Application.persistentDataPath + "/" + folderName;
+        System.IO.Directory.CreateDirectory(folderPath);
+        string path = Application.persistentDataPath + "/" + folderName + "/" + saveName;
+        File.WriteAllText(path,output);
+        
+        Debug.Log("score written **** SESSION ****");
         
         //File.WriteAllText(Application.persistentDataPath+"/settings.txt",output);
     }
