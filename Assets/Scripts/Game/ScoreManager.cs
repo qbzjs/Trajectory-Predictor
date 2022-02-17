@@ -632,7 +632,6 @@ public class ScoreManager : MonoBehaviour{
         scoreSessionData.meanSqErrorSumAssisted = meanSqErrorSumAssisted;
         scoreSessionData.meanSquareErrorAverage = meanSquareErrorAverage;
         scoreSessionData.meanSquareErrorAverageAssisted = meanSquareErrorAverageAssisted;
-        scoreSessionData.meanSquareErrorAverageAssisted = meanSquareErrorAverageAssisted;
 
         //write JSON
         JSONWriter jWriter = new JSONWriter();
