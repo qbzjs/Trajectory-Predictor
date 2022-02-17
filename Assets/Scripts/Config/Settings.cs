@@ -192,15 +192,13 @@ public class Settings : MonoBehaviour {
 	private void Start() {
 		//initialise display
 		InitialiseInterface();
-		displayObjects.settingsPanel.SetActive(true);
+		//displayObjects.settingsPanel.SetActive(true);
 		displayObjects.TrialUI.SetActive(true);
 		
 		//DEPRECIATED from V2 - readd in different context in  later version
 		// displayObjects.trial2D.SetActive(true);
 		// displayObjects.trial2D_RenderTexture.SetActive(true);
 		
-		active = true;
-		//ToggleSettings(); // use to start in or out of settings menu
 	}
 	//utility method
 	private string FormatString(float v){
@@ -215,16 +213,16 @@ public class Settings : MonoBehaviour {
 		set { gameStatus = value;}
 	}
 	
-	public void ToggleSettings() {
-		if (active) {
-			displayObjects.settingsPanel.SetActive(false);
-			active = false;
-		}
-		else {
-			displayObjects.settingsPanel.SetActive(true);
-			active = true;
-		}
-	}
+	// public void ToggleSettings() {
+	// 	if (active) {
+	// 		displayObjects.settingsPanel.SetActive(false);
+	// 		active = false;
+	// 	}
+	// 	else {
+	// 		displayObjects.settingsPanel.SetActive(true);
+	// 		active = true;
+	// 	}
+	// }
 
 //---------SESSION INFO---------
 	public string GetSessionInfo()

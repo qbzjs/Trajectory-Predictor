@@ -8,6 +8,8 @@ public class UI_DisplayObjects : MonoBehaviour {
 	[Header("Objects")]
 	public GameObject TrialUI;
 	public GameObject settingsPanel;
+	public GameObject scorePanel;
+	public GameObject statsPanel;
 	public GameObject trial2D;
 	public GameObject trial2D_RenderTexture;
 	public GameObject trialCameraScreen2D;

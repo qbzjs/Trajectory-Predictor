@@ -27,10 +27,14 @@ public class ScoreBlockDataObject
     
     public Vector3 correlationDisplay; //limited to ui
     public Vector3 correlationAssistedDisplay; //limited to ui
+    
+    //Performance Average
+    public float overallPerformance;
  
     public ScoreBlockDataObject(string name, int sessionNumber, string run, string block, string runType,
         int assistancePercentage, float distanceAccuracyKinematic,float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted,
-        Vector3 correlationUnassisted, Vector3 correlationAssisted, Vector3 correlationDisplay, Vector3 correlationAssistedDisplay)
+        Vector3 correlationUnassisted, Vector3 correlationAssisted, Vector3 correlationDisplay, Vector3 correlationAssistedDisplay,
+        float overallPerformance)
     {
         this.name = name;
         this.sessionNumber = sessionNumber;
@@ -49,5 +53,7 @@ public class ScoreBlockDataObject
         this.correlationAssisted = correlationAssisted;
         this.correlationDisplay = correlationDisplay;
         this.correlationAssistedDisplay = correlationAssistedDisplay;
+
+        this.overallPerformance = overallPerformance;
     }
 }

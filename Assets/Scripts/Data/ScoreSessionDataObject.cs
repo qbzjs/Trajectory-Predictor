@@ -30,6 +30,9 @@ public class ScoreSessionDataObject
     public Vector3 meanSqErrorSumAssisted;
     public Vector3 meanSquareErrorAverage;
     public Vector3 meanSquareErrorAverageAssisted;
+    
+    //Performance Average
+    public float overallPerformance;
 
     public ScoreSessionDataObject(string name, int sessionNumber, int assistanceDecrease, 
         float distanceAccuracyKin,float distanceAccuracyBCI_Assisted,float distanceAccuracyBCI_Unassisted,
@@ -37,7 +40,8 @@ public class ScoreSessionDataObject
         Vector3 correlationBCI_Assisted,float correlationBCIAvg_Assisted,
         Vector3 correlationBCI_Unassisted,float correlationBCIAvg_Unassisted,
         Vector3 meanSqErrorSum,Vector3 meanSqErrorSumAssisted,
-        Vector3 meanSquareErrorAverage,Vector3 meanSquareErrorAverageAssisted)
+        Vector3 meanSquareErrorAverage,Vector3 meanSquareErrorAverageAssisted,
+        float overallPerformance)
     {
         this.name = name;
         this.sessionNumber = sessionNumber;
@@ -58,5 +62,6 @@ public class ScoreSessionDataObject
         this.meanSqErrorSumAssisted = meanSqErrorSumAssisted;
         this.meanSquareErrorAverage = meanSquareErrorAverage;
         this.meanSquareErrorAverageAssisted = meanSquareErrorAverageAssisted;
+        this.overallPerformance = overallPerformance;
     }
 }

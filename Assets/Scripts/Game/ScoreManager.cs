@@ -116,6 +116,10 @@ public class ScoreManager : MonoBehaviour{
     public Vector3 sessionCorrelationBCI_Unassisted;
     public float sessionCorrelationBCIAvg_Unassisted;
 
+    [Header("-- overall average performance --")] [Space(4)]
+    public float overallPerformanceBlock;
+    public float overallPerformanceSession;
+    
     #region Broadcast Score Events
 
     public delegate void ScoreBlockObjectAction(ScoreBlockDataObject sessionScoreData);
@@ -125,7 +129,7 @@ public class ScoreManager : MonoBehaviour{
         
     public delegate void ScoreBlockAction(float distanceAccuracyKin, float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted, 
         Vector3 correlationPercentage,Vector3 correlationAssistedPercentage,
-        Vector3 correlationPercentageDisplay,Vector3 correlationAssistedPercentageDisplay);
+        Vector3 correlationPercentageDisplay,Vector3 correlationAssistedPercentageDisplay, float overallPerformance);
     public static event ScoreBlockAction OnScoreBlockAction;
 
     public delegate void ScoreSessionAction(float distanceAccuracyKin, float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted,
@@ -133,7 +137,8 @@ public class ScoreManager : MonoBehaviour{
         Vector3 correlationBCI_Assisted,float correlationBCI_AssistedAvg,
         Vector3 correlationBCI_Unassisted,float correlationBCI_UnassistedAvg,
         Vector3 meanSqErrorSum,Vector3 meanSqErrorSumAssisted,
-        Vector3 meanSquareErrorAverage,Vector3 meanSquareErrorAverageAssisted);
+        Vector3 meanSquareErrorAverage,Vector3 meanSquareErrorAverageAssisted,
+        float overallPerformance);
     public static event ScoreSessionAction OnScoreSessionAction;
 
     #endregion
@@ -429,13 +434,16 @@ public class ScoreManager : MonoBehaviour{
             
         #endregion
 
-        //SessionTotals();
+        //todo average the block correlation vectors for overall performance
+        //float p = distanceKin + distanceBCI_assisted + distanceBCI_unassisted + correlationPercentage + correlationAssistedPercentage;
+        //overallPerformanceBlock = p / 5;
         
         //broadcast the score
         if (OnScoreBlockAction != null){
             OnScoreBlockAction(distanceKin, distanceBCI_assisted, distanceBCI_unassisted,
                 correlationPercentage, correlationAssistedPercentage,
-                 correlationPercentage_Display, correlationAssistedPercentage_Display);
+                 correlationPercentage_Display, correlationAssistedPercentage_Display,
+                overallPerformanceBlock);
         }
     }
 
@@ -504,12 +512,18 @@ public class ScoreManager : MonoBehaviour{
             sessionCorrelationBCIAvg_Unassisted = (sessionCorrelationBCI_Unassisted.x + sessionCorrelationBCI_Unassisted.y + sessionCorrelationBCI_Unassisted.z) / 3;
         }
 
+        float p = sessionDistanceAccuracyKin + sessionDistanceAccuracyBCI_Assisted + sessionDistanceAccuracyBCI_Unassisted
+                  + sessionCorrelationKinAvg + sessionCorrelationBCIAvg_Assisted + sessionCorrelationBCIAvg_Unassisted;
+        
+        overallPerformanceSession = p / 6;
+
         if (OnScoreSessionAction != null){
             OnScoreSessionAction(sessionDistanceAccuracyKin, sessionDistanceAccuracyBCI_Assisted,sessionDistanceAccuracyBCI_Unassisted,
                 sessionCorrelationKin,sessionCorrelationKinAvg,
                 sessionCorrelationBCI_Assisted,sessionCorrelationBCIAvg_Assisted,
                 sessionCorrelationBCI_Unassisted,sessionCorrelationBCIAvg_Unassisted,
-            meanSqErrorSum,meanSqErrorSumAssisted,meanSquareErrorAverage,meanSquareErrorAverageAssisted);
+            meanSqErrorSum,meanSqErrorSumAssisted,meanSquareErrorAverage,meanSquareErrorAverageAssisted,
+                overallPerformanceSession);
         }
     }
 
@@ -632,6 +646,8 @@ public class ScoreManager : MonoBehaviour{
         scoreSessionData.meanSqErrorSumAssisted = meanSqErrorSumAssisted;
         scoreSessionData.meanSquareErrorAverage = meanSquareErrorAverage;
         scoreSessionData.meanSquareErrorAverageAssisted = meanSquareErrorAverageAssisted;
+
+        scoreSessionData.overallPerformance = overallPerformanceSession;
 
         //write JSON
         JSONWriter jWriter = new JSONWriter();
