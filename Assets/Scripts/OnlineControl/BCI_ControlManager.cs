@@ -15,7 +15,13 @@ public class BCI_ControlManager : MonoBehaviour
     public GameObject controlObject; //object moved by the BCI - arm will take position from this object
 
     [Header("HANDS")] 
+    public GameObject armIK_Male;
+    public GameObject armIK_Female;
+    public Renderer armIK_Renderer;
+    public Material armVisible;
+    public Material armInvisible;
     public GameObject leapHandManager;
+    
     public HandModelManager leapModelManager;
     public GameObject BCI_leftHand;
     public GameObject BCI_rightHand;
@@ -60,26 +66,40 @@ public class BCI_ControlManager : MonoBehaviour
         if (eventType == GameStatus.RunComplete){
             EnableKinematic();
             DisableBCI();
+            controlSignal.FadeSmoothing(Fade.Out);
+            //fade the hand material out
+            //enable the leap hand
         }
         if (eventType == GameStatus.AllRunsComplete){
             EnableKinematic();
             DisableBCI();
+            controlSignal.FadeSmoothing(Fade.Out);
+            //fade the hand material out
+            //enable the leap hand
         }
     }
     private void GameManagerOnBlockAction(GameStatus eventType, float lifetime, int blockIndex, int blockTotal){
         if (eventType==GameStatus.BlockComplete){
             EnableKinematic();
             DisableBCI();
+            //fade the hand material out
+            //enable the leap hand
         }
         if (eventType == GameStatus.Countdown){
             //SWITCH HANDS ON COUNTDOWN
             if (Settings.instance.currentRunType == RunType.Imagined){
                 DisableKinematic();
                 EnableBCI();
+                controlSignal.FadeSmoothing(Fade.In);
+                //fade the hand material in
+                //disable the leap hand
             }
             if (Settings.instance.currentRunType == RunType.Kinematic){
                 EnableKinematic();
                 DisableBCI();
+                controlSignal.FadeSmoothing(Fade.Out);
+                //fade the hand material in
+                //disable the leap hand
             }
         }
     }

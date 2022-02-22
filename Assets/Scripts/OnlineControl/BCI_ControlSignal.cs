@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Enums;
 
 public class BCI_ControlSignal : MonoBehaviour
 {
@@ -28,11 +28,18 @@ public class BCI_ControlSignal : MonoBehaviour
     public Vector3 controlVectorRefined; //modified output signal - final
     //public Vector3 controlVector; //final output
     private Vector3 cv;
-    
-    [Header("MODIFIERS")]
+
+
+    [Header("SMOOTHING")] 
+    public bool fadeSmoothing = true; 
     [Range(0,2f)]
     public float smoothDamping = 0.45F;
-    [Range(0, 10f)] public float magnitudeMultiplier = 1f;
+    private float defaultSmoothing = 0.45f;
+    private float targetSmoothing = 0.45f;
+    
+    [Header("MODIFIERS")]
+    [Range(0, 10f)]
+    public float magnitudeMultiplier = 1f;
     [Space(4)]
     public bool invertX;
     [Range(0, 2f)] public float magnitudeMultiplierX = 1f;
@@ -70,6 +77,7 @@ public class BCI_ControlSignal : MonoBehaviour
     }
 
     private void Start(){
+        defaultSmoothing = smoothDamping; //save the default value
         controlMixer = new BCI_ControlMixer();
     }
 
@@ -79,7 +87,7 @@ public class BCI_ControlSignal : MonoBehaviour
             //override raw control vector
             //controlVectorRaw = new Vector3(1, 1, 1);
         }
-        
+
         #region Control Assistance
 
         //Settings.instance.SetAssistance(controlAssistPercentage);//do this for now but change to make settings ui set control value
@@ -114,6 +122,21 @@ public class BCI_ControlSignal : MonoBehaviour
         //assign control to a vector for use in other classes 
         controlVectorRefined = cv;
 
+    }
+
+    private void LateUpdate(){
+        if (fadeSmoothing){
+            smoothDamping = Mathf.Lerp(smoothDamping, targetSmoothing, Time.deltaTime);
+        }
+    }
+
+    public void FadeSmoothing(Fade io){
+        if (io == Fade.In){
+            targetSmoothing = defaultSmoothing;
+        }
+        if (io == Fade.Out){
+            targetSmoothing = 0;
+        }
     }
 
     //DEPRECIATED CONTROL METHODS
