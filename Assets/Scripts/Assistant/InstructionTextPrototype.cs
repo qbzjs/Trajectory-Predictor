@@ -144,7 +144,7 @@ public class InstructionTextPrototype : MonoBehaviour
     }
     
     private IEnumerator WaitAndEnableCollider(Collider c){
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         c.enabled = true;
     }
     

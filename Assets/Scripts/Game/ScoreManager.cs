@@ -176,6 +176,7 @@ public class ScoreManager : MonoBehaviour{
         }
         if (eventType == GameStatus.BlockComplete){
             SessionTotals();
+            SaveScore();
             ResetScores();
         }
     }
@@ -213,7 +214,6 @@ public class ScoreManager : MonoBehaviour{
         if (restPresent){
             targetActive = false;
             TargetRemoved();
-            SaveScore(); //after performing score calculation..
         }
     }
     
@@ -445,6 +445,8 @@ public class ScoreManager : MonoBehaviour{
                  correlationPercentage_Display, correlationAssistedPercentage_Display,
                 overallPerformanceBlock);
         }
+        
+        SaveScore(); //after performing score calculation..
     }
 
     #region Session Totals

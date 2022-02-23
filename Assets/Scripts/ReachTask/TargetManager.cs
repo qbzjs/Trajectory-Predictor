@@ -443,7 +443,8 @@ public class TargetManager : MonoBehaviour
         }
         SetMLAgentGoal(targetDestination, false);
         
-        //everything in target period
+        //play the beep at standard pitch
+        gameObject.GetComponent<AudioSource>().pitch = 1f;
         gameObject.GetComponent<AudioSource>().Play();
         
 
@@ -489,6 +490,10 @@ public class TargetManager : MonoBehaviour
         lineToTarget = false;
         
         indicatorLineTransform.DOMove(transform.position, lifeTime/4);
+        
+        //play the beep at lower pitch
+        gameObject.GetComponent<AudioSource>().pitch = 0.9f;
+        gameObject.GetComponent<AudioSource>().Play();
     }
     private void DestroyObjects()
     {

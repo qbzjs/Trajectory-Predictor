@@ -64,12 +64,13 @@ public class ScoreDisplayUI : MonoBehaviour
     
     #region Subscriptions
     private void OnEnable(){
-        ScoreManager.OnScoreSessionObjectAction += ScoreManagerOnOnScoreSessionObjectAction;
+        ScoreManager.OnScoreSessionObjectAction += ScoreManagerOnScoreSessionObjectAction;
     }
     private void OnDisable(){
-        ScoreManager.OnScoreSessionObjectAction -= ScoreManagerOnOnScoreSessionObjectAction;
+        ScoreManager.OnScoreSessionObjectAction -= ScoreManagerOnScoreSessionObjectAction;
     }
-    private void ScoreManagerOnOnScoreSessionObjectAction(ScoreSessionDataObject sessionScoreData){
+    private void ScoreManagerOnScoreSessionObjectAction(ScoreSessionDataObject sessionScoreData){
+        // performance = ScoreManager.instance.overallPerformanceSession;
         performance = sessionScoreData.overallPerformance;
         kinematicDistance = sessionScoreData.distanceAccuracyKin;
         BCI_Distance = sessionScoreData.distanceAccuracyBCI_Assisted;
@@ -77,6 +78,7 @@ public class ScoreDisplayUI : MonoBehaviour
         BCI_Correlation = sessionScoreData.correlationBCI_Assisted;
         kinematicCorrelationAvg = sessionScoreData.correlationKinAvg;
         BCI_CorrelationAvg = sessionScoreData.correlationBCIAvg_Assisted;
+        Debug.Log("score...............");
     }
     #endregion
     
