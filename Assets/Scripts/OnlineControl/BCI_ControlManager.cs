@@ -20,6 +20,7 @@ public class BCI_ControlManager : MonoBehaviour
     public Renderer armIK_Renderer;
     public Material armVisible;
     public Material armInvisible;
+    public Material targetMaterial;
     public GameObject leapHandManager;
     
     public HandModelManager leapModelManager;
