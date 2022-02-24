@@ -191,7 +191,12 @@ public class BCI_ControlManager : MonoBehaviour
         DisableIK();
     }
 
+    //TODO - MAKE THE DECREASE ASSISTANCE PER RUN....
     public void SetControlAssistance(int a){
+        
+    }
+    public void DecreaseControlAssistance(int a){
+        
     }
 
 

@@ -16,6 +16,10 @@ public class BCI_ControlSignal : MonoBehaviour
     [Space(4)]
     [Range(0, 100)] 
     public int controlAssistPercentage; // silder between 0-1 for percentage of used bci signal control
+
+    [Range(0, 100)] 
+    public int assistanceDecrease = 0; //percentage or assistance to remove per run
+    
     private float assistance; // between 0-1 for percentage of used bci signal control
     private float ax;
     private float ay;
