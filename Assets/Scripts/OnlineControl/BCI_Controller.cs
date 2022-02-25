@@ -89,15 +89,30 @@ public class BCI_Controller : MonoBehaviour
         }
 
         if (applyToKinematics){
-            if (handSide == Handedness.Left){
-                // keep the right tracked/locked if the left is the active trial side
-                IK_TargetRight.transform.position = targetedMotionReference.rightHandTarget.position;
-                IK_TargetLeft.transform.position = controlObject.transform.position; // apply the left to the control object
+            if (Settings.instance.currentRunType == RunType.Imagined){
+                if (handSide == Handedness.Left){
+                    // keep the right tracked/locked if the left is the active trial side
+                    IK_TargetRight.transform.position = targetedMotionReference.rightHandTarget.position;
+                    IK_TargetLeft.transform.position = controlObject.transform.position; // apply the left to the control object
+                }
+                if (handSide == Handedness.Right){
+                    // keep the left tracked/locked if the right is the active trial side
+                    IK_TargetLeft.transform.position = targetedMotionReference.leftHandTarget.position;
+                    IK_TargetRight.transform.position = controlObject.transform.position; // apply the left to the control object
+                }
             }
-            if (handSide == Handedness.Right){
-                // keep the left tracked/locked if the right is the active trial side
-                IK_TargetLeft.transform.position = targetedMotionReference.leftHandTarget.position;
-                IK_TargetRight.transform.position = controlObject.transform.position; // apply the left to the control object
+
+            if (Settings.instance.currentRunType == RunType.Kinematic){
+                if (handSide == Handedness.Left){
+                    // keep the right tracked/locked if the left is the active trial side
+                    IK_TargetRight.transform.position = targetedMotionReference.rightHandTarget.position;
+                    IK_TargetLeft.transform.position = DAO.instance.motionDataLeftWrist.position; // apply the left to the control object
+                }
+                if (handSide == Handedness.Right){
+                    // keep the left tracked/locked if the right is the active trial side
+                    IK_TargetLeft.transform.position = targetedMotionReference.leftHandTarget.position;
+                    IK_TargetRight.transform.position = DAO.instance.motionDataRightWrist.position; // apply the left to the control object
+                }
             }
         }
     }
