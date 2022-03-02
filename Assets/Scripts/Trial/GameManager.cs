@@ -371,6 +371,7 @@ public class GameManager : MonoBehaviour
         UI_DisplayText.instance.SetBlockProgress(blockIndex,blockTotal);
         UI_DisplayText.instance.SetTrialProgress(trialSequenceIndex,trialSequenceTotal);
         UI_DisplayText.instance.SetTrialTotalProgress(totalTrialsProgress,totalTrials);
+        UI_DisplayText.instance.SetProgressSlider(completionPercentage);
 
         if (totalTrialsProgress > 0){
             // completionPercentage = totalTrialsProgress/totalTrials;
