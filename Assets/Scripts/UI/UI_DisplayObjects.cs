@@ -8,6 +8,8 @@ public class UI_DisplayObjects : MonoBehaviour {
 	[Header("Objects")]
 	public GameObject TrialUI;
 	public GameObject settingsPanel;
+	public GameObject scorePanel;
+	public GameObject statsPanel;
 	public GameObject trial2D;
 	public GameObject trial2D_RenderTexture;
 	public GameObject trialCameraScreen2D;
@@ -22,17 +24,22 @@ public class UI_DisplayObjects : MonoBehaviour {
 	public GameObject[] labels = new GameObject[3];
 	public GameObject scoreDisplay;
 	public GameObject statusDisplay;
-	public GameObject progressDisplayMovement;
+	public GameObject progressDisplayRun;
+	public GameObject progressDisplayBlock;
 	public GameObject progressDisplayTrial;
+	public GameObject progressDisplayTrialTotal;
 	public GameObject countdownDisplay;
 	public GameObject FPS;
-	public GameObject rest;
-	public GameObject outerLines;
-	public GameObject innerLinesA;
-	public GameObject innerLinesB;
-	public GameObject ringOuter;
+	
+	//----REDACTED FROM v2
+	// public GameObject rest;
+	// public GameObject outerLines;
+	// public GameObject innerLinesA;
+	// public GameObject innerLinesB;
+	// public GameObject ringOuter;
 
 
+	
 	// public GameObject environment3D;
 	// public GameObject interface3D;
 	// public GameObject renderTexture2D;

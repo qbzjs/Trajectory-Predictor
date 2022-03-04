@@ -79,7 +79,7 @@ public class ToggleUI : MonoBehaviour {
 			b = Settings.instance.actionObservation;
 		}
 		if (visualInterface == VisualInterface.RecordTrajectory) {
-			b = Settings.instance.recordTrajectory;
+			b = Settings.instance.recordMotionData;
 			//Debug.Log(b);
 		}
 

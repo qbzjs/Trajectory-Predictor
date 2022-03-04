@@ -24,34 +24,42 @@ public class SetNumberSettings : MonoBehaviour {
     }
 
     private void Initialise() {
-        if (trialSettingValue == TrialSettingsValue.TrialBlocks) {
-            SetNumber(Settings.instance.trialBlocks);
+        if (trialSettingValue == TrialSettingsValue.Runs) {
+            SetNumber(Settings.instance.sessionRuns);
+        }
+        if (trialSettingValue == TrialSettingsValue.BlocksPerRun) {
+            SetNumber(Settings.instance.blocksPerRun);
+        }
+        if (trialSettingValue == TrialSettingsValue.Countdown) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.preBlockCountdown);
+        }
+        if (trialSettingValue == TrialSettingsValue.visibleCountdown) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.visibleCountdown);
+        }
+        if (trialSettingValue == TrialSettingsValue.InterRunRestPeriod) {
+            valueDisplay = "<size=-10>s";
+            SetNumber(Settings.instance.interRunRestPeriod);
         }
         if (trialSettingValue == TrialSettingsValue.Repetitions) {
             valueDisplay = "<size=-10>x";
             SetNumber(Settings.instance.repetitions);
         }
-        if (trialSettingValue == TrialSettingsValue.StartDelay) {
-            valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.startDelay);
-            
-        }
-        if (trialSettingValue == TrialSettingsValue.InterBlockRestPeriod) {
-            valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.interBlockRestPeriod);
-        }
-        if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
-            valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.restDurationMin);
-        }
-        if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
-            valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.restDurationMax);
-        }
-        if (trialSettingValue == TrialSettingsValue.TargetDuration) {
-            valueDisplay = "<size=-10>s";
-            SetNumber(Settings.instance.targetDuration);
-        }
+        
+        //DEPRECIATED TO FLOAT VALUES
+        // if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
+        //     valueDisplay = "<size=-10>s";
+        //     SetNumber(Settings.instance.restDurationMin);
+        // }
+        // if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
+        //     valueDisplay = "<size=-10>s";
+        //     SetNumber(Settings.instance.restDurationMax);
+        // }
+        // if (trialSettingValue == TrialSettingsValue.TargetDuration) {
+        //     valueDisplay = "<size=-10>s";
+        //     SetNumber(Settings.instance.targetDuration);
+        // }
     }
     private void SetNumber(int n) {
         numberText.text = n.ToString() + valueDisplay;
@@ -101,32 +109,40 @@ public class SetNumberSettings : MonoBehaviour {
     }
 
     private void SetValue(int v) {
-        if (trialSettingValue == TrialSettingsValue.TrialBlocks) {
-            Settings.instance.SetTrialBlocks(v);
+        if (trialSettingValue == TrialSettingsValue.Runs) {
+            Settings.instance.SetRuns(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.BlocksPerRun) {
+            Settings.instance.SetBlocksPerRun(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.Countdown) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetBlockCountdown(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.visibleCountdown) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetVisibleCountdown(v);
+        }
+        if (trialSettingValue == TrialSettingsValue.InterRunRestPeriod) {
+            valueDisplay = "<size=-10>s";
+            Settings.instance.SetInterRunRestPeriod(v);
         }
         if (trialSettingValue == TrialSettingsValue.Repetitions) {
             valueDisplay = "<size=-10>x";
             Settings.instance.SetRepetitions(v);
         }
-        if (trialSettingValue == TrialSettingsValue.StartDelay) {
-            valueDisplay = "<size=-10>s";
-            Settings.instance.SetStartDelay(v);
-        }
-        if (trialSettingValue == TrialSettingsValue.InterBlockRestPeriod) {
-            valueDisplay = "<size=-10>s";
-            Settings.instance.SetInterBlockRestPeriod(v);
-        }
-        if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
-            valueDisplay = "<size=-10>s";
-            Settings.instance.SetRestDurationMin(v);
-        }
-        if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
-            valueDisplay = "<size=-10>s";
-            Settings.instance.SetRestDurationMax(v);
-        }
-        if (trialSettingValue == TrialSettingsValue.TargetDuration) {
-            valueDisplay = "<size=-10>s";
-            Settings.instance.SetTargetDuration(v);
-        }
+        
+        // if (trialSettingValue == TrialSettingsValue.RestDurationMin) {
+        //     valueDisplay = "<size=-10>s";
+        //     Settings.instance.SetRestDurationMin(v);
+        // }
+        // if (trialSettingValue == TrialSettingsValue.RestDurationMax) {
+        //     valueDisplay = "<size=-10>s";
+        //     Settings.instance.SetRestDurationMax(v);
+        // }
+        // if (trialSettingValue == TrialSettingsValue.TargetDuration) {
+        //     valueDisplay = "<size=-10>s";
+        //     Settings.instance.SetTargetDuration(v);
+        // }
     }
 }

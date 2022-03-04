@@ -6,7 +6,7 @@ using Enums;
 
 public class SetTaskSide : MonoBehaviour
 {
-	public TaskSide taskSide;
+	public Handedness handedness;
 
 	public Button leftButton;
 	public Button rightButton;
@@ -22,14 +22,14 @@ public class SetTaskSide : MonoBehaviour
 
 	private void Initialise()
 	{
-		taskSide = Settings.instance.taskSide;
+		handedness = Settings.instance.handedness;
 
-		if (taskSide == TaskSide.Left)
+		if (handedness == Handedness.Left)
 		{
 			leftButton.image.color = highlightedColour;
 			rightButton.image.color = initialColour;
 		}
-		if (taskSide == TaskSide.Right)
+		if (handedness == Handedness.Right)
 		{
 			leftButton.image.color = initialColour;
 			rightButton.image.color = highlightedColour;
@@ -39,12 +39,12 @@ public class SetTaskSide : MonoBehaviour
 	{
 		leftButton.image.color = highlightedColour;
 		rightButton.image.color = initialColour;
-		Settings.instance.SetReachTaskSide(TaskSide.Left);
+		Settings.instance.SetHandedness(Handedness.Left);
 	}
 	public void SetRight()
 	{
 		leftButton.image.color = initialColour;
 		rightButton.image.color = highlightedColour;
-		Settings.instance.SetReachTaskSide(TaskSide.Right);
+		Settings.instance.SetHandedness(Handedness.Right);
 	}
 }

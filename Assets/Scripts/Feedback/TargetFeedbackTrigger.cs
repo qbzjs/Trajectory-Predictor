@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 public class TargetFeedbackTrigger : MonoBehaviour
 {
+    public bool feedbackActive;
     [Header("Feedbacks")]
     /// a MMFeedbacks to play when the Hero starts jumping
     public MMFeedbacks targetFeedback;
@@ -23,6 +24,9 @@ public class TargetFeedbackTrigger : MonoBehaviour
 
     public void Feedback()
     {
-        targetFeedback.PlayFeedbacks();
+        if (feedbackActive){
+            targetFeedback.PlayFeedbacks();
+        }
+        
     }
 }

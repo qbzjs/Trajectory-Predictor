@@ -15,7 +15,10 @@ public class CountdownTimer : MonoBehaviour
 
     public bool timerEnabled = false;
     public float timer;
+    public int maxTimerDisplay = 61; //the number where the countdown timer renders on screen
     public int timerDisplay;
+    public bool visibleDisplay;
+    public bool timeUp;
 
     void Awake()
     {
@@ -28,19 +31,28 @@ public class CountdownTimer : MonoBehaviour
         }
     }
 
-    public void SetCountdown(int t)
+    public void SetCountdown(int t, int maxCountdownDisplay)
     {
         timer = t;
+        maxTimerDisplay = maxCountdownDisplay;
+        visibleDisplay = false;
+        timeUp = false;
         timerEnabled = true;
     }
     void Update()
     {
         if (timerEnabled)
+            
         {
-            timer -= Time.deltaTime;
-            if (timer <= countdown + 1 && timer >= 0)
+            if (GameManager.instance.paused == false){
+                timer -= Time.deltaTime * GetGameSpeed();
+            }
+            
+            if (timer <= maxTimerDisplay && timer >= 0) //only show countdown from max of set value
             {
-                timerDisplay = (int)timer % 60;
+                visibleDisplay = true;//callback
+                
+                timerDisplay = (int)timer % maxTimerDisplay;
                 for (int i = 0; i < countdownDisplayWorld.Length; i++)
                 {
                     countdownDisplayWorld[i].text = timerDisplay.ToString();
@@ -71,12 +83,29 @@ public class CountdownTimer : MonoBehaviour
                 {
                     countdownDisplayUI[i].text = "";
                 }
-
-                TrialManager.instance.StartBlock();
+                
                 timerEnabled = false;
                 timer = 0;
-                //done
+                timeUp = true;
+                //done - 
             }
         }
+    }
+
+    public void StopTimer(){
+        timerEnabled = false;
+        timer = 0;
+        timeUp = true;
+    }
+    public bool TimerComplete(){
+        return timeUp;
+    }
+
+    private int GetGameSpeed(){
+        int s = Mathf.RoundToInt(GameManager.instance.gameSpeed);
+        if (s == 0){
+            s = 1;
+        }
+        return s;
     }
 }

@@ -11,27 +11,44 @@
 	
 	public enum TrialEventType
     {
+	    Null,
+	    Ready,
+	    TrialSequenceStarted,
+	    PreTrialPhase,
+	    Initialise,
 		Fixation,
-		Arrow,
-		Target,
+		Indication,
+		TargetPresentation,
 		Observation,
-		Rest
+		Rest,
+		Complete,
+		PostTrialPhase,
+		TrialComplete,
+		TrialSequenceComplete,
+		Debug
     }
 	public enum RigType {AvatarRig, GhostRig}
 	
-	public enum TrialType{
-		Three_Targets,
-		Four_Targets,
-		CentreOut
+	public enum TrialParadigm{
+		Null,
+		Horizontal,
+		Vertical,
+		Circle,
+		CentreOut,
+		RandomPosition
 	}
 
 	public enum SequenceType{
 		Linear,
 		Permutation
 	}
-	public enum TaskSide{
+	public enum Handedness{
 		Left,
 		Right
+	}
+
+	public enum ParadigmTargetCount{
+		One,Two,Three,Four,Eight,Sixteen
 	}
 
 	public enum MotionTag{
@@ -50,13 +67,14 @@
 		LeftPointerFinger_Leap,
 		RightPointerFinger_Leap,
 		Waist,
-		Eyes
+		Eyes,
+		BCI
 	}
 	
-	public enum TrialParadigm{
-		Avatar3D,
-		Screen2D
-	}
+	// public enum TrialParadigm{
+	// 	Avatar3D,
+	// 	Screen2D
+	// }
 
 	public enum CharacterColourType{
 		Dynamic,
@@ -92,16 +110,43 @@
 	}
 
 	public enum TrialSettingsValue{
-		TrialBlocks,
+		Runs,
+		BlocksPerRun,
 		Repetitions,
-		StartDelay,
-		InterBlockRestPeriod,
-		RestDurationMin,
-		RestDurationMax,
-		TargetDuration,
-		Fixation,
-		Arrow,
-		Observation
+		Countdown,
+		visibleCountdown,
+		InterRunRestPeriod,
+		preTrialWaitPeriod,
+		TargetPresentationPeriod,
+		FixationPeriod,
+		IndicationPeriod,
+		ObservationPeriod,
+		RestPeriodMin,
+		RestPeriodMax,
+		PostTrialWaitPeriod,
+		PostBlockWaitPeriod,
+		PostRunWaitPeriod
+	}
+
+	public enum SliderValue
+	{
+		Assistance,
+		AssistanceDecrease,
+		ControlMagnitude,
+		MagnitudeX,
+		MagnitudeY,
+		MagnitudeZ,
+		SmoothingSpeed
+	}
+
+	public enum SessionMetric{
+		TrialsPerBlock,
+		TrialsPerRun,
+		TrialsPerSession,
+		EstimatedTrialDuration,
+		EstimatedBlockDuration,
+		EstimatedRunDuration,
+		EstimatedSessionDuration
 	}
 	public enum TrialSettings{
 		ActionObservation,
@@ -128,25 +173,69 @@
 	}
 
 	public enum GameStatus{
+		Null,
+		Initialised,
 		Orientation,
 		Preparation,
+		WaitingForInput,
+		SetStartButton,
+		DisplayBlockMenu,
+		DisplayRunMenu,
+		DisplayMenu,
 		Ready,
 		Countdown,
-		Running,
-		Complete
+		VisibleCountdown,
+		CountdownComplete,
+		RunningTrials,
+		BlockStarted,
+		BlockComplete,
+		AllBlocksComplete,
+		RunStarted,
+		RunComplete,
+		AllRunsComplete,
+		GameComplete,
+		Complete,
+		Paused,
+		Unpaused,
+		Reset,
+		Generic,
+		Progress,
+		Debug
 	}
 
-	public enum UserInput{
-		GamePad_A,
-		GamePad_B,
-		GamePad_X,
-		GamePad_Y,
-		L_Button,
-		R_Button,
-		Up,
-		Down,
-		Left,
-		Right
+	public enum UserInputType{
+		Start,
+		Stop,
+		Pause,
+		Reset,
+		Sensel
+	}
+
+	public enum BCI_ControlType
+	{
+		Velocity,
+		ForceVelocity,
+		Translate,
+		Position
+	}
+
+	public enum RunType
+	{
+		Null,
+		Kinematic,
+		Imagined
+	}
+
+	public enum Fade
+	{
+		In,
+		Out
+	}
+
+	public enum Sex
+	{
+		Male,
+		Female
 	}
 
 }

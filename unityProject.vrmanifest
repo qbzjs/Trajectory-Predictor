@@ -5,7 +5,7 @@
       "app_key": "application.generated.unity.bcitrialmanagervr.exe",
       "launch_type": "url",
       "url": "steam://launch/",
-      "action_manifest_path": "C:\\Users\\SCAN-iHub\\Documents\\Unity Projects\\BCI\\BCI-Trial-Manager-VR\\Assets\\StreamingAssets\\SteamVR\\actions.json",
+      "action_manifest_path": "C:\\Users\\SCAN-iHub\\Documents\\Unity Projects\\BCI\\BCI-Trial-Manager-VR_v2\\Assets\\StreamingAssets\\SteamVR\\actions.json",
       "strings": {
         "en_us": {
           "name": "BCI Trial Manager VR [Testing]"

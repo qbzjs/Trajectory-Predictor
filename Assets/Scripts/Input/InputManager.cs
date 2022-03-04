@@ -3,75 +3,96 @@ using System.Collections;
 using System.Collections.Generic;
 using Enums;
 using UnityEngine;
+
 /// <summary>
 /// All input routed through this class
 /// some inputs are conditional depending on the scene loaded
 /// </summary>
-public class InputManager : MonoBehaviour
-{
-    public static InputManager instance;
+///
 
-    public delegate void RecordAction(bool t, string id);
-    public static event RecordAction OnRecordAction;
-    
-    private void OnEnable(){
-        GamePadInput.OnGamePad_A += GamePadInput_OnGamePad_A;
-        GamePadInput.OnGamePad_B += GamePadInput_OnGamePad_B;
-        GamePadInput.OnGamePad_X += GamePadInput_OnGamePad_X;
-        GamePadInput.OnGamePad_Y += GamePadInput_OnGamePad_Y;
-    }
-    private void OnDisable(){
-        GamePadInput.OnGamePad_A -= GamePadInput_OnGamePad_A;
-        GamePadInput.OnGamePad_B -= GamePadInput_OnGamePad_B;
-        GamePadInput.OnGamePad_X -= GamePadInput_OnGamePad_X;
-        GamePadInput.OnGamePad_Y -= GamePadInput_OnGamePad_Y;
-    }
+public class InputManager : MonoBehaviour{
+	
+	public static InputManager instance;
 
-    void Awake()
-    {
-        instance = this;
-    }
+	public bool inputEnabled = true;
+	public delegate void UserInputAction(UserInputType inputType);
+	public static event UserInputAction OnUserInputAction;
 
-    
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
- //           SetTrajectoryRecording(true);
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
- //           SetTrajectoryRecording(false);
-        }
-    }
-    private void GamePadInput_OnGamePad_A(UserInput b)
-    {
-        //START RECORDING DATA
-    }
-    private void GamePadInput_OnGamePad_B(UserInput b)
-    {
+	void Awake(){
+		instance = this;
+	}
 
-    }
-    private void GamePadInput_OnGamePad_X(UserInput b)
-    {
+	#region Subscriptions
 
-    }
-    private void GamePadInput_OnGamePad_Y(UserInput b)
-    {
+	private void OnEnable() {
+		SenselTap.OnUserInputAction+= SenselTapOnUserInputAction;
+	}
+	private void OnDisable() {
+		SenselTap.OnUserInputAction+= SenselTapOnUserInputAction;
+	}
 
-    }
-    public void StartTrialSequence()
-    {
-        TrialSequence.instance.StartTrial();
-    }
-    public void StopTrialSequence()
-    {
-        TrialSequence.instance.StopTrial();
-    }
-    public void SetTrajectoryRecording(bool t){
-        if (OnRecordAction != null)
-        {
-            OnRecordAction(t, System.Guid.NewGuid().ToString());
-        }
-    }
+	#endregion
+
+
+	#region Inputs
+
+	void Update(){
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			StartTrials();
+		}
+		if (Input.GetKeyDown(KeyCode.P)){
+			PauseGame();
+		}
+		if (Input.GetKeyDown(KeyCode.R)){
+			ResetSession();
+		}
+		
+	}
+	private void SenselTapOnUserInputAction(UserInputType iType, float x, float y, float f)
+	{
+		Debug.Log("Sensel Input ---> " + "X: " + x + " : " + "Y: " + y + "F: " + f);
+		StartTrials();
+	}
+
+	#endregion
+
+	#region Input Actions
+
+	public void StartTrials(){
+		if (inputEnabled){
+			if (OnUserInputAction != null){
+				OnUserInputAction(UserInputType.Start);
+			}
+		}
+	}
+
+	public void StopTrial(){
+		if (inputEnabled){
+			if (OnUserInputAction != null){
+				OnUserInputAction(UserInputType.Stop);
+			}
+		}
+	}
+	
+	public void PauseGame(){
+		if (inputEnabled){
+			if (OnUserInputAction != null){
+				OnUserInputAction(UserInputType.Pause);
+			}
+		}
+	}
+	public void ResetSession(){
+		if (inputEnabled){
+			if (OnUserInputAction != null){
+				OnUserInputAction(UserInputType.Reset);
+			}
+		}
+	}
+
+	#endregion
+
+
+	//remember this is record data start
+	//OnRecordAction(t, System.Guid.NewGuid().ToString());
 }

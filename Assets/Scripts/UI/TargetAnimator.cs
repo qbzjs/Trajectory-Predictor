@@ -20,7 +20,7 @@ public class TargetAnimator : MonoBehaviour {
 	private IEnumerator ScaleToDefault() {
 //		yield return new WaitForSeconds(0.11f);
 		yield return new WaitForEndOfFrame();
-		LeanTween.scale( target, new Vector3(initialScale.x, initialScale.y, initialScale.z), Settings.instance.targetDuration).setEase(LeanTweenType.easeInOutSine);
+		LeanTween.scale( target, new Vector3(initialScale.x, initialScale.y, initialScale.z), Settings.instance.targetPresentationPeriod).setEase(LeanTweenType.easeInOutSine);
 	}
 
 	//TODO - temporary method for target beeps - redo as decoupled audio manager

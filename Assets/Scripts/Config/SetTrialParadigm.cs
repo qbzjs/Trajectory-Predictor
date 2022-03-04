@@ -3,48 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Enums;
+using Enums;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+/// <summary>
+/// selects the paradigm in the UI
+/// </summary>
 
 public class SetTrialParadigm : MonoBehaviour
 {
-	public TrialParadigm trialParadigm;
+	public TrialParadigm paradigm;
 
-	public Button avatarButton;
-	public Button screenButton;
+	public TextMeshProUGUI paradigmTextUI;
+	public Button fourButton;
+	public Button threeButton;
 
 	private Color initialColour;
 	public Color highlightedColour;
-
-	void Start()
-	{
-		initialColour = avatarButton.image.color;
+	
+	void Start () {
+		// initialColour = centreOutButton.image.color;
 		Initialise();
 	}
 
-	private void Initialise()
-	{
-		trialParadigm = Settings.instance.trialParadigm;
+	private void Initialise() {
+		paradigm = Settings.instance.trialParadigm;
 
-		if (trialParadigm == TrialParadigm.Avatar3D)
-		{
-			avatarButton.image.color = highlightedColour;
-			screenButton.image.color = initialColour;
+		if (paradigm == TrialParadigm.CentreOut){
 		}
-		if (trialParadigm == TrialParadigm.Screen2D)
-		{
-			avatarButton.image.color = initialColour;
-			screenButton.image.color = highlightedColour;
+
+		if (paradigm == TrialParadigm.Vertical){
 		}
-	}
-	public void SetAvatar3D()
-	{
-		avatarButton.image.color = highlightedColour;
-		screenButton.image.color = initialColour;
-		Settings.instance.SetTrialParadigm(TrialParadigm.Avatar3D);
-	}
-	public void SetScreen2D()
-	{
-		avatarButton.image.color = initialColour;
-		screenButton.image.color = highlightedColour;
-		Settings.instance.SetTrialParadigm(TrialParadigm.Screen2D);
+
+		if (paradigm == TrialParadigm.Horizontal){
+		}
+
+		if (paradigm == TrialParadigm.Circle){
+		}
+
 	}
 }
