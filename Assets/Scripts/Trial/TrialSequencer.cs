@@ -8,7 +8,10 @@ using Random = UnityEngine.Random;
 public class TrialSequencer : MonoBehaviour
 {
     private GameManager gameManager;
-    
+
+    //TODO WAIT FOR USER INPUT
+    public bool pauseForInput;
+        
     public int targetCount = 4;
     public int repetitions = 4;
     public int sequenceLength = 0;
@@ -75,6 +78,9 @@ public class TrialSequencer : MonoBehaviour
     private IEnumerator RunTrialSequence(){
         sequenceIndex = 0;
         sequenceComplete = false;
+        
+        //pause function - NEWLY ADDED
+        yield return new WaitUntil(() => !gameManager.paused);
 
         //trial event
         gameManager.TrialEvent(TrialEventType.TrialSequenceStarted, -1, 0,sequenceIndex,sequenceLength);
@@ -88,12 +94,18 @@ public class TrialSequencer : MonoBehaviour
 
             // trialEventType = TrialEventType.TrialSequenceStarted;
             // UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], trialEventType, 0);
+            
+            //pause function - NEWLY ADDED
+            yield return new WaitUntil(() => !gameManager.paused);
 
             //trial event
             gameManager.TrialEvent(TrialEventType.PreTrialPhase, sequenceOrder[i],gameManager.SpeedCheck(preTrialWaitPeriod),sequenceIndex,sequenceLength);
             
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
+            
+            //UDP pre-trial trigger - for ERSP (NEWLY ADDED)
+            gameManager.SendUDP_byte(99,0, TrialEventType.PreTrialPhase); //modifier adds 1 to the trigger number
             
             trialEventType = TrialEventType.PreTrialPhase;
             UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], trialEventType, preTrialWaitPeriod);
