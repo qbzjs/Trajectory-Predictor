@@ -105,7 +105,7 @@ public class TrialSequencer : MonoBehaviour
             yield return new WaitUntil(() => !gameManager.paused);
             
             //UDP pre-trial trigger - for ERSP (NEWLY ADDED)
-            gameManager.SendUDP_byte(99,0, TrialEventType.PreTrialPhase); //modifier adds 1 to the trigger number
+            //gameManager.SendUDP_byte(99,0, TrialEventType.PreTrialPhase); //modifier adds 1 to the trigger number
             
             trialEventType = TrialEventType.PreTrialPhase;
             UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], trialEventType, preTrialWaitPeriod);
