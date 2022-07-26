@@ -72,8 +72,8 @@ public class ToggleUI : MonoBehaviour {
 		if (visualInterface == VisualInterface.Interface3D){
 			b = Settings.instance.interface3D;
 		}
-		if (visualInterface == VisualInterface.RenderTexture2D){
-			b = Settings.instance.renderTexture2D;
+		if (visualInterface == VisualInterface.Display2D){
+			b = Settings.instance.display2D;
 		}
 		if (visualInterface == VisualInterface.ActionObservation) {
 			b = Settings.instance.actionObservation;
@@ -153,8 +153,8 @@ public class ToggleUI : MonoBehaviour {
 		if (visualInterface == VisualInterface.Interface3D) {
 			Settings.instance.SetInterface3D(toggle.isOn);
 		}
-		if (visualInterface == VisualInterface.RenderTexture2D){
-			Settings.instance.SetRenderTexture2D(toggle.isOn);
+		if (visualInterface == VisualInterface.Display2D){
+			Settings.instance.SetDisplay(toggle.isOn);
 		}
 		if (visualInterface == VisualInterface.ActionObservation) {
 			Settings.instance.SetActionObservation(toggle.isOn);

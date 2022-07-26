@@ -64,7 +64,7 @@ public class SetWorldUI : MonoBehaviour{
     public void SetUI()
     {
         worldUI.SetActive(Settings.instance.interface3D);
-        trialRender2D.SetActive(Settings.instance.renderTexture2D);
+        trialRender2D.SetActive(Settings.instance.display2D);
 //        outerRing.SetActive(Settings.instance.ringOuter);
 //        outerLines.SetActive(Settings.instance.linesOuter);
 //        innerLinesA.SetActive(Settings.instance.linesInnerA);

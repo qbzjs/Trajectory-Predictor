@@ -114,7 +114,7 @@ public class Settings : MonoBehaviour {
 	
 	[Header("INTERFACE 3D")]
 	public bool interface3D = false;
-	public bool renderTexture2D = false;
+	public bool display2D = false;
 
 	[Header("INTERFACE")]
 	public bool labelsVisible = true;
@@ -551,10 +551,17 @@ public class Settings : MonoBehaviour {
 	}
 	
 	//DEPRECIATED from v2 - readd to later version
-	public void SetRenderTexture2D(bool t){
-		renderTexture2D = t;
+	public void SetDisplay(bool t){
+		display2D = t;
 		//toggle environment here
 //		SetWorldUI.instance.SetUI();
+
+		if (display2D){
+			SetDisplayType.instance.SetDisplay(DisplayType.Screen2D);
+		}
+		else{
+			SetDisplayType.instance.SetDisplay(DisplayType.ScreenVR);
+		}
 		SaveState();
 	}
 
@@ -763,7 +770,7 @@ public class Settings : MonoBehaviour {
 			
 		//interface 3D
 		EasySave.Save("interface3D", interface3D);
-		EasySave.Save("renderTexture2D", renderTexture2D);
+		EasySave.Save("display2D", display2D); 
 
 		//interface
 		EasySave.Save("animateTargets", animateTargets);
@@ -797,6 +804,14 @@ public class Settings : MonoBehaviour {
 		settingsData.targetCount = paradigmTargetCount.ToString();
 		settingsData.repetitions = repetitions;
 		settingsData.handedness = handedness.ToString();
+
+		if (display2D){
+			settingsData.displayType = DisplayType.Screen2D.ToString();
+		}
+		else{
+			settingsData.displayType = DisplayType.ScreenVR.ToString();
+		}
+		
 
 		settingsData.blocks = blocksPerRun;
 		settingsData.runs = sessionRuns;
@@ -972,7 +987,8 @@ public class Settings : MonoBehaviour {
 			
 			//interface3D
 			interface3D = EasySave.Load<bool>("interface3D");
-			renderTexture2D = EasySave.Load<bool>("renderTexture2D");
+			display2D = EasySave.Load<bool>("display2D");
+			display2D = false; //start in VR always
 
 			//interface
 			animateTargets = EasySave.Load<bool>("animateTargets");
@@ -1065,7 +1081,7 @@ public class Settings : MonoBehaviour {
 			
 			//interface 3d
 			interface3D = false;
-			renderTexture2D = false;
+			display2D = false;
 			
 			//interface
 			animateTargets = false;
@@ -1157,7 +1173,7 @@ public class Settings : MonoBehaviour {
 		
 		//interface 3d
 		SetInterface3D(interface3D);
-		SetRenderTexture2D(renderTexture2D);
+		SetDisplay(display2D);
 		
 		//interface
 		SetAnimateTargets(animateTargets);

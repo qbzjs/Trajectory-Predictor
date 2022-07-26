@@ -98,7 +98,7 @@
 		Score,
 		Environment3D,
 		Interface3D,
-		RenderTexture2D,
+		Display2D,
 		ActionObservation,
 		RecordTrajectory,
 		Countdown,
@@ -236,6 +236,12 @@
 	{
 		Male,
 		Female
+	}
+
+	public enum DisplayType
+	{
+		ScreenVR,
+		Screen2D
 	}
 
 }

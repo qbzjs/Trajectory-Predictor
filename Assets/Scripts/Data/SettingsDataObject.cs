@@ -11,6 +11,7 @@ public class SettingsDataObject
     public string targetCount;
     public int repetitions;
     public string handedness;
+    public string displayType;
 
     public int runs;
     public int blocks;
@@ -56,7 +57,7 @@ public class SettingsDataObject
     //public float[] timeSigniture / time sequence (target times
     
 
-    public SettingsDataObject(string trialParadigm, string targets, int repetitions, string handedness, 
+    public SettingsDataObject(string trialParadigm, string targets, int repetitions, string handedness, string displayType,
         int blocks, int runs, RunType[] runSequence,
         int trialsPerBlock, int trialsPerRun, int trialsPerSession,
         float estimatedTrialDuration, string estimatedBlockDuration, string estimatedRunDuration, string estimatedSessionDuration,
@@ -71,6 +72,8 @@ public class SettingsDataObject
         this.targetCount = targets;
         this.repetitions = repetitions;
         this.handedness = handedness;
+
+        this.displayType = displayType;
 
         this.blocks = blocks;
         this.runs = runs;

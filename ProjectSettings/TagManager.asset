@@ -10,6 +10,9 @@ TagManager:
   - RightTarget
   - BottomTarget
   - ReachTargets
+  - TestObject
+  - Label
+  - 2D_Camera
   layers:
   - Default
   - TransparentFX
