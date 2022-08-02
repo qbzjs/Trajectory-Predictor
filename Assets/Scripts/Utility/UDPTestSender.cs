@@ -6,6 +6,8 @@ public class UDPTestSender : MonoBehaviour
 {
     public bool active = false;
 
+    public int valueToSend=0;
+
     void Start()
     {
         
@@ -38,6 +40,14 @@ public class UDPTestSender : MonoBehaviour
         {
             SendUDP_byte(5);
         }
+
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha9)){
+                SendUDP_byte(valueToSend);
+                SendUDP_byte(0);
+            }
+        }
+
 
     }
     private void SendUDP_byte(int t)
