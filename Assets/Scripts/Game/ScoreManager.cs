@@ -202,6 +202,13 @@ public class ScoreManager : MonoBehaviour{
         if (eventType == TrialEventType.Rest){
             //move to home
         }
+
+        if (eventType == TrialEventType.TrialComplete){
+            print("TRIAL COMPLETE......................");
+            SessionTotals();
+            SaveScore();
+            //ResetScores();
+        }
     }
     private void TargetManagerOnTargetAction(bool targetPresent, bool restPresent, Vector3 position, Transform activeTarget){
         if (targetPresent){
@@ -514,10 +521,14 @@ public class ScoreManager : MonoBehaviour{
             sessionCorrelationBCIAvg_Unassisted = (sessionCorrelationBCI_Unassisted.x + sessionCorrelationBCI_Unassisted.y + sessionCorrelationBCI_Unassisted.z) / 3;
         }
 
-        float p = sessionDistanceAccuracyKin + sessionDistanceAccuracyBCI_Assisted + sessionDistanceAccuracyBCI_Unassisted
-                  + sessionCorrelationKinAvg + sessionCorrelationBCIAvg_Assisted + sessionCorrelationBCIAvg_Unassisted;
+        //all metrics combined - 
+        // float p = sessionDistanceAccuracyKin + sessionDistanceAccuracyBCI_Assisted + sessionDistanceAccuracyBCI_Unassisted
+        //           + sessionCorrelationKinAvg + sessionCorrelationBCIAvg_Assisted + sessionCorrelationBCIAvg_Unassisted;
+        //overallPerformanceSession = p / 6;
         
-        overallPerformanceSession = p / 6;
+        //no kinematic metrics
+        float p = sessionDistanceAccuracyBCI_Assisted + sessionDistanceAccuracyBCI_Unassisted + sessionCorrelationBCIAvg_Assisted + sessionCorrelationBCIAvg_Unassisted;
+        overallPerformanceSession = p / 4;
 
         if (OnScoreSessionAction != null){
             OnScoreSessionAction(sessionDistanceAccuracyKin, sessionDistanceAccuracyBCI_Assisted,sessionDistanceAccuracyBCI_Unassisted,

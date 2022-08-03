@@ -9,6 +9,8 @@ using Leap.Unity;
 
 public class InstructionTextPrototype : MonoBehaviour
 {
+    private UserInputType userInputType = UserInputType.Start;
+    
     public TextMeshPro instructionTextActual;
     public TextMeshPro instructionTextImagined;
     public TextMeshPro instructionTextBlockComplete;
@@ -47,15 +49,26 @@ public class InstructionTextPrototype : MonoBehaviour
     #region Subscriptions
 
     private void OnEnable(){
+        InputManager.OnUserInputAction += InputManagerOnUserInputAction;
         GameManager.OnGameAction += GameManagerOnGameAction;
         GameManager.OnRunAction += GameManagerOnRunAction;
         GameManager.OnBlockAction += GameManagerOnBlockAction;
     }
+
+
+
     private void OnDisable(){
         GameManager.OnGameAction -= GameManagerOnGameAction;
         GameManager.OnRunAction -= GameManagerOnRunAction;
         GameManager.OnBlockAction -= GameManagerOnBlockAction;
     }
+    
+    private void InputManagerOnUserInputAction(UserInputType inputType){
+        if (userInputType == UserInputType.Start){
+            RemoveText();
+        }
+    }
+    
     private void GameManagerOnGameAction(GameStatus eventType){
         if (eventType == GameStatus.Ready){
             DisplayNewRunText();

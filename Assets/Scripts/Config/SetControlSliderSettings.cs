@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Enums;
+using TMPro;
 
 public class SetControlSliderSettings : MonoBehaviour
 {
@@ -11,8 +12,10 @@ public class SetControlSliderSettings : MonoBehaviour
     public Slider slider;
     public float value;
 
+    public TextMeshProUGUI textDisplay;
     private void Awake(){
         slider = gameObject.GetComponent<Slider>();
+        textDisplay = transform.Find("Handle Slide Area/Handle/Value").GetComponent<TextMeshProUGUI>();
     }
 
     private void Start(){
@@ -50,26 +53,37 @@ public class SetControlSliderSettings : MonoBehaviour
     
     public void SetValue(){
         value = slider.value;
+        int vDisp = Mathf.RoundToInt(value);
+        
         if (sliderValue == SliderValue.Assistance){
             Settings.instance.SetAssistance(value);
+            textDisplay.text = vDisp.ToString();
         }
         if (sliderValue == SliderValue.AssistanceDecrease){
             Settings.instance.SetAssistanceDecrease(value);
+            textDisplay.text = vDisp.ToString();
         }
         if (sliderValue == SliderValue.ControlMagnitude){
             Settings.instance.SetMagnitude(value);
+            textDisplay.text = value.ToString("f1");
         }
         if (sliderValue == SliderValue.MagnitudeX){
             Settings.instance.SetMagnitudeX(value);
+            textDisplay.text = value.ToString("f1");
         }
         if (sliderValue == SliderValue.MagnitudeY){
             Settings.instance.SetMagnitudeY(value);
+            textDisplay.text = value.ToString("f1");
         }
         if (sliderValue == SliderValue.MagnitudeZ){
             Settings.instance.SetMagnitudeZ(value);
+            textDisplay.text = value.ToString("f1");
         }
         if (sliderValue == SliderValue.SmoothingSpeed){
             Settings.instance.SetSmoothingSpeed(value);
+            textDisplay.text = value.ToString("f2");
         }
+        
+        
     }
 }
