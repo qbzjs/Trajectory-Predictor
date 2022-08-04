@@ -45,7 +45,7 @@ public class Settings : MonoBehaviour {
 	[Range(0, 100)] 
 	public float BCI_ControlAssistance; //serialise from bci signal for now -TODO link from settings ui and set for bci controller
 	[Range(0, 20)] 
-	public float assistanceDecrease;
+	public float assistanceModifier;
 	[Range(0, 4)] 
 	public float controlMagnitude;
 	[Range(0, 4)] 
@@ -338,37 +338,39 @@ public class Settings : MonoBehaviour {
 	//todo add assistance to save system
 	public void SetAssistance(float v){
 		BCI_ControlAssistance = v;
-		//BCI_ControlSignal.instance.controlAssistPercentage = BCI_ControlAssistance;
+		BCI_ControlSignal.instance.controlAssistPercentage = Mathf.RoundToInt(BCI_ControlAssistance);
 		SaveState();
 	}
-	public void SetAssistanceDecrease(float v){
-		assistanceDecrease = v;
-		
+	public void SetAssistanceModifier(float v){
+		assistanceModifier = v;
+		BCI_ControlSignal.instance.assistanceModifier = Mathf.RoundToInt(assistanceModifier);
 		SaveState();
 	}
 	public void SetMagnitude(float v){
 		controlMagnitude = v;
-		
+		BCI_ControlSignal.instance.magnitudeMultiplier = Mathf.Round(controlMagnitude * 10.0f) * 0.1f;
 		SaveState();
 	}
 	public void SetMagnitudeX(float v){
 		controlMagnitudeX = v;
-		
+		BCI_ControlSignal.instance.magnitudeMultiplierX = Mathf.Round(controlMagnitudeX * 10.0f) * 0.1f;
 		SaveState();
 	}
 	public void SetMagnitudeY(float v){
 		controlMagnitudeY = v;
-		
+		BCI_ControlSignal.instance.magnitudeMultiplierY = Mathf.Round(controlMagnitudeY * 10.0f) * 0.1f;
 		SaveState();
 	}
 	public void SetMagnitudeZ(float v){
 		controlMagnitudeZ = v;
-		
+		BCI_ControlSignal.instance.magnitudeMultiplierZ = Mathf.Round(controlMagnitudeZ * 10.0f) * 0.1f;
 		SaveState();
 	}
 	public void SetSmoothingSpeed(float v){
 		smoothingSpeed = v;
-		
+		BCI_ControlSignal.instance.defaultSmoothing = Mathf.Round(smoothingSpeed * 100.0f) * 0.01f;
+		BCI_ControlSignal.instance.targetSmoothing = Mathf.Round(smoothingSpeed * 100.0f) * 0.01f;
+		BCI_ControlSignal.instance.smoothDamping = Mathf.Round(smoothingSpeed * 100.0f) * 0.01f;
 		SaveState();
 	}
 
@@ -754,8 +756,10 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("sampleRate", sampleRate.ToString());
 		EasySave.Save("actionObservation", actionObservation);
 		
+		Debug.Log(BCI_ControlAssistance);
+		
 		EasySave.Save("BCI_ControlAssistance", BCI_ControlAssistance);
-		EasySave.Save("assistanceDecrease", assistanceDecrease);
+		EasySave.Save("assistanceModifier", assistanceModifier);
 		EasySave.Save("controlMagnitude", controlMagnitude);
 		EasySave.Save("controlMagnitudeX", controlMagnitudeX);
 		EasySave.Save("controlMagnitudeY", controlMagnitudeY);
@@ -847,7 +851,7 @@ public class Settings : MonoBehaviour {
 		
 		//control
 		settingsData.BCI_ControlAssistance = BCI_ControlAssistance;
-		settingsData.assistanceDecrease = assistanceDecrease;
+		settingsData.assistanceModifier = assistanceModifier;
 		settingsData.controlMagnitude = controlMagnitude;
 		settingsData.controlMagnitudeX = controlMagnitudeX;
 		settingsData.controlMagnitudeY = controlMagnitudeY;
@@ -969,7 +973,7 @@ public class Settings : MonoBehaviour {
 			#region Control Settings
 
 			BCI_ControlAssistance = EasySave.Load<float>("BCI_ControlAssistance");
-			assistanceDecrease = EasySave.Load<float>("assistanceDecrease");
+			assistanceModifier = EasySave.Load<float>("assistanceModifier");
 			controlMagnitude = EasySave.Load<float>("controlMagnitude");
 			controlMagnitudeX = EasySave.Load<float>("controlMagnitudeX");
 			controlMagnitudeY = EasySave.Load<float>("controlMagnitudeY");
@@ -1067,7 +1071,7 @@ public class Settings : MonoBehaviour {
 			#region Control Settings
 
 			BCI_ControlAssistance = 100f;
-			assistanceDecrease = 0;
+			assistanceModifier = 0;
 			controlMagnitude = 1f;
 			controlMagnitudeX = 1f;
 			controlMagnitudeY = 1f;
@@ -1158,8 +1162,10 @@ public class Settings : MonoBehaviour {
 		
 		#region Control Settings
 
+		Debug.Log(BCI_ControlAssistance);
+		
 		SetAssistance(BCI_ControlAssistance);
-		SetAssistanceDecrease(assistanceDecrease);
+		SetAssistanceModifier(assistanceModifier);
 		SetMagnitude(controlMagnitude);
 		SetMagnitudeX(controlMagnitudeX);
 		SetMagnitudeY(controlMagnitudeY);

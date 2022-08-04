@@ -45,7 +45,7 @@ public class SettingsDataObject
     
     //---CONTROL---
     public float BCI_ControlAssistance;
-    public float assistanceDecrease;
+    public float assistanceModifier;
     public float controlMagnitude;
     public float controlMagnitudeX;
     public float controlMagnitudeY;
@@ -66,7 +66,7 @@ public class SettingsDataObject
         float targetDuration,float restPeriodMin,float restPeriodMax,
         float postTrialWaitPeriod,float postBlockWaitPeriod,float postRunWaitPeriod, 
         bool actionObservation, string sampleRate,
-        float bciControlAssistance, float assistanceDecrease,float controlMagnitude,float controlMagnitudeX,float controlMagnitudeY,float controlMagnitudeZ, float smoothingSpeed)
+        float bciControlAssistance, float assistanceModifier,float controlMagnitude,float controlMagnitudeX,float controlMagnitudeY,float controlMagnitudeZ, float smoothingSpeed)
     {
         this.trialParadigm = trialParadigm;
         this.targetCount = targets;
@@ -109,7 +109,7 @@ public class SettingsDataObject
         
         //control
         this.BCI_ControlAssistance = bciControlAssistance;
-        this.assistanceDecrease = assistanceDecrease;
+        this.assistanceModifier = assistanceModifier;
         this.controlMagnitude = controlMagnitude;
         this.controlMagnitudeX = controlMagnitudeX;
         this.controlMagnitudeY = controlMagnitudeY;

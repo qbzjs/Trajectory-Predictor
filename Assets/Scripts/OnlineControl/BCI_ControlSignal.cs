@@ -18,7 +18,7 @@ public class BCI_ControlSignal : MonoBehaviour
     public int controlAssistPercentage; // silder between 0-1 for percentage of used bci signal control
 
     [Range(0, 100)] 
-    public int assistanceDecrease = 0; //percentage or assistance to remove per run
+    public int assistanceModifier = 0; //percentage or assistance to remove per run
     
     private float assistance; // between 0-1 for percentage of used bci signal control
     private float ax;
@@ -38,8 +38,9 @@ public class BCI_ControlSignal : MonoBehaviour
     public bool fadeSmoothing = true; 
     [Range(0,2f)]
     public float smoothDamping = 0.45F;
-    private float defaultSmoothing = 0.45f;
-    private float targetSmoothing = 0.45f;
+    //[HideInInspector]
+    public float defaultSmoothing = 0.45f;
+    public float targetSmoothing = 0.45f;
     
     [Header("MODIFIERS")]
     [Range(0, 10f)]
@@ -81,6 +82,8 @@ public class BCI_ControlSignal : MonoBehaviour
     }
 
     private void Start(){
+        controlAssistPercentage = Mathf.RoundToInt(Settings.instance.BCI_ControlAssistance);
+        smoothDamping = Settings.instance.smoothingSpeed;
         defaultSmoothing = smoothDamping; //save the default value
         controlMixer = new BCI_ControlMixer();
     }

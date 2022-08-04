@@ -25,10 +25,10 @@ public class SetControlSliderSettings : MonoBehaviour
     private void Initialise(){
         if (sliderValue == SliderValue.Assistance){
             //todo figure this out??
-//            slider.value = Settings.instance.BCI_ControlAssistance;
+            slider.value = Settings.instance.BCI_ControlAssistance;
         }
-        if (sliderValue == SliderValue.AssistanceDecrease){
-            slider.value = Settings.instance.assistanceDecrease;
+        if (sliderValue == SliderValue.AssistanceModifier){
+            slider.value = Settings.instance.assistanceModifier;
         }
         if (sliderValue == SliderValue.ControlMagnitude){
             slider.value = Settings.instance.controlMagnitude;
@@ -53,15 +53,15 @@ public class SetControlSliderSettings : MonoBehaviour
     
     public void SetValue(){
         value = slider.value;
-        int vDisp = Mathf.RoundToInt(value);
+        //int vDisp = Mathf.RoundToInt(value);
         
         if (sliderValue == SliderValue.Assistance){
             Settings.instance.SetAssistance(value);
-            textDisplay.text = vDisp.ToString();
+            textDisplay.text = Mathf.RoundToInt(value).ToString();
         }
-        if (sliderValue == SliderValue.AssistanceDecrease){
-            Settings.instance.SetAssistanceDecrease(value);
-            textDisplay.text = vDisp.ToString();
+        if (sliderValue == SliderValue.AssistanceModifier){
+            Settings.instance.SetAssistanceModifier(value);
+            textDisplay.text = Mathf.RoundToInt(value).ToString();
         }
         if (sliderValue == SliderValue.ControlMagnitude){
             Settings.instance.SetMagnitude(value);

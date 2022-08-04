@@ -131,7 +131,7 @@
 	public enum SliderValue
 	{
 		Assistance,
-		AssistanceDecrease,
+		AssistanceModifier,
 		ControlMagnitude,
 		MagnitudeX,
 		MagnitudeY,

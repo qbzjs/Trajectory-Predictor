@@ -642,7 +642,7 @@ public class ScoreManager : MonoBehaviour{
         scoreSessionData.name = Settings.instance.sessionName;
         scoreSessionData.sessionNumber = Settings.instance.sessionNumber;
         
-        scoreSessionData.assistanceDecrease = Settings.instance.assistanceDecrease;
+        scoreSessionData.assistanceDecrease = Settings.instance.assistanceModifier;
 
         scoreSessionData.distanceAccuracyKin = sessionDistanceAccuracyKin;
         scoreSessionData.distanceAccuracyBCI_Assisted = sessionDistanceAccuracyBCI_Assisted;
