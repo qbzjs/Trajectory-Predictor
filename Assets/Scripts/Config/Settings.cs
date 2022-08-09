@@ -348,26 +348,31 @@ public class Settings : MonoBehaviour {
 	}
 	public void SetMagnitude(float v){
 		controlMagnitude = v;
+		controlMagnitude = Mathf.Round(controlMagnitude * 100.0f) * 0.01f;
 		BCI_ControlSignal.instance.magnitudeMultiplier = Mathf.Round(controlMagnitude * 10.0f) * 0.1f;
 		SaveState();
 	}
 	public void SetMagnitudeX(float v){
 		controlMagnitudeX = v;
+		controlMagnitudeX = Mathf.Round(controlMagnitudeX * 100.0f) * 0.01f;
 		BCI_ControlSignal.instance.magnitudeMultiplierX = Mathf.Round(controlMagnitudeX * 10.0f) * 0.1f;
 		SaveState();
 	}
 	public void SetMagnitudeY(float v){
 		controlMagnitudeY = v;
+		controlMagnitudeY = Mathf.Round(controlMagnitudeY * 100.0f) * 0.01f;
 		BCI_ControlSignal.instance.magnitudeMultiplierY = Mathf.Round(controlMagnitudeY * 10.0f) * 0.1f;
 		SaveState();
 	}
 	public void SetMagnitudeZ(float v){
 		controlMagnitudeZ = v;
+		controlMagnitudeZ = Mathf.Round(controlMagnitudeZ * 100.0f) * 0.01f;
 		BCI_ControlSignal.instance.magnitudeMultiplierZ = Mathf.Round(controlMagnitudeZ * 10.0f) * 0.1f;
 		SaveState();
 	}
 	public void SetSmoothingSpeed(float v){
 		smoothingSpeed = v;
+		smoothingSpeed = Mathf.Round(smoothingSpeed * 100.0f) * 0.01f;
 		BCI_ControlSignal.instance.defaultSmoothing = Mathf.Round(smoothingSpeed * 100.0f) * 0.01f;
 		BCI_ControlSignal.instance.targetSmoothing = Mathf.Round(smoothingSpeed * 100.0f) * 0.01f;
 		BCI_ControlSignal.instance.smoothDamping = Mathf.Round(smoothingSpeed * 100.0f) * 0.01f;
@@ -756,7 +761,7 @@ public class Settings : MonoBehaviour {
 		EasySave.Save("sampleRate", sampleRate.ToString());
 		EasySave.Save("actionObservation", actionObservation);
 		
-		Debug.Log(BCI_ControlAssistance);
+//		Debug.Log(BCI_ControlAssistance);
 		
 		EasySave.Save("BCI_ControlAssistance", BCI_ControlAssistance);
 		EasySave.Save("assistanceModifier", assistanceModifier);
@@ -980,7 +985,7 @@ public class Settings : MonoBehaviour {
 			controlMagnitudeZ = EasySave.Load<float>("controlMagnitudeZ");
 			smoothingSpeed = EasySave.Load<float>("smoothingSpeed");
 			
-			Debug.Log(BCI_ControlAssistance);
+//			Debug.Log(BCI_ControlAssistance);
 			
 			#endregion
 
@@ -1162,7 +1167,7 @@ public class Settings : MonoBehaviour {
 		
 		#region Control Settings
 
-		Debug.Log(BCI_ControlAssistance);
+//		Debug.Log(BCI_ControlAssistance);
 		
 		SetAssistance(BCI_ControlAssistance);
 		SetAssistanceModifier(assistanceModifier);

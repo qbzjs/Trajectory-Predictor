@@ -40,7 +40,7 @@ public class UI_DisplayText : MonoBehaviour {
     }
     private void GameManagerOnProgressAction(GameStatus eventType, float completionPercentage, int run, int runTotal, int block, int blockTotal, int trial, int trialTotal){
         SetProgressSlider(completionPercentage);
-        Debug.Log(completionPercentage);
+//        Debug.Log(completionPercentage);
     }
 
     private void Awake() {
