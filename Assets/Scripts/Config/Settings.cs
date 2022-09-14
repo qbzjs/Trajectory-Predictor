@@ -333,8 +333,7 @@ public class Settings : MonoBehaviour {
 	#endregion
 
 	#region Control Setup
-
-	//todo make assistance a ui menu slider and set bci controller from there
+	
 	//todo add assistance to save system
 	public void SetAssistance(float v){
 		BCI_ControlAssistance = v;

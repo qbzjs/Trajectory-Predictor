@@ -23,6 +23,8 @@ public class InstructionAvatar : MonoBehaviour
 
     public BipedIK bipedIK;
 
+    private bool enabledFlag;
+
     private void Awake(){
         avatarSize = avatar.transform.localScale;
         avatar.transform.localScale = Vector3.zero;
@@ -47,27 +49,34 @@ public class InstructionAvatar : MonoBehaviour
         GameObject par = Instantiate(popParticle, avatar.transform.position, quaternion.identity);
 
         bipedIK.enabled = true;
+        enabledFlag = true;
     }
 
     public void DisableAvatar(){
-        avatar.transform.DOScale(Vector3.zero, duration);
-        avatar.transform.DOPunchRotation(rot, duration*2);
-        GameObject par = Instantiate(popParticle, avatar.transform.position, quaternion.identity);
+        if (enabledFlag){
+            avatar.transform.DOScale(Vector3.zero, duration);
+            avatar.transform.DOPunchRotation(rot, duration*2);
+            GameObject par = Instantiate(popParticle, avatar.transform.position, quaternion.identity);
         
-        speechBubble.text = "...";
+            speechBubble.text = "...";
         
-        bipedIK.enabled = false;
+            bipedIK.enabled = false;
+            enabledFlag = false;
+        }
     }
     public void DisableAvatar(bool particle){
-        avatar.transform.DOScale(Vector3.zero, duration);
-        avatar.transform.DOPunchRotation(rot, duration*2);
-        if (particle){
-            GameObject par = Instantiate(popParticle, avatar.transform.position, quaternion.identity);
+        if (enabledFlag){
+            avatar.transform.DOScale(Vector3.zero, duration);
+            avatar.transform.DOPunchRotation(rot, duration*2);
+            if (particle){
+                GameObject par = Instantiate(popParticle, avatar.transform.position, quaternion.identity);
+            }
+        
+            speechBubble.text = "...";
+        
+            bipedIK.enabled = false;
+            enabledFlag = false;
         }
-        
-        speechBubble.text = "...";
-        
-        bipedIK.enabled = false;
     }
 
     public void SetText(string txt, Color col){
