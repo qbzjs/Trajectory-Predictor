@@ -127,6 +127,7 @@ public class TrialSequencer : MonoBehaviour
             //pause function
             yield return new WaitUntil(() => !gameManager.paused);
             
+            gameManager.SendUDP_byte(99,0, TrialEventType.Indication); //modifier adds 1 to the trigger number
             trialEventType = TrialEventType.Indication;
             UpdateTrialStatus(sequenceLength,sequenceIndex,sequenceOrder[i], trialEventType, indicationPeriod);
             yield return new WaitForSeconds(gameManager.SpeedCheck(indicationPeriod));

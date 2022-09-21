@@ -244,4 +244,10 @@
 		Screen2D
 	}
 
+	public enum TriggerType
+	{
+		Pulse,
+		Constant
+	}
+
 }

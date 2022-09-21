@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Enums;
 
+/// <summary>
+/// TODO
+/// - ADD BASELINE CORRECTION
+/// - CHECK BASELINE MULTIPLIERS
+/// - BASELINE CORRECTION ROUNDING OR ....RESET BUTTON IN SETTINGS
+/// </summary>
 public class BCI_ControlSignal : MonoBehaviour
 {
     public static BCI_ControlSignal instance;
@@ -111,7 +117,7 @@ public class BCI_ControlSignal : MonoBehaviour
         //controlVectorAssisted = controlMixer.AssistControl(controlVectorRaw, targetVector, assistance);
         #endregion
 
-        //invert per axis - TODO CHECK THIS WORKS!!!
+        //invert per axis - TODO CHECK THIS WORKS!!!....
         if (invertX){
             magnitudeMultiplierX = -magnitudeMultiplierX;
         }

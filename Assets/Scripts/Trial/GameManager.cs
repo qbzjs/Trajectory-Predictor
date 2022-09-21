@@ -355,7 +355,7 @@ public class GameManager : MonoBehaviour
         ProgressEvent(GameStatus.Progress);
     }
 
-    //use as overall status - maybe later..for FSM
+    //use as overall status - maybe later..for FSM 
     public void SetSystemStatus(GameStatus gs){
         if (gs == GameStatus.WaitingForInput){
             SetTrialActiveStatus(false);
@@ -378,7 +378,8 @@ public class GameManager : MonoBehaviour
             // completionPercentage = (totalTrialsProgress / totalTrials) * 100;
         }
 
-        string phaseDisplay = "ACTIVE TARGET: " + activeTarget + " - TRIAL PHASE: " + trialPhase.ToString() + " - TIMING: " + activePhaseDuration.ToString("f2") +"s";
+        int aT = activeTarget + 1;
+        string phaseDisplay = "ACTIVE TARGET: " + aT + " - TRIAL PHASE: " + trialPhase.ToString() + " - TIMING: " + activePhaseDuration.ToString("f2") +"s";
         UI_DisplayText.instance.SetTrialPhaseDetail(phaseDisplay);
     }
 

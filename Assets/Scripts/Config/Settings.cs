@@ -333,8 +333,6 @@ public class Settings : MonoBehaviour {
 	#endregion
 
 	#region Control Setup
-	
-	//todo add assistance to save system
 	public void SetAssistance(float v){
 		BCI_ControlAssistance = v;
 		BCI_ControlSignal.instance.controlAssistPercentage = Mathf.RoundToInt(BCI_ControlAssistance);
@@ -343,6 +341,7 @@ public class Settings : MonoBehaviour {
 	public void SetAssistanceModifier(float v){
 		assistanceModifier = v;
 		BCI_ControlSignal.instance.assistanceModifier = Mathf.RoundToInt(assistanceModifier);
+		//TODO this doen't affect anything yet...
 		SaveState();
 	}
 	public void SetMagnitude(float v){
