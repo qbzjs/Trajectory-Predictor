@@ -267,6 +267,7 @@ namespace ViveSR
 
                 private void RouteEyeData()
                 {
+                    //format the eyedata for saving
                     eyeDataFormat.blinking = blinking;
                     eyeDataFormat.gazeDirectionLeft = gazeDirectionLeft;
                     eyeDataFormat.gazeDirectionRight = gazeDirectionRight;

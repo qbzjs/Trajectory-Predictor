@@ -208,7 +208,8 @@
 		Stop,
 		Pause,
 		Reset,
-		Sensel
+		Sensel,
+		LongBlink
 	}
 
 	public enum BCI_ControlType

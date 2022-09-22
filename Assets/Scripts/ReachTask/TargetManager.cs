@@ -403,7 +403,7 @@ public class TargetManager : MonoBehaviour
         float y = target.transform.position.y + (transform.position.y - target.transform.position.y) / 1.25f;
         float z = target.transform.position.z + (transform.position.z - target.transform.position.z) / 1.25f;
         indicatorlineDestination = new Vector3(x, y, z);
-        
+
 
         target.SetActive(false);
     }

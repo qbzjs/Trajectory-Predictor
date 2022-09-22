@@ -11,7 +11,7 @@ public class FixationColour : MonoBehaviour
     public Material fixationImagined;
 
     private RunType runType = RunType.Null;
-
+    
     #region Subscriptions
 
     private void OnEnable(){
@@ -31,16 +31,9 @@ public class FixationColour : MonoBehaviour
             SetFixation();
         }
     }
-
     #endregion
 
-
-    void Start(){
-        //get starting fixation
-    }
-
     public void SetFixation(){
-        print("--------------------------------------------------------------");
         runType = Settings.instance.currentRunType;
         Debug.Log(runType.ToString());
 
