@@ -9,8 +9,12 @@ public class TrialSequencer : MonoBehaviour
 {
     private GameManager gameManager;
 
+    public bool debugTrials = false;
+    
     //TODO WAIT FOR USER INPUT
     public bool pauseForInput;
+    public bool waitingForInput = false;
+    public bool startInputReceived = false;
         
     public int targetCount = 4;
     public int repetitions = 4;
@@ -39,6 +43,22 @@ public class TrialSequencer : MonoBehaviour
     public delegate void TargetAction(int trialTotal,int trialIndex, int targetNumber, TrialEventType eType, float dur);
     public static event TargetAction OnTargetAction;
 
+    #region Subscriptions
+
+    private void OnEnable(){
+        EyeControl.OnUserEyeAction += EyeControlOnUserEyeAction;
+    }
+    private void OnDisable(){
+        EyeControl.OnUserEyeAction -= EyeControlOnUserEyeAction;
+    }
+    private void EyeControlOnUserEyeAction(UserInputType inputType){
+        if (inputType==UserInputType.LongBlink){
+            print("Long Blink.................");
+        }
+    }
+
+    #endregion
+    
     #region Initialise
     void Awake(){
         gameManager = GetComponent<GameManager>();
@@ -64,6 +84,9 @@ public class TrialSequencer : MonoBehaviour
     public void StartTrialSequence(){
         InitialiseTrial();
         StartCoroutine(RunTrialSequence());
+        if (debugTrials){
+            Debug.Log("TRIAL......................");
+        }
     }
 
     #endregion

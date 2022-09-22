@@ -35,12 +35,9 @@ public class FixationColour : MonoBehaviour
 
     public void SetFixation(){
         runType = Settings.instance.currentRunType;
-        Debug.Log(runType.ToString());
-
         if (runType == RunType.Kinematic){
             fixationRenderer.material = fixationKinematic;
         }
-
         if (runType == RunType.Imagined){
             fixationRenderer.material = fixationImagined;
         }

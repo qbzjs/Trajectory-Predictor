@@ -9,8 +9,10 @@ using DG.Tweening;
 using Leap.Unity;
 using Unity.MLAgents;
 
-public class TargetManager : MonoBehaviour
-{
+public class TargetManager : MonoBehaviour{
+    
+    public bool debugTrialPhases = false;
+    
     private TargetController controller;
 
     public bool targetOnIndicationPhase;
@@ -170,38 +172,52 @@ public class TargetManager : MonoBehaviour
         }
 
         if (eventType == TrialEventType.PreTrialPhase){
-            Debug.Log("Instantiate Target Objects");
+            if (debugTrialPhases){
+                Debug.Log("Instantiate Target Objects");
+            }
             InitialiseObjects();
         }
 
         if (eventType == TrialEventType.Fixation){
-            Debug.Log("Display Fixation");
+            if (debugTrialPhases){
+                Debug.Log("Display Fixation");
+            }
             DisplayFixation();
         }
 
         if (eventType == TrialEventType.Indication){
-            Debug.Log("Display Indication");
+            if (debugTrialPhases){
+                Debug.Log("Display Indication");
+            }
             DisplayIndication();
         }
 
         if (eventType == TrialEventType.Observation){
-            Debug.Log("Display Observation");
+            if (debugTrialPhases){
+                Debug.Log("Display Observation");
+            }
             // DisplayIndication();
             DisplayObservation();
         }
 
         if (eventType == TrialEventType.TargetPresentation){
-            Debug.Log("Present Target");
+            if (debugTrialPhases){
+                Debug.Log("Present Target");
+            }
             DisplayTarget();
         }
 
         if (eventType == TrialEventType.Rest){
-            Debug.Log("Start Target Removal");
+            if (debugTrialPhases){
+                Debug.Log("Start Target Removal");
+            }
             RemoveTarget();
         }
 
         if (eventType == TrialEventType.PostTrialPhase){
-            Debug.Log("Destroy Target Objects");
+            if (debugTrialPhases){
+                Debug.Log("Destroy Target Objects");
+            }
             DestroyObjects();
         }
 

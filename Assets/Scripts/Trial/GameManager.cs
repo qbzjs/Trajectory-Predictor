@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     [Header("-- DEBUGGING ----")] 
     public bool automateInput;
+
+    public bool debugGeneric = false;
     public bool debugTimingSimple = true;
     public bool debugTimingDetailed = true;
     public bool debugUDPTriggers = true;
@@ -178,10 +180,14 @@ public class GameManager : MonoBehaviour
         }
 
         if (trialsActive){
-            Debug.Log("---Input not available - Trials Started...");
+            if (debugGeneric){
+                Debug.Log("---Input not available - Trials Started...");  
+            }
         }
         if (runManager.runsComplete){
-            Debug.Log("---Runs Completed - Reset to begin new session...");
+            if (debugGeneric){
+                Debug.Log("---Runs Completed - Reset to begin new session...");
+            }
         }
     }
 
@@ -225,7 +231,9 @@ public class GameManager : MonoBehaviour
         GameEvent(GameStatus.Reset);
         GameEvent(GameStatus.Ready);
         //initialise run type???
-        Debug.Log("----------Trial Session Reset!------------------");
+        if (debugGeneric){
+            Debug.Log("----------Trial Session Reset!------------------");
+        }
     }
     //function to reset the loaded game (not applicable yet)
     public void SetGameSpeed(float s){
@@ -347,7 +355,10 @@ public class GameManager : MonoBehaviour
             
             float p = totalTrialsProgress;
             float t = totalTrials;
-            Debug.Log(p / t);
+            if (debugGeneric){
+                Debug.Log(p / t);
+            }
+
             completionPercentage = (p / t) *100;
         }
         UpdateProgressionUI();

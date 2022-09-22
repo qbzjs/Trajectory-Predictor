@@ -7,6 +7,8 @@ using Enums;
 
 public class ScoreManager : MonoBehaviour{
 
+    public bool debugScore = false;
+    
     public static ScoreManager instance;
 
     public ScoreSessionDataObject scoreSessionData;
@@ -204,7 +206,9 @@ public class ScoreManager : MonoBehaviour{
         }
 
         if (eventType == TrialEventType.TrialComplete){
-            print("TRIAL COMPLETE......................");
+            if (debugScore){
+                print("TRIAL COMPLETE......................");
+            }
             SessionTotals();
             SaveScore();
             //ResetScores();
@@ -665,11 +669,16 @@ public class ScoreManager : MonoBehaviour{
         //write JSON
         JSONWriter jWriter = new JSONWriter();
         jWriter.OutputScoreBlockJSON(scoreBlockData);
-        print("block score written------------------------");
+        if (debugScore){
+            print("block score written------------------------");
+        }
+        
         //jWriter = new JSONWriter();
         jWriter.OutputScoreSessionJSON(scoreSessionData);
-        print("session score written------------------------");
-        
+        if (debugScore){
+            print("session score written------------------------");
+        }
+
         //SEND SCORE DATA OBJECTS
         if (OnScoreBlockObjectAction!=null){
             OnScoreBlockObjectAction(scoreBlockData);

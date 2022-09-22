@@ -10,6 +10,8 @@ public class BlockManager : MonoBehaviour
 {
     public static BlockManager instance;
 
+    public bool debugBlocks = false;
+    
     private GameManager gameManager;
     private TrialSequencer trialSequencer;
 
@@ -95,9 +97,11 @@ public class BlockManager : MonoBehaviour
             //event
             gameManager.BlockEvent(GameStatus.CountdownComplete,0);
         }
-        
-        Debug.Log("--------BlockManager - Started Trial Sequence------------------");
-        
+
+        if (debugBlocks){
+            Debug.Log("--------BlockManager - Started Trial Sequence------------------");
+        }
+
         //UDP ON
         gameManager.SendUDP_byte(blockSequence.sequenceStartTrigger[blockIndex-1], 0,GameStatus.BlockStarted);
 

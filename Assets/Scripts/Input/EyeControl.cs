@@ -6,6 +6,8 @@ using Enums;
 public class EyeControl : MonoBehaviour
 {
     //public static EyeControl instance; 
+
+    public bool eyeControlEnabled = false;
     
     public EyeDataFormat eyeData;
 
@@ -32,30 +34,32 @@ public class EyeControl : MonoBehaviour
         }
     }
     void LateUpdate(){
-        if (eyeData.blinking){
-            blinkTimer += Time.deltaTime;
-            if (blinkTimer > 1){
-                longBlinkReady = true;
+        if (eyeControlEnabled){
+            if (eyeData.blinking){
+                blinkTimer += Time.deltaTime;
+                if (blinkTimer > 1){
+                    longBlinkReady = true;
+                }
             }
-        }
-        else{
-            blinkTimer = 0;
+            else{
+                blinkTimer = 0;
+            }
+
+            if (longBlinkReady && !eventSent){
+                longBlinkReady = false;
+                eventSent = true;
+                if (OnUserEyeAction != null){
+                    OnUserEyeAction(UserInputType.LongBlink);
+                }
+            }
+            if (eventSent){
+                cooldownTimer += Time.deltaTime;
+                if (cooldownTimer > 1){
+                    cooldownTimer = 0;
+                    eventSent = false;
+                }
+            }
         }
 
-        if (longBlinkReady && !eventSent){
-            longBlinkReady = false;
-            eventSent = true;
-            if (OnUserEyeAction != null){
-                OnUserEyeAction(UserInputType.LongBlink);
-            }
-        }
-
-        if (eventSent){
-            cooldownTimer += Time.deltaTime;
-            if (cooldownTimer > 1){
-                cooldownTimer = 0;
-                eventSent = false;
-            }
-        }
     }
 }

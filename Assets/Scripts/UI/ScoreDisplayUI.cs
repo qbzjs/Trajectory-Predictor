@@ -78,7 +78,6 @@ public class ScoreDisplayUI : MonoBehaviour
         BCI_Correlation = sessionScoreData.correlationBCI_Assisted;
         kinematicCorrelationAvg = sessionScoreData.correlationKinAvg;
         BCI_CorrelationAvg = sessionScoreData.correlationBCIAvg_Assisted;
-        Debug.Log("score...............");
     }
     #endregion
     

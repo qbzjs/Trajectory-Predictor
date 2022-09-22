@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class JSONWriter
-{
+public class JSONWriter{
+    
+    public bool debugDataWrite = false;
+    
     private SettingsDataObject settingsData;
     private ScoreBlockDataObject scoreBlockData;
     private ScoreSessionDataObject scoreSessionData;
@@ -36,9 +38,11 @@ public class JSONWriter
         System.IO.Directory.CreateDirectory(folderPath);
         string path = Application.persistentDataPath + "/" + folderName + "/" + saveName;
         File.WriteAllText(path,output);
-        
-        Debug.Log("score written **** BLOCK ****");
-        
+
+        if (debugDataWrite){
+            Debug.Log("score written **** BLOCK ****");
+        }
+
         //File.WriteAllText(Application.persistentDataPath+"/settings.txt",output);
     }
     public void OutputScoreSessionJSON(ScoreSessionDataObject scoreSession)
@@ -54,9 +58,11 @@ public class JSONWriter
         System.IO.Directory.CreateDirectory(folderPath);
         string path = Application.persistentDataPath + "/" + folderName + "/" + saveName;
         File.WriteAllText(path,output);
-        
-        Debug.Log("score written **** SESSION ****");
-        
+
+        if (debugDataWrite){
+            Debug.Log("score written **** SESSION ****");
+        }
+
         //File.WriteAllText(Application.persistentDataPath+"/settings.txt",output);
     }
 }
