@@ -12,6 +12,8 @@ using Unity.MLAgents;
 public class TargetManager : MonoBehaviour
 {
     private TargetController controller;
+
+    public bool targetOnIndicationPhase;
     
     public GameObject targetGhostPrefab;
     public GameObject[] targetGhosts = new GameObject[0];
@@ -28,7 +30,6 @@ public class TargetManager : MonoBehaviour
     public GameObject ghostHandRight;
     public Renderer ghostHandRightMesh;
 
-    
     private Renderer targetRenderer;
     private Renderer homeTargetRenderer;
     private Renderer fixationRenderer;
@@ -44,6 +45,8 @@ public class TargetManager : MonoBehaviour
     public Transform originPoint;
     [Range(0.05f,0.25f)]
     public float targetDistance = 0.125f;
+
+    public bool flipOrientation = false; // this is needed to flip the targets depending on which direction the subject is seated
     
     public Vector3 offsetFromOrigin;
     public Vector3 targetDestination;
@@ -66,6 +69,7 @@ public class TargetManager : MonoBehaviour
     public int targetIndex;
     public float lifeTime;
     
+    [Header("Machine Learning Agent (depreciated?)")]
     //ML
     public bool trainAgent;
     public GameObject agent;
@@ -416,18 +420,28 @@ public class TargetManager : MonoBehaviour
         
         homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 2);
         
-
+        //to display next target during the indication phase...
+        if (targetOnIndicationPhase){
+            // ghostHandRightMesh.material.DOFade(0.2f, lifeTime);
+            // ghostHandRight.transform.DOMove(destinationTransform.position, lifeTime);
         
+            //homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 4);
+        
+            targetMesh.transform.DOScale(1, lifeTime/8);
+            targetRenderer.material.DOColor(highlightColour, lifeTime / 8);
+        }
+
         targetGhosts[targetIndex].transform.DOScale(0f, lifeTime/2);
         target.SetActive(true);
-        targetMesh.transform.DOScale(0.75f, lifeTime/2);
+        
+        targetMesh.transform.DOScale(0.75f, lifeTime/4);
         
         // ghostHandRightMesh.material.DOFade(0.05f, lifeTime);
         ghostHandRightMesh.material.DOFade(0, lifeTime);
         ghostHandRight.transform.DOMove(handPosition, lifeTime/2);
         
         //add indication here...point to target
-        indicatorLineTransform.DOMove(indicatorlineDestination, lifeTime);
+        indicatorLineTransform.DOMove(indicatorlineDestination, lifeTime/4);
     }
     private void DisplayObservation()
     {
@@ -461,8 +475,8 @@ public class TargetManager : MonoBehaviour
         
         //homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 4);
         
-        targetMesh.transform.DOScale(1, lifeTime/4);
-        targetRenderer.material.DOColor(highlightColour, lifeTime / 4);
+        targetMesh.transform.DOScale(1, lifeTime/8);
+        targetRenderer.material.DOColor(highlightColour, lifeTime / 8);
 
     }
     private void RemoveTarget()
@@ -493,7 +507,7 @@ public class TargetManager : MonoBehaviour
         indicatorLineTransform.DOMove(transform.position, lifeTime/4);
         
         //play the beep at lower pitch
-        gameObject.GetComponent<AudioSource>().pitch = 0.9f;
+        gameObject.GetComponent<AudioSource>().pitch = 0.89f;
         gameObject.GetComponent<AudioSource>().Play();
     }
     private void DestroyObjects()
@@ -520,7 +534,7 @@ public class TargetManager : MonoBehaviour
             targetGhosts[i].transform.DOMove(GetDestination(i), GameManager.instance.SpeedCheck(animationDuration));
         }
         
-        targetHomeObject.transform.DOScale(0.05f, GameManager.instance.SpeedCheck(animationDuration));
+        targetHomeObject.transform.DOScale(1.5f, GameManager.instance.SpeedCheck(animationDuration));
     }
     private void RemoveGhostTargetArray(){
         for (int i = 0; i < targetGhosts.Length; i++){
@@ -536,37 +550,60 @@ public class TargetManager : MonoBehaviour
             OnTargetAction(false, false, targetHomeObject.transform.position, targetHomeObject.transform);
         }
     }
-    
+
+    #region TargetPositions
+
     private Vector3 GetDestination(int tNum)
     {
         Vector3 dest = Vector3.zero;
-        switch (tNum) {
-            // case 0:
-            //     targetDestination = new Vector3(originPoint.position.x, originPoint.position.y, originPoint.position.z);
-            //     break;
-            case 0:
-                targetDestination = new Vector3(originPoint.position.x - targetDistance, originPoint.position.y, originPoint.position.z);
-                break;
-            case 1:
-                targetDestination = new Vector3(originPoint.position.x, originPoint.position.y + targetDistance, originPoint.position.z);
-                break;
-            case 2:
-                targetDestination = new Vector3(originPoint.position.x + targetDistance, originPoint.position.y, originPoint.position.z);
-                break;
-            case 3:
-                targetDestination = new Vector3(originPoint.position.x, originPoint.position.y-targetDistance, originPoint.position.z);
-                break;
-        }
+        
+        if (flipOrientation){
+            switch (tNum) {
+                case 0:
+                    targetDestination = new Vector3(originPoint.position.x + targetDistance, originPoint.position.y, originPoint.position.z);
+                    break;
+                case 1:
+                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y + targetDistance, originPoint.position.z);
+                    break;
+                case 2:
+                    targetDestination = new Vector3(originPoint.position.x - targetDistance, originPoint.position.y, originPoint.position.z);
+                    break;
+                case 3:
+                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y-targetDistance, originPoint.position.z);
+                    break;
+            }
 
+            if (!flipOrientation){
+                switch (tNum) {
+                    // case 0:
+                    //     targetDestination = new Vector3(originPoint.position.x, originPoint.position.y, originPoint.position.z);
+                    //     break;
+                    case 0:
+                        targetDestination = new Vector3(originPoint.position.x - targetDistance, originPoint.position.y, originPoint.position.z);
+                        break;
+                    case 1:
+                        targetDestination = new Vector3(originPoint.position.x, originPoint.position.y + targetDistance, originPoint.position.z);
+                        break;
+                    case 2:
+                        targetDestination = new Vector3(originPoint.position.x + targetDistance, originPoint.position.y, originPoint.position.z);
+                        break;
+                    case 3:
+                        targetDestination = new Vector3(originPoint.position.x, originPoint.position.y-targetDistance, originPoint.position.z);
+                        break;
+                }
+            }
+        }
         // if (randomisePosition)
         // {
         //     //set a random position based on an offset  
         // }
 
         dest = targetDestination;
-        
         return dest;
     }
+
+    #endregion
+
 
     private void SetMLAgentGoal(Vector3 goalPosition, bool home){
         //position a trigger at the target point

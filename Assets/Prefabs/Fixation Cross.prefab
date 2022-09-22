@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8199264443113048226}
   - component: {fileID: 8222695157184374851}
+  - component: {fileID: 8817900791976951677}
   m_Layer: 0
   m_Name: Fixation Cross
   m_TagString: Untagged
@@ -53,6 +54,21 @@ MonoBehaviour:
   interpolation: 1
   speed: 10
   output: 0
+--- !u!114 &8817900791976951677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3270473755686340959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c83bdbc18d00be243a37dbcdd9e9ae8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fixationRenderer: {fileID: 3086755047454659681}
+  fixationKinematic: {fileID: 2100000, guid: 54064d38f1c065449b00c398f00b43aa, type: 2}
+  fixationImagined: {fileID: 2100000, guid: ba238b3e18f09d24086f092542e6fabc, type: 2}
 --- !u!1001 &4402214748185118949
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -133,5 +149,10 @@ PrefabInstance:
 --- !u!4 &4223663417924398862 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5495d0a407e3996449cd060e0c16a77b, type: 3}
+  m_PrefabInstance: {fileID: 4402214748185118949}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &3086755047454659681 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 5495d0a407e3996449cd060e0c16a77b, type: 3}
   m_PrefabInstance: {fileID: 4402214748185118949}
   m_PrefabAsset: {fileID: 0}
