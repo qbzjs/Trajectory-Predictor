@@ -32,7 +32,7 @@ public class MagnaOscillator : MonoBehaviour
 
     Oscillator oscillator;
     AudioClip clip;
-    
+
     void Start()
     {
         oscillator = new Oscillator();

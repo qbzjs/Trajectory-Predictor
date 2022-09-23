@@ -18,7 +18,7 @@ public class FixationColour : MonoBehaviour
         GameManager.OnBlockAction += GameManagerOnBlockAction;
     }
 
-    private void Disable(){
+    private void OnDisable(){
         GameManager.OnBlockAction -= GameManagerOnBlockAction;
     }
     

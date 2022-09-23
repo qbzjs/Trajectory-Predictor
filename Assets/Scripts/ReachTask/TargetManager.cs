@@ -494,6 +494,11 @@ public class TargetManager : MonoBehaviour{
         
         targetMesh.transform.DOScale(1, lifeTime/8);
         targetRenderer.material.DOColor(highlightColour, lifeTime / 8);
+        
+        //change indicatior colour //done in script on indicator line
+        // LineRenderer lr = indicatorLineTransform.gameObject.GetComponent<LineRenderer>();
+        // lr.startColor = Color.green;
+        // lr.endColor = Color.green;
 
     }
     private void RemoveTarget()
