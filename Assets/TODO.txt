@@ -1,0 +1,15 @@
+user start trials
+
+resting text
+
+baseline correction
+
+Change indication colour
+
+fix magna oscillator
+
+test magna haptics
+
+switch 2d/3d display on button press
+
+
