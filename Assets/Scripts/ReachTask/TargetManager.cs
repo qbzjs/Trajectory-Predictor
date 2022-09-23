@@ -382,7 +382,8 @@ public class TargetManager : MonoBehaviour{
     }
     private void InitialiseFixation(){
         if (fixationCross == null){
-            fixationCross = Instantiate(fixationCrossPrefab, originPoint.position, quaternion.identity);
+            Vector3 fixPoint = new Vector3(originPoint.position.x, originPoint.position.y, originPoint.position.z + 0.1f);
+            fixationCross = Instantiate(fixationCrossPrefab, fixPoint, quaternion.identity);
             fixationCross.transform.position = originPoint.position;
             fixationRenderer = fixationCross.transform.Find("Cross").GetComponent<Renderer>();
             fixationCross.transform.DOScale(0, 0);

@@ -45,7 +45,7 @@ public class InstructionAvatar : MonoBehaviour
     }
     public void EnableAvatar(){
         avatar.transform.DOScale(avatarSize, duration);
-        avatar.transform.DOPunchRotation(rot, duration*2);
+        //avatar.transform.DOPunchRotation(rot, duration*2);
         GameObject par = Instantiate(popParticle, avatar.transform.position, quaternion.identity);
 
         bipedIK.enabled = true;
@@ -55,7 +55,7 @@ public class InstructionAvatar : MonoBehaviour
     public void DisableAvatar(){
         if (enabledFlag){
             avatar.transform.DOScale(Vector3.zero, duration);
-            avatar.transform.DOPunchRotation(rot, duration*2);
+            //avatar.transform.DOPunchRotation(rot, duration*2);
             GameObject par = Instantiate(popParticle, avatar.transform.position, quaternion.identity);
         
             speechBubble.text = "...";
@@ -67,7 +67,7 @@ public class InstructionAvatar : MonoBehaviour
     public void DisableAvatar(bool particle){
         if (enabledFlag){
             avatar.transform.DOScale(Vector3.zero, duration);
-            avatar.transform.DOPunchRotation(rot, duration*2);
+            //avatar.transform.DOPunchRotation(rot, duration*2);
             if (particle){
                 GameObject par = Instantiate(popParticle, avatar.transform.position, quaternion.identity);
             }
