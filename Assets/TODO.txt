@@ -1,15 +1,20 @@
-user start trials
+-TODO-
+Eye Tracking 2D?
 
-resting text
+verify baseline correction
+save baseline correction - csv
+add live plot for tuning?
 
-baseline correction
+resting text/indication of rest period for user?
 
-Change indication colour
+DONE - self pace trial option - user start trials
+DONE - eye blink controls
 
-fix magna oscillator
+DONE - Change indication colour for kin/imag
 
-test magna haptics
+DONE - spatial feedback haptics/audio optional
 
-switch 2d/3d display on button press
+DONE - alignment of seated/experiment position for VR or 2D
+DONE - kinematic data capture
 
 

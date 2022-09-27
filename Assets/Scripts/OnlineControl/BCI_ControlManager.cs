@@ -54,7 +54,7 @@ public class BCI_ControlManager : MonoBehaviour
 
     public static event ControlSignal OnControlSignal;
 
-    #region Subscriptions
+    #region Event Subscriptions
 
     private void OnEnable(){
         GameManager.OnGameAction += GameManagerOnGameAction;

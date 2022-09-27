@@ -48,18 +48,22 @@ public class BCI_ControlSignal : MonoBehaviour
     public float defaultSmoothing = 0.45f;
     public float targetSmoothing = 0.45f;
     
-    [Header("MODIFIERS")]
+    [Header("BASELINE CORRECTION")]
+    [Header("Offset")]
+    [Range(-1f, 1f)] public float baselineOffsetX = 0f;
+    [Range(-1f, 1f)] public float baselineOffsetY = 0f;
+    [Range(-1f, 1f)] public float baselineOffsetZ = 0f;
+    [Header("Magnitude")]
     [Range(0, 10f)]
     public float magnitudeMultiplier = 1f;
     [Space(4)]
-    public bool invertX;
-    [Range(0, 2f)] public float magnitudeMultiplierX = 1f;
-    public bool invertY;
-    [Range(0, 2f)] public float magnitudeMultiplierY = 1f;
-    public bool invertZ;
-    [Range(0, 2f)] public float magnitudeMultiplierZ = 1f;
+    [Range(-5f, 5f)] public float magnitudeMultiplierX = 1f;
+    [Range(0, 5f)] public float magnitudeMultiplierY = 1f;
+    [Range(0, 5f)] public float magnitudeMultiplierZ = 1f;
 
-    #region Data Subscribe
+    //todo - save baseline correction to settings
+
+    #region Event Subscriptions
 
     private void OnEnable(){
         UDPClient.OnBCI_Data += UDPClientOnBCI_Data;
@@ -117,20 +121,25 @@ public class BCI_ControlSignal : MonoBehaviour
         //controlVectorAssisted = controlMixer.AssistControl(controlVectorRaw, targetVector, assistance);
         #endregion
 
+        #region Baseline Correction
+
         //invert per axis - TODO CHECK THIS WORKS!!!....
-        if (invertX){
-            magnitudeMultiplierX = -magnitudeMultiplierX;
-        }
-        if (invertY){
-            magnitudeMultiplierY = -magnitudeMultiplierY;
-        }
-        if (invertZ){
-            magnitudeMultiplierZ = -magnitudeMultiplierZ;
-        }
+        magnitudeMultiplierX = -magnitudeMultiplierX;
+        magnitudeMultiplierY = -magnitudeMultiplierY;
+        magnitudeMultiplierZ = -magnitudeMultiplierZ;
+
+        //TODO - add baseline offset here??
         
-        //scale the control magnitude
+        //scale the control magnitude on all axis
         cv = controlVectorAssisted * magnitudeMultiplier;
+        
+        //scale the control magnitude on individual axis
         cv = new Vector3(cv.x * magnitudeMultiplierX, cv.y * magnitudeMultiplierY, cv.z * magnitudeMultiplierZ);
+
+        cv = new Vector3(cv.x + baselineOffsetX, cv.y + baselineOffsetY, cv.z + baselineOffsetZ);
+        
+
+        #endregion
         
         //assign control to a vector for use in other classes 
         controlVectorRefined = cv;
