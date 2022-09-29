@@ -58,8 +58,8 @@ public class BCI_ControlSignal : MonoBehaviour
     public float magnitudeMultiplier = 1f;
     [Space(4)]
     [Range(-5f, 5f)] public float magnitudeMultiplierX = 1f;
-    [Range(0, 5f)] public float magnitudeMultiplierY = 1f;
-    [Range(0, 5f)] public float magnitudeMultiplierZ = 1f;
+    [Range(-5, 5f)] public float magnitudeMultiplierY = 1f;
+    [Range(-5, 5f)] public float magnitudeMultiplierZ = 1f;
 
     //todo - save baseline correction to settings
 
@@ -76,7 +76,7 @@ public class BCI_ControlSignal : MonoBehaviour
     private void UDPClientOnBCI_Data(float x, float y, float z){
         if (!simulateValues){
             controlVectorPredicted = new Vector3(x, y, z);
-            //Debug.Log(controlVectorRaw);
+            Debug.Log("BCI: " +controlVectorPredicted);
         }
     }
     private void ArmReachControllerOnTargetVelocity(Vector3 targetVelocity){
@@ -124,9 +124,9 @@ public class BCI_ControlSignal : MonoBehaviour
         #region Baseline Correction
 
         //invert per axis - TODO CHECK THIS WORKS!!!....
-        magnitudeMultiplierX = -magnitudeMultiplierX;
-        magnitudeMultiplierY = -magnitudeMultiplierY;
-        magnitudeMultiplierZ = -magnitudeMultiplierZ;
+        // magnitudeMultiplierX = -magnitudeMultiplierX;
+        // magnitudeMultiplierY = -magnitudeMultiplierY;
+        // magnitudeMultiplierZ = -magnitudeMultiplierZ;
 
         //TODO - add baseline offset here??
         

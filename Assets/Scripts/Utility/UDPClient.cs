@@ -83,18 +83,19 @@ public class UDPClient : MonoBehaviour
         //Check if a message has been received and broadcast data if true
         if (received != ""){
             //Debug.Log("UDPClient: message received \'" + received + "\'");
-            receivedFlag = true; 
+            receivedFlag = true;
             // received = ""; //makes it flicker on/off - need to buffer frames or add timeout
         }
-        // else {
-        //     receivedFlag = false;
-        // }
-        
-        if (receivedFlag){
-            if (OnBCI_Data != null){
-                OnBCI_Data(x,y,z);
-            }
+        else{
+            receivedFlag = false;
         }
+
+        //this is moved to the receive function - the flags are no longer used..
+        // if (receivedFlag){
+        //     if (OnBCI_Data != null){
+        //         OnBCI_Data(x,y,z);
+        //     }
+        // }
     }
 
     #region Data Sender
@@ -142,10 +143,16 @@ public class UDPClient : MonoBehaviour
     #region Data Receiver
     public void ReceiveData()
     {
+        // print("recieve data");
+        
         while (true){
             
             //data conversion to x y z
             IPEndPoint receiveIP = new IPEndPoint (IPAddress.Any, portListen);
+            
+            //print("recieve UDP");
+            //received = "t";
+            
             
             try{
                 byte[] byteArray = new byte[]{}; //length is 24
@@ -162,22 +169,38 @@ public class UDPClient : MonoBehaviour
                 
                 i++;
                 z = Convert.ToSingle(BitConverter.ToDouble(byteArray, 8 * i));
+                
+                Debug.Log("UDP Data Received: " + "x:" + x.ToString() + "y:" + y.ToString() +"z:" + z.ToString());
+                
+                //flag to set when data is broadcast from update
+                string text = "";
+                text = Encoding.UTF8.GetString (byteArray);
+                received = text;
+                Debug.Log(received.ToString());
+                received = "";
+                
+                //moved from update
+                if (OnBCI_Data != null){
+                    OnBCI_Data(x,y,z);
+                }
             }
             catch (Exception e){
                 Debug.Log ("Error in UDP Receiver:" + e.ToString ());
             }
             
-            //Unconverted data (used to check data is received)
-            try {
-                byte[] data = client.Receive (ref receiveIP);
-                // Bytes into text
-                string text = "";
-                text = Encoding.UTF8.GetString (data);
-                received = text;
-            } 
-            catch (Exception err) {
-                Debug.Log ("Error:" + err.ToString ());
-            }
+            
+            
+            // //Unconverted data (used to check data is received)
+            // try {
+            //     byte[] data = client.Receive (ref receiveIP);
+            //     // Bytes into text
+            //     string text = "";
+            //     text = Encoding.UTF8.GetString (data);
+            //     received = text;
+            // } 
+            // catch (Exception err) {
+            //     Debug.Log ("Error:" + err.ToString ());
+            // }
             
         }
     }
