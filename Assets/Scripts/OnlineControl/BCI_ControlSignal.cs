@@ -76,7 +76,7 @@ public class BCI_ControlSignal : MonoBehaviour
     private void UDPClientOnBCI_Data(float x, float y, float z){
         if (!simulateValues){
             controlVectorPredicted = new Vector3(x, y, z);
-            Debug.Log("BCI: " +controlVectorPredicted);
+//            Debug.Log("BCI: " +controlVectorPredicted);
         }
     }
     private void ArmReachControllerOnTargetVelocity(Vector3 targetVelocity){

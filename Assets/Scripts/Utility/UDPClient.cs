@@ -20,10 +20,11 @@ public class UDPClient : MonoBehaviour
 {
     public static UDPClient instance;
 
+    public bool debug = false;
     // public bool sendEnabled = true;
     // public bool receiveEnabled = true;
     
-    public string ip = "127.0.0.1";
+    public string ip = "127.0.0.1"; //ip to send triggers to (BCI Computer) scanihub network hub  192.168.1.20
     public int portListen = 3002;
     public int portSend = 3010;
 
@@ -80,7 +81,7 @@ public class UDPClient : MonoBehaviour
     {
         //Debug.Log(received.ToString());
 
-        //Check if a message has been received and broadcast data if true
+        //Check if a message has been received and broadcast data if true - DEPRECIATED - DATA ALWAYS SENT...
         if (received != ""){
             //Debug.Log("UDPClient: message received \'" + received + "\'");
             receivedFlag = true;
@@ -129,7 +130,9 @@ public class UDPClient : MonoBehaviour
 
                 // Send bytes to remote client
                 client.Send (data, data.Length, remoteEndPoint);
-                Debug.Log ("UDPClient: send \'" + valueToSend + "\'");
+                if (debug){
+                    Debug.Log ("UDPClient: send \'" + valueToSend + "\'");
+                }
                 //Clear message
                 valueToSend = "";
             }
@@ -169,17 +172,19 @@ public class UDPClient : MonoBehaviour
                 
                 i++;
                 z = Convert.ToSingle(BitConverter.ToDouble(byteArray, 8 * i));
-                
-                Debug.Log("UDP Data Received: " + "x:" + x.ToString() + "y:" + y.ToString() +"z:" + z.ToString());
-                
-                //flag to set when data is broadcast from update
+
+                if (debug){
+                    Debug.Log("UDP Data Received: " + "x:" + x.ToString() + "y:" + y.ToString() +"z:" + z.ToString());
+                }
+
+                //flag to set when data is broadcast from update - DEPRECIATED -DATA ALWAYS SENT..
                 string text = "";
                 text = Encoding.UTF8.GetString (byteArray);
-                received = text;
-                Debug.Log(received.ToString());
-                received = "";
+                // received = text;
+                //
+                // received = "";
                 
-                //moved from update
+                //moved from update - DATA ALWAYS SENT FROM HERE NOW
                 if (OnBCI_Data != null){
                     OnBCI_Data(x,y,z);
                 }
