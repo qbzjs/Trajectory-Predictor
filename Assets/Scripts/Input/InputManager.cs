@@ -17,6 +17,7 @@ public class InputManager : MonoBehaviour{
 	public bool debugInput = false;
 	
 	public bool inputEnabled = true;
+	public bool trialReady;
 	public delegate void UserInputAction(UserInputType inputType);
 	public static event UserInputAction OnUserInputAction;
 
@@ -24,15 +25,32 @@ public class InputManager : MonoBehaviour{
 		instance = this;
 	}
 
+	private void Start(){
+		trialReady = true;
+	}
+
 	#region Subscriptions
 
 	private void OnEnable() {
 		SenselTap.OnUserInputAction+= SenselTapOnUserInputAction;
+		GameManager.OnProgressAction += GameManagerOnProgressAction;
 	}
 	private void OnDisable() {
-		SenselTap.OnUserInputAction+= SenselTapOnUserInputAction;
+		SenselTap.OnUserInputAction -= SenselTapOnUserInputAction;
+		GameManager.OnProgressAction -= GameManagerOnProgressAction;
 	}
-
+	private void GameManagerOnProgressAction(GameStatus eventType, float completionPercentage, int run, int runTotal, int block, int blockTotal, int trial, int trialTotal){
+		if (eventType == GameStatus.Ready){
+			trialReady = true;
+		}
+		else{
+			trialReady = false;
+		}
+		// if (eventType == GameStatus.BlockComplete){
+		// 	trialReady = true;
+		// }
+	}
+	
 	#endregion
 
 
@@ -64,9 +82,11 @@ public class InputManager : MonoBehaviour{
 	#region Input Actions
 
 	public void StartTrials(){
-		if (inputEnabled){
-			if (OnUserInputAction != null){
-				OnUserInputAction(UserInputType.Start);
+		if (GameManager.instance.gameStatus != GameStatus.RunningTrials){
+			if (inputEnabled){
+				if (OnUserInputAction != null){
+					OnUserInputAction(UserInputType.Start);
+				}
 			}
 		}
 	}
