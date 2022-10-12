@@ -14,6 +14,8 @@ public class InputManager : MonoBehaviour{
 	
 	public static InputManager instance;
 
+	public bool debugInput = false;
+	
 	public bool inputEnabled = true;
 	public delegate void UserInputAction(UserInputType inputType);
 	public static event UserInputAction OnUserInputAction;
@@ -51,7 +53,9 @@ public class InputManager : MonoBehaviour{
 	}
 	private void SenselTapOnUserInputAction(UserInputType iType, float x, float y, float f)
 	{
-		Debug.Log("Sensel Input ---> " + "X: " + x + " : " + "Y: " + y + "F: " + f);
+		if (debugInput){
+			Debug.Log("Sensel Input ---> " + "X: " + x + " : " + "Y: " + y + "F: " + f);
+		}
 		StartTrials();
 	}
 

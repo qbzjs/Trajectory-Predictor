@@ -220,7 +220,7 @@ namespace ViveSR
                         }
                         else
                         {
-                            print("dfdfokbnmdfobndmfo");
+                            print("TODO - VERIFY EYE TRACKING RECORDING");
                             //Debug.Log("---- Stop Eye Tracking Tracking : " + fileName);
                             recordEyeData = false;
                             dataWriter.WriteData(testID);

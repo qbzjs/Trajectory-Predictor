@@ -177,6 +177,9 @@ public class GameManager : MonoBehaviour
             GameEvent(GameStatus.Initialised);
             SetTrialActiveStatus(true);
             runManager.StartTrial();
+            //play audio in audiomanager by finding a sound source and passing it back to the audiomanager play function
+            AudioSource s = AudioManager.instance.startTrials;
+            AudioManager.instance.PlayInteraction(AudioManager.instance.startTrials,1f,1f);
         }
 
         if (trialsActive){

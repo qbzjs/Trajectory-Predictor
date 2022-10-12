@@ -1,6 +1,10 @@
 -TODO-
 Eye Tracking 2D?
 
+Foley Audio...
+Audio VR = -18db
+Audio 2D = -6db
+
 verify baseline correction
 save baseline correction - csv
 
