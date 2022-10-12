@@ -3,7 +3,8 @@ Eye Tracking 2D?
 
 verify baseline correction
 save baseline correction - csv
-add live plot for tuning?
+
+start button render vr
 
 resting text/indication of rest period for user?
 

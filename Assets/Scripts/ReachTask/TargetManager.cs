@@ -594,25 +594,24 @@ public class TargetManager : MonoBehaviour{
                     targetDestination = new Vector3(originPoint.position.x, originPoint.position.y-targetDistance, originPoint.position.z);
                     break;
             }
-
-            if (!flipOrientation){
-                switch (tNum) {
-                    // case 0:
-                    //     targetDestination = new Vector3(originPoint.position.x, originPoint.position.y, originPoint.position.z);
-                    //     break;
-                    case 0:
-                        targetDestination = new Vector3(originPoint.position.x - targetDistance, originPoint.position.y, originPoint.position.z);
-                        break;
-                    case 1:
-                        targetDestination = new Vector3(originPoint.position.x, originPoint.position.y + targetDistance, originPoint.position.z);
-                        break;
-                    case 2:
-                        targetDestination = new Vector3(originPoint.position.x + targetDistance, originPoint.position.y, originPoint.position.z);
-                        break;
-                    case 3:
-                        targetDestination = new Vector3(originPoint.position.x, originPoint.position.y-targetDistance, originPoint.position.z);
-                        break;
-                }
+        }
+        if (!flipOrientation){
+            switch (tNum) {
+                // case 0:
+                //     targetDestination = new Vector3(originPoint.position.x, originPoint.position.y, originPoint.position.z);
+                //     break;
+                case 0:
+                    targetDestination = new Vector3(originPoint.position.x - targetDistance, originPoint.position.y, originPoint.position.z);
+                    break;
+                case 1:
+                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y + targetDistance, originPoint.position.z);
+                    break;
+                case 2:
+                    targetDestination = new Vector3(originPoint.position.x + targetDistance, originPoint.position.y, originPoint.position.z);
+                    break;
+                case 3:
+                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y-targetDistance, originPoint.position.z);
+                    break;
             }
         }
         // if (randomisePosition)
