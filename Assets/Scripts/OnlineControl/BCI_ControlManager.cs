@@ -8,8 +8,7 @@ using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class BCI_ControlManager : MonoBehaviour
-{
+public class BCI_ControlManager : MonoBehaviour{
     public static BCI_ControlManager instance;
 
     public GameObject controlObject; //object moved by the BCI - arm will take position from this object
@@ -24,6 +23,11 @@ public class BCI_ControlManager : MonoBehaviour
     public Material armInvisibleMaterialMale;
     public Material armInvisibleMaterialFemale;
 
+    public GameObject autoHandModelLeft;
+    public GameObject autoHandModelRight;
+    public Material handMat;
+    public Material handMatInvisible;
+
     public GameObject leapHandManager;
 
     public HandModelManager leapModelManager;
@@ -36,10 +40,17 @@ public class BCI_ControlManager : MonoBehaviour
 
     private bool leapHands = false;
     private bool ikHands = false;
+    private bool autoHands = false;
     private bool kinematicHands = false;
     private bool BCIHands = false;
 
+    //for editor
+    public bool allowLeap = true;
+    public bool allowAutoHand = true;
+    public bool allowVRIK = true;
+
     [Header("UI")] public Button leapBtn;
+    public Button autoHand_Btn;
     public Button IK_Btn;
 
     public Button kinematicBtn;
@@ -86,6 +97,7 @@ public class BCI_ControlManager : MonoBehaviour
 
             EnableLeap();
             DisableIK();
+            DisableAutoHand();
         }
 
         if (eventType == GameStatus.AllRunsComplete){
@@ -98,6 +110,7 @@ public class BCI_ControlManager : MonoBehaviour
             // FadeArms(false,1f);
             EnableLeap();
             DisableIK();
+            DisableAutoHand();
         }
     }
 
@@ -112,6 +125,7 @@ public class BCI_ControlManager : MonoBehaviour
 
             EnableLeap();
             DisableIK();
+            DisableAutoHand();
         }
 
         if (eventType == GameStatus.Countdown){
@@ -127,6 +141,7 @@ public class BCI_ControlManager : MonoBehaviour
 
                 DisableLeap();
                 EnableIK();
+                EnableAutoHand();
             }
 
             if (Settings.instance.currentRunType == RunType.Kinematic){
@@ -137,9 +152,10 @@ public class BCI_ControlManager : MonoBehaviour
                 //disable the leap hand
 
                 // FadeArms(true, 1f);
-                
+
                 DisableLeap();
                 EnableIK();
+                EnableAutoHand();
             }
         }
     }
@@ -177,11 +193,16 @@ public class BCI_ControlManager : MonoBehaviour
         }
 
         armIK_Renderer.material = armMaterial;
+
+
+        //todo make autohand for left...
+        handMat = autoHandModelLeft.GetComponent<Renderer>().material;
     }
 
     void Start(){
         leapBtn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
         IK_Btn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
+        autoHand_Btn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
         // kinematicBtn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
         // BCI_Btn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
         // EnableKinematic(); //START WITH LEAP HANDS ACTIVE
@@ -193,10 +214,9 @@ public class BCI_ControlManager : MonoBehaviour
 
     //TODO - MAKE THE DECREASE ASSISTANCE PER RUN....
     public void SetControlAssistance(int a){
-        
     }
+
     public void DecreaseControlAssistance(int a){
-        
     }
 
 
@@ -217,21 +237,52 @@ public class BCI_ControlManager : MonoBehaviour
 
     public void FadeArms(bool b, float t){
         if (b){
-            armIK_Renderer.material = armMaterialInvisible;
-            armIK_Renderer.material.DOFade(0, 0);
-            armIK_Renderer.material.DOFade(1, t);
-            StartCoroutine(PostFadeMaterial(armMaterial, 1f));
+            if (allowVRIK){
+                armIK_Renderer.material = armMaterialInvisible;
+                armIK_Renderer.material.DOFade(0, 0);
+                armIK_Renderer.material.DOFade(1, t);
+                
+                StartCoroutine(PostFadeMaterialIK(armMaterial, 1f));
+            }
+
+            if (allowAutoHand){
+                autoHandModelLeft.GetComponent<Renderer>().material = handMatInvisible;
+                autoHandModelLeft.GetComponent<Renderer>().material.DOFade(0, 0);
+                autoHandModelLeft.GetComponent<Renderer>().material.DOFade(1, t);
+                autoHandModelRight.GetComponent<Renderer>().material = handMatInvisible;
+                autoHandModelRight.GetComponent<Renderer>().material.DOFade(0, 0);
+                autoHandModelRight.GetComponent<Renderer>().material.DOFade(1, t);
+                
+                StartCoroutine(PostFadeMaterialAH(1f));
+            }
         }
         else{
-            armIK_Renderer.material = armMaterialInvisible;
-            armIK_Renderer.material.DOFade(1, 0);
-            armIK_Renderer.material.DOFade(0, t);
+            if (allowVRIK){
+                armIK_Renderer.material = armMaterialInvisible;
+                armIK_Renderer.material.DOFade(1, 0);
+                armIK_Renderer.material.DOFade(0, t);
+            }
+
+            if (allowAutoHand){
+                autoHandModelLeft.GetComponent<Renderer>().material = handMatInvisible;
+                autoHandModelLeft.GetComponent<Renderer>().material.DOFade(1, 0);
+                autoHandModelLeft.GetComponent<Renderer>().material.DOFade(0, t);
+                autoHandModelRight.GetComponent<Renderer>().material = handMatInvisible;
+                autoHandModelRight.GetComponent<Renderer>().material.DOFade(1, 0);
+                autoHandModelRight.GetComponent<Renderer>().material.DOFade(0, t);
+            }
         }
     }
 
-    private IEnumerator PostFadeMaterial(Material m, float t){
+    private IEnumerator PostFadeMaterialIK(Material m, float t){
         yield return new WaitForSeconds(t);
         armIK_Renderer.material = m;
+    }
+
+    private IEnumerator PostFadeMaterialAH(float t){
+        yield return new WaitForSeconds(t);
+        autoHandModelLeft.GetComponent<Renderer>().material = handMat;
+        autoHandModelRight.GetComponent<Renderer>().material = handMat;
     }
 
     // public void ToggleKinematicHands(){
@@ -251,6 +302,7 @@ public class BCI_ControlManager : MonoBehaviour
     //         EnableBCI();
     //     }
     // }
+   
     public void ToggleLeapHands(){
         if (leapHands){
             DisableLeap();
@@ -266,6 +318,15 @@ public class BCI_ControlManager : MonoBehaviour
         }
         else{
             EnableIK();
+        }
+    }
+
+    public void ToggleAutoHands(){
+        if (autoHands){
+            DisableAutoHand();
+        }
+        else{
+            EnableAutoHand();
         }
     }
 
@@ -291,6 +352,18 @@ public class BCI_ControlManager : MonoBehaviour
         ikHands = false;
         FadeArms(false, 1f);
         IK_Btn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
+    }
+
+    private void EnableAutoHand(){
+        autoHands = true;
+        FadeArms(true, 1f);
+        autoHand_Btn.transform.GetComponent<Image>().color = Settings.instance.UI_Orange;
+    }
+
+    private void DisableAutoHand(){
+        autoHands = false;
+        FadeArms(false, 1f);
+        autoHand_Btn.transform.GetComponent<Image>().color = Settings.instance.UI_Disabled;
     }
     // private void DisableKinematic(){
     //     kinematicHands = false;
