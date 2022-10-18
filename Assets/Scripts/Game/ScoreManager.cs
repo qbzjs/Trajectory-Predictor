@@ -122,7 +122,8 @@ public class ScoreManager : MonoBehaviour{
     public float overallPerformanceBlock;
     public float overallPerformanceSession;
 
-    [Header("STREAK")]
+    [Header("STREAK")] 
+    public bool streaking = false;
     public int targetStreak = 0;
     public int streakCounterKin = 4;
     public int streakCounterImag = 2;
@@ -147,6 +148,9 @@ public class ScoreManager : MonoBehaviour{
         Vector3 meanSquareErrorAverage,Vector3 meanSquareErrorAverageAssisted,
         float overallPerformance);
     public static event ScoreSessionAction OnScoreSessionAction;
+    
+    public delegate void TargetStreakAction(bool streakFeedback, int streakCount);
+    public static event TargetStreakAction OnTargetStreakAction;
 
     #endregion
 
@@ -185,6 +189,7 @@ public class ScoreManager : MonoBehaviour{
             SessionTotals();
             SaveScore();
             ResetScores();
+            ResetStreak();
         }
     }
 
@@ -321,20 +326,39 @@ public class ScoreManager : MonoBehaviour{
         if (Settings.instance.currentRunType == RunType.Kinematic){
             if (targetStreak == streakCounterKin){
                 Debug.Log(("streak..."));
-                streakCounterKin = targetStreak + 4;
+                streakCounterImag = targetStreak + 4;
+                streaking = true;
+                if (OnTargetStreakAction != null){
+                    OnTargetStreakAction(true, targetStreak);
+                }
             }
+            else{
+                if (OnTargetStreakAction != null){
+                    OnTargetStreakAction(false, targetStreak);
+                }
+            }
+
         }
         if (Settings.instance.currentRunType == RunType.Imagined){
             if (targetStreak == streakCounterImag){
                 Debug.Log(("streak..."));
                 streakCounterImag = targetStreak + 1;
+                streaking = true;
+                if (OnTargetStreakAction != null){
+                    OnTargetStreakAction(true, targetStreak);
+                }
             }
         }
-    }
 
+    }
     public void ResetStreak(){
         targetStreak = 0;
         streakCounterKin = 4;
+        streaking = false;
+        
+        if (OnTargetStreakAction != null){
+            OnTargetStreakAction(streaking, targetStreak);
+        }
     }
 
     #endregion
