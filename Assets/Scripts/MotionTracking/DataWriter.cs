@@ -154,7 +154,7 @@ public class DataWriter : MonoBehaviour
 
     public void WriteEyeData(string ts, string elapsed, string tag, string target,
     string blinking, float eyeOpennessLeft, float eyeOpennessRight, Vector3 gazeLeft, Vector3 gazeRight,
-    float pupilDiameterLeft, float pupilDiameterRight)
+    float pupilDiameterLeft, float pupilDiameterRight, float xCoord2D, float yCoord2D)
     {
         if (writeTitle){
             stringBuilder.Append("Joint Tag").Append (",")
@@ -171,7 +171,9 @@ public class DataWriter : MonoBehaviour
                 .Append("Gaze Right Y").Append (",")
                 .Append("Gaze Right Z").Append (",")
                 .Append("Pupil Diameter Left").Append (",")
-                .Append("Pupil Diameter Right").AppendLine();
+                .Append("Pupil Diameter Right").Append (",")
+                .Append("X Coord 2D").Append (",")
+                .Append("Y Coord 2D").AppendLine();
 
             writeTitle = false;
         }
@@ -190,7 +192,9 @@ public class DataWriter : MonoBehaviour
                 .Append(gazeRight.y).Append (",")
                 .Append(gazeRight.z).Append (",")
                 .Append(pupilDiameterLeft).Append (",")
-                .Append(pupilDiameterRight).AppendLine();
+                .Append(pupilDiameterRight).Append (",")
+                .Append(xCoord2D).Append (",")
+                .Append(yCoord2D).AppendLine();
         }
     }
     //TODO - fix naming with new classes---------------------

@@ -19,9 +19,12 @@ public class EyeDataFormat
 
     public float pupilDiameterLeft;
     public float pupilDiameterRight;
+
+    public float xCoord2D;
+    public float yCoord2D;
     
     public EyeDataFormat(bool blinking, Vector3 gazeDirectionLeft,Vector3 gazeDirectionRight,
-        float eyeOpennessLeft, float eyeOpennessRight, float pupilDiameterLeft, float pupilDiameterRight)
+        float eyeOpennessLeft, float eyeOpennessRight, float pupilDiameterLeft, float pupilDiameterRight, float xCoord2D, float yCoord2D)
     {
         this.blinking = blinking;
         this.gazeDirectionLeft = gazeDirectionLeft;
@@ -30,5 +33,7 @@ public class EyeDataFormat
         this.eyeOpennessRight = eyeOpennessRight;
         this.pupilDiameterLeft = pupilDiameterLeft;
         this.pupilDiameterRight = pupilDiameterRight;
+        this.xCoord2D = xCoord2D;
+        this.yCoord2D = yCoord2D;
     }
 }

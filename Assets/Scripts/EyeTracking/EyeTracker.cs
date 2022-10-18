@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using TMPro;
 using Enums;
+using Tobii.Gaming.Examples.GazePointData;
 
 namespace ViveSR
 {
@@ -26,6 +27,9 @@ namespace ViveSR
 
                 static Vector3 gazeDirectionLeft;
                 static Vector3 gazeDirectionRight;
+
+                static float xCoord2D;
+                static float yCoord2D;
 
                 static float eyeOpennessLeft;
                 static float eyeOpennessRight;
@@ -259,9 +263,15 @@ namespace ViveSR
                         //     p_speed,p_velocity,p_acceleration,p_accelerationStrength,p_direction,
                         //     p_angularSpeed,p_angularVelocity,p_angularAcceleration,p_angularAccelerationStrength,p_angularAxis);
                         
+                        //2D Gaze tracking!!!!!!!!!
+                        if (gameObject.GetComponent<EyeTracker2D>()){
+                            xCoord2D = gameObject.GetComponent<EyeTracker2D>().xCoord;
+                            yCoord2D = gameObject.GetComponent<EyeTracker2D>().yCoord;
+                        }
+                        
                         dataWriter.WriteEyeData(timeStamp, elapsedTime.ToString("f2"), motionTag.ToString(), targetTag,
                             blinking.ToString(), eyeOpennessLeft, eyeOpennessRight, gazeDirectionLeft, gazeDirectionRight,
-                            pupilDiameterLeft, pupilDiameterRight);
+                            pupilDiameterLeft, pupilDiameterRight, xCoord2D, yCoord2D);
                     }
                 }
 
@@ -275,6 +285,9 @@ namespace ViveSR
                     eyeDataFormat.eyeOpennessRight = eyeOpennessRight;
                     eyeDataFormat.pupilDiameterLeft = pupilDiameterLeft;
                     eyeDataFormat.pupilDiameterRight = pupilDiameterRight;
+                    eyeDataFormat.xCoord2D = xCoord2D;
+                    eyeDataFormat.yCoord2D = yCoord2D;
+                    
                     if (DAO.instance != null)
                     {
                         DAO.instance.eyeData = eyeDataFormat;
