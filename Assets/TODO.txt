@@ -1,25 +1,8 @@
 -TODO-
-Eye Tracking 2D?
+verify kinematic streaks
 
-Foley Audio...
-Audio VR = -18db
-Audio 2D = -6db
+save streaks to csv
 
-verify baseline correction
-save baseline correction - csv
+display streaks in ui
 
-start button render vr
-
-resting text/indication of rest period for user?
-
-DONE - self pace trial option - user start trials
-DONE - eye blink controls
-
-DONE - Change indication colour for kin/imag
-
-DONE - spatial feedback haptics/audio optional
-
-DONE - alignment of seated/experiment position for VR or 2D
-DONE - kinematic data capture
-
-
+save baseline??

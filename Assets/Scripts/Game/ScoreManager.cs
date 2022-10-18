@@ -127,6 +127,9 @@ public class ScoreManager : MonoBehaviour{
     public int targetStreak = 0;
     public int streakCounterKin = 4;
     public int streakCounterImag = 2;
+    public float streakBonus = 0;
+    public List<float> streaks = new List<float>();
+    public int longestStreak;
     
     #region Broadcast Score Events
 
@@ -189,7 +192,8 @@ public class ScoreManager : MonoBehaviour{
             SessionTotals();
             SaveScore();
             ResetScores();
-            ResetStreak();
+            print("restt block");
+            ResetStreakBlock();
         }
     }
 
@@ -331,6 +335,7 @@ public class ScoreManager : MonoBehaviour{
                 if (OnTargetStreakAction != null){
                     OnTargetStreakAction(true, targetStreak);
                 }
+                AccumulateStreak(targetStreak/8);
             }
             else{
                 if (OnTargetStreakAction != null){
@@ -347,6 +352,8 @@ public class ScoreManager : MonoBehaviour{
                 if (OnTargetStreakAction != null){
                     OnTargetStreakAction(true, targetStreak);
                 }
+                Debug.Log(overallPerformanceSession);
+                AccumulateStreak(targetStreak);
             }
         }
 
@@ -354,6 +361,19 @@ public class ScoreManager : MonoBehaviour{
     public void ResetStreak(){
         targetStreak = 0;
         streakCounterKin = 4;
+        streakCounterImag = 2;
+        streaking = false;
+        if (OnTargetStreakAction != null){
+            OnTargetStreakAction(streaking, targetStreak);
+        }
+    }
+    public void ResetStreakBlock(){
+        targetStreak = 0;
+        streakCounterKin = 4;
+        streakCounterImag = 2;
+        streakBonus = 0;
+        streaks.Clear();
+        longestStreak = 0;
         streaking = false;
         
         if (OnTargetStreakAction != null){
@@ -361,6 +381,19 @@ public class ScoreManager : MonoBehaviour{
         }
     }
 
+    public void AccumulateStreak(float a){
+        streaks.Add(a);
+        streakBonus = streaks.Count;
+        longestStreak = Mathf.RoundToInt(streaks.Max()-1);
+        // for (int i = 0; i < streaks.Count; i++){
+        //     if (i >= 1){
+        //         if (streaks[i] >= streaks[i]){
+        //             longestStreak = Mathf.RoundToInt(streaks[i]);
+        //         }
+        //     }
+        //     
+        // }
+    }
     #endregion
     
     public void TargetRemoved(){
@@ -588,7 +621,13 @@ public class ScoreManager : MonoBehaviour{
         //no kinematic metrics
         float p = sessionDistanceAccuracyBCI_Assisted + sessionDistanceAccuracyBCI_Unassisted + sessionCorrelationBCIAvg_Assisted + sessionCorrelationBCIAvg_Unassisted;
         overallPerformanceSession = p / 4;
-
+        //TODO ADD STREAK TO OVERAll performance
+        overallPerformanceSession = overallPerformanceSession + (streakBonus + longestStreak);
+        
+        if (overallPerformanceSession >= 100){
+            overallPerformanceSession = 100;
+        }
+        
         if (OnScoreSessionAction != null){
             OnScoreSessionAction(sessionDistanceAccuracyKin, sessionDistanceAccuracyBCI_Assisted,sessionDistanceAccuracyBCI_Unassisted,
                 sessionCorrelationKin,sessionCorrelationKinAvg,
