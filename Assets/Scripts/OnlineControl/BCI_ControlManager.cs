@@ -13,6 +13,10 @@ public class BCI_ControlManager : MonoBehaviour{
 
     public GameObject controlObject; //object moved by the BCI - arm will take position from this object
 
+    public bool handFeedback = true;
+    public bool armFeedback = false;
+    public bool leapFeedback = true; //not used yet...
+    
     [Header("HANDS")] public Sex sex = Sex.Female;
     public GameObject armIK_Male;
     public GameObject armIK_Female;
@@ -45,9 +49,9 @@ public class BCI_ControlManager : MonoBehaviour{
     private bool BCIHands = false;
 
     //for editor
-    public bool allowLeap = true;
-    public bool allowAutoHand = true;
-    public bool allowVRIK = true;
+    // public bool allowLeap = true;
+    // public bool allowAutoHand = true;
+    // public bool allowVRIK = true;
 
     [Header("UI")] public Button leapBtn;
     public Button autoHand_Btn;
@@ -210,6 +214,13 @@ public class BCI_ControlManager : MonoBehaviour{
 
         EnableLeap();
         DisableIK();
+        DisableAutoHand();
+
+        
+        armIK_Renderer.enabled = armFeedback;
+        autoHandModelLeft.GetComponent<Renderer>().enabled = handFeedback;
+        autoHandModelRight.GetComponent<Renderer>().enabled = handFeedback;
+        
     }
 
     //TODO - MAKE THE DECREASE ASSISTANCE PER RUN....
@@ -237,40 +248,33 @@ public class BCI_ControlManager : MonoBehaviour{
 
     public void FadeArms(bool b, float t){
         if (b){
-            if (allowVRIK){
-                armIK_Renderer.material = armMaterialInvisible;
-                armIK_Renderer.material.DOFade(0, 0);
-                armIK_Renderer.material.DOFade(1, t);
-                
-                StartCoroutine(PostFadeMaterialIK(armMaterial, 1f));
-            }
+            armIK_Renderer.material = armMaterialInvisible;
+            armIK_Renderer.material.DOFade(0, 0);
+            armIK_Renderer.material.DOFade(1, t);
 
-            if (allowAutoHand){
-                autoHandModelLeft.GetComponent<Renderer>().material = handMatInvisible;
-                autoHandModelLeft.GetComponent<Renderer>().material.DOFade(0, 0);
-                autoHandModelLeft.GetComponent<Renderer>().material.DOFade(1, t);
-                autoHandModelRight.GetComponent<Renderer>().material = handMatInvisible;
-                autoHandModelRight.GetComponent<Renderer>().material.DOFade(0, 0);
-                autoHandModelRight.GetComponent<Renderer>().material.DOFade(1, t);
-                
-                StartCoroutine(PostFadeMaterialAH(1f));
-            }
+            StartCoroutine(PostFadeMaterialIK(armMaterial, 1f));
+            
+            autoHandModelLeft.GetComponent<Renderer>().material = handMatInvisible;
+            autoHandModelLeft.GetComponent<Renderer>().material.DOFade(0, 0);
+            autoHandModelLeft.GetComponent<Renderer>().material.DOFade(1, t);
+            autoHandModelRight.GetComponent<Renderer>().material = handMatInvisible;
+            autoHandModelRight.GetComponent<Renderer>().material.DOFade(0, 0);
+            autoHandModelRight.GetComponent<Renderer>().material.DOFade(1, t);
+
+            StartCoroutine(PostFadeMaterialAH(1f));
         }
         else{
-            if (allowVRIK){
-                armIK_Renderer.material = armMaterialInvisible;
-                armIK_Renderer.material.DOFade(1, 0);
-                armIK_Renderer.material.DOFade(0, t);
-            }
+            armIK_Renderer.material = armMaterialInvisible;
+            armIK_Renderer.material.DOFade(1, 0);
+            armIK_Renderer.material.DOFade(0, t);
 
-            if (allowAutoHand){
-                autoHandModelLeft.GetComponent<Renderer>().material = handMatInvisible;
-                autoHandModelLeft.GetComponent<Renderer>().material.DOFade(1, 0);
-                autoHandModelLeft.GetComponent<Renderer>().material.DOFade(0, t);
-                autoHandModelRight.GetComponent<Renderer>().material = handMatInvisible;
-                autoHandModelRight.GetComponent<Renderer>().material.DOFade(1, 0);
-                autoHandModelRight.GetComponent<Renderer>().material.DOFade(0, t);
-            }
+
+            autoHandModelLeft.GetComponent<Renderer>().material = handMatInvisible;
+            autoHandModelLeft.GetComponent<Renderer>().material.DOFade(1, 0);
+            autoHandModelLeft.GetComponent<Renderer>().material.DOFade(0, t);
+            autoHandModelRight.GetComponent<Renderer>().material = handMatInvisible;
+            autoHandModelRight.GetComponent<Renderer>().material.DOFade(1, 0);
+            autoHandModelRight.GetComponent<Renderer>().material.DOFade(0, t);
         }
     }
 

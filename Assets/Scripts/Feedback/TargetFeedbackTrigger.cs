@@ -1,32 +1,66 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MoreMountains.Feedbacks;
 using UnityEngine.Events;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class TargetFeedbackTrigger : MonoBehaviour
 {
     public bool feedbackActive;
+
     [Header("Feedbacks")]
     /// a MMFeedbacks to play when the Hero starts jumping
     public MMFeedbacks targetFeedback;
+
+    private bool feedbackReady;
     
-    void Awake()
-    {
-        if (targetFeedback == null)
-        {
-            if (transform.GetChild(0).GetComponent<MMFeedbacks>() != null)
-            {
+    #region Event Subscriptions
+    private void OnEnable(){
+        TargetManager.OnTargetAction += TargetManagerOnTargetAction;
+    }
+    private void OnDisable(){
+        TargetManager.OnTargetAction -= TargetManagerOnTargetAction;
+    }
+    private void TargetManagerOnTargetAction(bool targetPresent, bool restPresent, Vector3 position, Transform activeTarget){
+        //trial started
+        if (targetPresent){
+            feedbackReady = true;
+        }
+        //Executes after a trial...
+        if (restPresent){
+            if (feedbackReady == true){ //didn;t hit the target during the trial
+                ScoreManager.instance.ResetStreak();
+            }
+            feedbackReady = false;
+        }
+    }
+
+    #endregion
+
+    
+    void Awake(){
+        if (targetFeedback == null){
+            if (transform.GetChild(0).GetComponent<MMFeedbacks>() != null){
                 targetFeedback = transform.GetChild(0).GetComponent<MMFeedbacks>();
             }
         }
     }
 
-    public void Feedback()
-    {
+    public void OnTriggerEnter(Collider other){
+        if (other.GetComponent<Tag>()){
+            if (other.GetComponent<Tag>().tag == "fingers" && feedbackReady == true){
+                feedbackReady = false;
+                ScoreManager.instance.AddToStreak();
+                Feedback();
+            }
+        }
+    }
+
+    public void Feedback(){
         if (feedbackActive){
             targetFeedback.PlayFeedbacks();
         }
-        
     }
 }

@@ -1232,7 +1232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fd51b974e3fd684085486163184cc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  feedbackActive: 0
+  feedbackActive: 1
   targetFeedback: {fileID: 9021540585692444375}
 --- !u!114 &5460865123278242011
 MonoBehaviour:

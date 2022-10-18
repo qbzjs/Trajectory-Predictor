@@ -121,6 +121,11 @@ public class ScoreManager : MonoBehaviour{
     [Header("-- overall average performance --")] [Space(4)]
     public float overallPerformanceBlock;
     public float overallPerformanceSession;
+
+    [Header("STREAK")]
+    public int targetStreak = 0;
+    public int streakCounterKin = 4;
+    public int streakCounterImag = 2;
     
     #region Broadcast Score Events
 
@@ -308,6 +313,32 @@ public class ScoreManager : MonoBehaviour{
         
     }
 
+    #region Streak Score
+
+    public void AddToStreak(){
+        targetStreak++;
+
+        if (Settings.instance.currentRunType == RunType.Kinematic){
+            if (targetStreak == streakCounterKin){
+                Debug.Log(("streak..."));
+                streakCounterKin = targetStreak + 4;
+            }
+        }
+        if (Settings.instance.currentRunType == RunType.Imagined){
+            if (targetStreak == streakCounterImag){
+                Debug.Log(("streak..."));
+                streakCounterImag = targetStreak + 1;
+            }
+        }
+    }
+
+    public void ResetStreak(){
+        targetStreak = 0;
+        streakCounterKin = 4;
+    }
+
+    #endregion
+    
     public void TargetRemoved(){
 
         #region Correlation Score
