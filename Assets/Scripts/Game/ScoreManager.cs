@@ -330,7 +330,7 @@ public class ScoreManager : MonoBehaviour{
 
         if (Settings.instance.currentRunType == RunType.Kinematic){
             if (targetStreak == streakCounterKin){
-                Debug.Log(("streak..."));
+  //              Debug.Log(("streak..."));
                 streakCounterKin = targetStreak + 4;
                 streaking = true;
                 if (OnTargetStreakAction != null){
@@ -347,13 +347,13 @@ public class ScoreManager : MonoBehaviour{
         }
         if (Settings.instance.currentRunType == RunType.Imagined){
             if (targetStreak == streakCounterImag){
-                Debug.Log(("streak..."));
+//                Debug.Log(("streak..."));
                 streakCounterImag = targetStreak + 1;
                 streaking = true;
                 if (OnTargetStreakAction != null){
                     OnTargetStreakAction(true, targetStreak);
                 }
-                Debug.Log(overallPerformanceSession);
+//                Debug.Log(overallPerformanceSession);
                 AccumulateStreak(targetStreak,4);
             }
         }

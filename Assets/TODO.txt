@@ -3,14 +3,8 @@
 
 end text - session over
 
-actual/imagined movement text during trials
-
-tracking points - dont show
-
-
 display streaks in ui
 
-save baseline??
-
+//todo check input manager sensel tap
 wait to enable start button 
 

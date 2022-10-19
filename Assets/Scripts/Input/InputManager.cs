@@ -74,7 +74,12 @@ public class InputManager : MonoBehaviour{
 		if (debugInput){
 			Debug.Log("Sensel Input ---> " + "X: " + x + " : " + "Y: " + y + "F: " + f);
 		}
-		StartTrials();
+
+		//todo check trial ready works...	
+		if (trialReady){
+			StartTrials();
+		}
+		
 	}
 
 	#endregion
