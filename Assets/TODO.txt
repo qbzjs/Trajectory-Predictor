@@ -12,6 +12,8 @@ tracking points - dont show
 
 verify kinematic streaks ???
 
+FIX STREAK SCORING!!!
+
 save streaks to csv
 
 display streaks in ui
