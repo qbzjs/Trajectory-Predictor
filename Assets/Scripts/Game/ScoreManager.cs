@@ -330,12 +330,12 @@ public class ScoreManager : MonoBehaviour{
         if (Settings.instance.currentRunType == RunType.Kinematic){
             if (targetStreak == streakCounterKin){
                 Debug.Log(("streak..."));
-                streakCounterImag = targetStreak + 4;
+                streakCounterKin = targetStreak + 4;
                 streaking = true;
                 if (OnTargetStreakAction != null){
                     OnTargetStreakAction(true, targetStreak);
                 }
-                AccumulateStreak(targetStreak/8);
+                AccumulateStreak(targetStreak);
             }
             else{
                 if (OnTargetStreakAction != null){
@@ -385,14 +385,8 @@ public class ScoreManager : MonoBehaviour{
         streaks.Add(a);
         streakBonus = streaks.Count;
         longestStreak = Mathf.RoundToInt(streaks.Max()-1);
-        // for (int i = 0; i < streaks.Count; i++){
-        //     if (i >= 1){
-        //         if (streaks[i] >= streaks[i]){
-        //             longestStreak = Mathf.RoundToInt(streaks[i]);
-        //         }
-        //     }
-        //     
-        // }
+
+        
     }
     #endregion
     

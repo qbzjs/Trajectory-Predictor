@@ -1,8 +1,23 @@
 -TODO-
-verify kinematic streaks
+
+test new timing - extra for trial
+
+output indication time in csv
+
+end text - session over
+
+actual/imagined movement text during trials
+
+tracking points - dont show
+
+verify kinematic streaks ???
 
 save streaks to csv
 
 display streaks in ui
 
 save baseline??
+
+wait to enable start button 
+
+pre trial wait add to timing calculate
