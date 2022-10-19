@@ -14,6 +14,8 @@ public class ScoreDisplayUI : MonoBehaviour
     public Slider performanceSlider;
     public TextMeshProUGUI performanceText;
     
+    public TextMeshProUGUI streakBonusText;
+    
     public Slider kinematicDistanceSlider;
     public TextMeshProUGUI kinematicDistanceText;
     public Slider BCI_DistanceSlider;
@@ -46,6 +48,7 @@ public class ScoreDisplayUI : MonoBehaviour
     //scores
     public float performance;
     private float p;
+    public int streakBonus;
     public float kinematicDistance;
     private float kd;
     public float BCI_Distance;
@@ -72,12 +75,14 @@ public class ScoreDisplayUI : MonoBehaviour
     private void ScoreManagerOnScoreSessionObjectAction(ScoreSessionDataObject sessionScoreData){
         // performance = ScoreManager.instance.overallPerformanceSession;
         performance = sessionScoreData.overallPerformance;
+        streakBonus = sessionScoreData.streakBonus;
         kinematicDistance = sessionScoreData.distanceAccuracyKin;
         BCI_Distance = sessionScoreData.distanceAccuracyBCI_Assisted;
         kinematicCorrelation = sessionScoreData.correlationKin;
         BCI_Correlation = sessionScoreData.correlationBCI_Assisted;
         kinematicCorrelationAvg = sessionScoreData.correlationKinAvg;
         BCI_CorrelationAvg = sessionScoreData.correlationBCIAvg_Assisted;
+        print("skfjgnslofdgnslodgnsold");
     }
     #endregion
     
@@ -88,6 +93,8 @@ public class ScoreDisplayUI : MonoBehaviour
         p = Mathf.Lerp(p, performance, Time.deltaTime * updateSpeed);
         performanceSlider.value = p;
         performanceText.text = Mathf.RoundToInt(p).ToString()+"%";
+
+        streakBonusText.text = "Streak Bonus : " + streakBonus.ToString();
 
         kd = Mathf.Lerp(kd, kinematicDistance, Time.deltaTime * updateSpeed);
         kinematicDistanceSlider.value = kd;

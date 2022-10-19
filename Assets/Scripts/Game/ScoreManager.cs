@@ -130,6 +130,7 @@ public class ScoreManager : MonoBehaviour{
     public float streakBonus = 0;
     public List<float> streaks = new List<float>();
     public int longestStreak;
+    public int streakBonusSession;
     
     #region Broadcast Score Events
 
@@ -140,7 +141,7 @@ public class ScoreManager : MonoBehaviour{
         
     public delegate void ScoreBlockAction(float distanceAccuracyKin, float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted, 
         Vector3 correlationPercentage,Vector3 correlationAssistedPercentage,
-        Vector3 correlationPercentageDisplay,Vector3 correlationAssistedPercentageDisplay, float overallPerformance);
+        Vector3 correlationPercentageDisplay,Vector3 correlationAssistedPercentageDisplay, float overallPerformance, int streakBonus);
     public static event ScoreBlockAction OnScoreBlockAction;
 
     public delegate void ScoreSessionAction(float distanceAccuracyKin, float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted,
@@ -149,7 +150,7 @@ public class ScoreManager : MonoBehaviour{
         Vector3 correlationBCI_Unassisted,float correlationBCI_UnassistedAvg,
         Vector3 meanSqErrorSum,Vector3 meanSqErrorSumAssisted,
         Vector3 meanSquareErrorAverage,Vector3 meanSquareErrorAverageAssisted,
-        float overallPerformance);
+        float overallPerformance, int streakBonus);
     public static event ScoreSessionAction OnScoreSessionAction;
     
     public delegate void TargetStreakAction(bool streakFeedback, int streakCount);
@@ -335,7 +336,7 @@ public class ScoreManager : MonoBehaviour{
                 if (OnTargetStreakAction != null){
                     OnTargetStreakAction(true, targetStreak);
                 }
-                AccumulateStreak(targetStreak);
+                AccumulateStreak(targetStreak,1);
             }
             else{
                 if (OnTargetStreakAction != null){
@@ -353,7 +354,7 @@ public class ScoreManager : MonoBehaviour{
                     OnTargetStreakAction(true, targetStreak);
                 }
                 Debug.Log(overallPerformanceSession);
-                AccumulateStreak(targetStreak);
+                AccumulateStreak(targetStreak,4);
             }
         }
 
@@ -381,12 +382,12 @@ public class ScoreManager : MonoBehaviour{
         }
     }
 
-    public void AccumulateStreak(float a){
+    public void AccumulateStreak(float a, int multiplier){
         streaks.Add(a);
         streakBonus = streaks.Count;
         longestStreak = Mathf.RoundToInt(streaks.Max()-1);
-
-        
+        int bonus = Mathf.RoundToInt(streakBonus + longestStreak) * multiplier;
+        streakBonusSession = streakBonusSession + bonus;
     }
     #endregion
     
@@ -536,7 +537,7 @@ public class ScoreManager : MonoBehaviour{
             OnScoreBlockAction(distanceKin, distanceBCI_assisted, distanceBCI_unassisted,
                 correlationPercentage, correlationAssistedPercentage,
                  correlationPercentage_Display, correlationAssistedPercentage_Display,
-                overallPerformanceBlock);
+                overallPerformanceBlock, streakBonusSession);
         }
         
         SaveScore(); //after performing score calculation..
@@ -615,8 +616,8 @@ public class ScoreManager : MonoBehaviour{
         //no kinematic metrics
         float p = sessionDistanceAccuracyBCI_Assisted + sessionDistanceAccuracyBCI_Unassisted + sessionCorrelationBCIAvg_Assisted + sessionCorrelationBCIAvg_Unassisted;
         overallPerformanceSession = p / 4;
-        //TODO ADD STREAK TO OVERAll performance
-        overallPerformanceSession = overallPerformanceSession + (streakBonus + longestStreak);
+        //TODO ADD STREAK TO OVERAll performance - streak is shown seperately
+        //overallPerformanceSession = overallPerformanceSession + (streakBonus + longestStreak);
         
         if (overallPerformanceSession >= 100){
             overallPerformanceSession = 100;
@@ -628,7 +629,9 @@ public class ScoreManager : MonoBehaviour{
                 sessionCorrelationBCI_Assisted,sessionCorrelationBCIAvg_Assisted,
                 sessionCorrelationBCI_Unassisted,sessionCorrelationBCIAvg_Unassisted,
             meanSqErrorSum,meanSqErrorSumAssisted,meanSquareErrorAverage,meanSquareErrorAverageAssisted,
-                overallPerformanceSession);
+                overallPerformanceSession, streakBonusSession);
+            
+            Debug.Log(streakBonusSession);
         }
     }
 
@@ -753,6 +756,7 @@ public class ScoreManager : MonoBehaviour{
         scoreSessionData.meanSquareErrorAverageAssisted = meanSquareErrorAverageAssisted;
 
         scoreSessionData.overallPerformance = overallPerformanceSession;
+        scoreSessionData.streakBonus = streakBonusSession;
 
         //write JSON
         JSONWriter jWriter = new JSONWriter();

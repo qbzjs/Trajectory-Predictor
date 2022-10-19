@@ -107,6 +107,10 @@ public class InstructionText : MonoBehaviour
         if (eventType == GameStatus.Countdown){
             DisplayBigInstructionText();
         }
+
+        if (eventType == GameStatus.BlockStarted){
+            bigInstruction.DOFade(0, 1f);
+        }
     }
 
     #endregion
@@ -205,7 +209,7 @@ public class InstructionText : MonoBehaviour
         }
         if(currentRunType == RunType.Kinematic){
  //           Debug.Log("BIG Instructions - RUN TYPE : "+ runType);
-            bigInstruction.text = "Kinematic Arm" + "\n" + "Movement";
+            bigInstruction.text = "Real Arm" + "\n" + "Movement";
             bigInstruction.color = UI_Orange;
             bigInstruction.DOFade(0, 0);
             bigInstruction.DOFade(1, 2f);

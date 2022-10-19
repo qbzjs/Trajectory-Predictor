@@ -33,6 +33,7 @@ public class ScoreSessionDataObject
     
     //Performance Average
     public float overallPerformance;
+    public int streakBonus;
 
     public ScoreSessionDataObject(string name, int sessionNumber, int assistanceDecrease, 
         float distanceAccuracyKin,float distanceAccuracyBCI_Assisted,float distanceAccuracyBCI_Unassisted,
@@ -41,7 +42,7 @@ public class ScoreSessionDataObject
         Vector3 correlationBCI_Unassisted,float correlationBCIAvg_Unassisted,
         Vector3 meanSqErrorSum,Vector3 meanSqErrorSumAssisted,
         Vector3 meanSquareErrorAverage,Vector3 meanSquareErrorAverageAssisted,
-        float overallPerformance)
+        float overallPerformance, int streakBonus)
     {
         this.name = name;
         this.sessionNumber = sessionNumber;
@@ -63,5 +64,6 @@ public class ScoreSessionDataObject
         this.meanSquareErrorAverage = meanSquareErrorAverage;
         this.meanSquareErrorAverageAssisted = meanSquareErrorAverageAssisted;
         this.overallPerformance = overallPerformance;
+        this.streakBonus = streakBonus;
     }
 }
