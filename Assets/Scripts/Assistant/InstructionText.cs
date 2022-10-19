@@ -98,6 +98,9 @@ public class InstructionText : MonoBehaviour
         if (eventType == GameStatus.AllRunsComplete){
             RemoveText();
             instructionTextSessionComplete.gameObject.SetActive(true);
+            tempTextObj = instructionTextSessionComplete.gameObject;
+            BoxCollider c = gameObject.GetComponent<BoxCollider>();
+            StartCoroutine(WaitAndEnable(c));
         }
     }
     private void GameManagerOnBlockAction(GameStatus eventType, float lifeTime, int blockIndex, int blockTotal){

@@ -3,8 +3,6 @@
 
 end text - session over
 
-display streaks in ui
-
 //todo check input manager sensel tap
 wait to enable start button 
 

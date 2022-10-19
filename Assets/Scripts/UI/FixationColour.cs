@@ -9,6 +9,7 @@ public class FixationColour : MonoBehaviour
     public Renderer fixationRenderer;
     public Material fixationKinematic;
     public Material fixationImagined;
+    public Material fixationStreak;
 
     private RunType runType = RunType.Null;
     
@@ -16,10 +17,25 @@ public class FixationColour : MonoBehaviour
 
     private void OnEnable(){
         GameManager.OnBlockAction += GameManagerOnBlockAction;
+        ScoreManager.OnTargetStreakAction += ScoreManagerOnTargetStreakAction;
     }
-
     private void OnDisable(){
         GameManager.OnBlockAction -= GameManagerOnBlockAction;
+        ScoreManager.OnTargetStreakAction -= ScoreManagerOnTargetStreakAction;
+    }
+    private void ScoreManagerOnTargetStreakAction(bool streakFeedback, int streakCount, bool showUI){
+        if (showUI){
+            fixationRenderer.material = fixationStreak;
+        }
+        else{
+            runType = Settings.instance.currentRunType;
+            if (runType == RunType.Kinematic){
+                fixationRenderer.material = fixationKinematic;
+            }
+            if (runType == RunType.Imagined){
+                fixationRenderer.material = fixationImagined;
+            }
+        }
     }
     
     private void GameManagerOnBlockAction(GameStatus eventType, float lifeTime, int blockIndex, int blockTotal){

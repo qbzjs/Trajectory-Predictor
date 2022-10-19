@@ -14,7 +14,7 @@ public class StreakFeedback : MonoBehaviour
     private void OnDisable(){
         ScoreManager.OnTargetStreakAction -= ScoreManagerOnTargetStreakAction;
     }
-    private void ScoreManagerOnTargetStreakAction(bool streakFeedback, int streakCount){
+    private void ScoreManagerOnTargetStreakAction(bool streakFeedback, int streakCount, bool showUI){
         if (streakFeedback){
             targetFeedback.PlayFeedbacks();
         }

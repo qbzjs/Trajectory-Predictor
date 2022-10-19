@@ -153,7 +153,7 @@ public class ScoreManager : MonoBehaviour{
         float overallPerformance, int streakBonus);
     public static event ScoreSessionAction OnScoreSessionAction;
     
-    public delegate void TargetStreakAction(bool streakFeedback, int streakCount);
+    public delegate void TargetStreakAction(bool streakFeedback, int streakCount, bool showUI);
     public static event TargetStreakAction OnTargetStreakAction;
 
     #endregion
@@ -334,13 +334,13 @@ public class ScoreManager : MonoBehaviour{
                 streakCounterKin = targetStreak + 4;
                 streaking = true;
                 if (OnTargetStreakAction != null){
-                    OnTargetStreakAction(true, targetStreak);
+                    OnTargetStreakAction(true, targetStreak, true);
                 }
                 AccumulateStreak(targetStreak,1);
             }
             else{
                 if (OnTargetStreakAction != null){
-                    OnTargetStreakAction(false, targetStreak);
+                    OnTargetStreakAction(false, targetStreak,true);
                 }
             }
 
@@ -351,7 +351,7 @@ public class ScoreManager : MonoBehaviour{
                 streakCounterImag = targetStreak + 1;
                 streaking = true;
                 if (OnTargetStreakAction != null){
-                    OnTargetStreakAction(true, targetStreak);
+                    OnTargetStreakAction(true, targetStreak, true);
                 }
 //                Debug.Log(overallPerformanceSession);
                 AccumulateStreak(targetStreak,4);
@@ -365,7 +365,7 @@ public class ScoreManager : MonoBehaviour{
         streakCounterImag = 2;
         streaking = false;
         if (OnTargetStreakAction != null){
-            OnTargetStreakAction(streaking, targetStreak);
+            OnTargetStreakAction(streaking, targetStreak, false);
         }
     }
     public void ResetStreakBlock(){
@@ -378,7 +378,7 @@ public class ScoreManager : MonoBehaviour{
         streaking = false;
         
         if (OnTargetStreakAction != null){
-            OnTargetStreakAction(streaking, targetStreak);
+            OnTargetStreakAction(streaking, targetStreak, false);
         }
     }
 

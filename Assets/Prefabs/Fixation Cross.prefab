@@ -69,6 +69,7 @@ MonoBehaviour:
   fixationRenderer: {fileID: 3086755047454659681}
   fixationKinematic: {fileID: 2100000, guid: 54064d38f1c065449b00c398f00b43aa, type: 2}
   fixationImagined: {fileID: 2100000, guid: ba238b3e18f09d24086f092542e6fabc, type: 2}
+  fixationStreak: {fileID: 2100000, guid: a80a942f44aa85946ab3b1f9587b72f8, type: 2}
 --- !u!1001 &4402214748185118949
 PrefabInstance:
   m_ObjectHideFlags: 0
