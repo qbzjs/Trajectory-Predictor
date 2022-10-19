@@ -448,60 +448,70 @@ public class Settings : MonoBehaviour {
 	}
 	public void SetPreTrialWaitPeriod(float num){
 		preTrialWaitPeriod = num;
+		UpdateSessionTotals();
 		GameManager.instance.preTrialWaitPeriod = preTrialWaitPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetFixationPeriod(float num){
 		fixationPeriod = num;
+		UpdateSessionTotals();
 		GameManager.instance.fixationPeriod = fixationPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetIndicationPeriod(float num){
 		indicationPeriod = num;
+		UpdateSessionTotals();
 		GameManager.instance.indicationPeriod = indicationPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetObservationPeriod(float num) {
 		observationPeriod = num;
+		UpdateSessionTotals();
 		GameManager.instance.observationPeriod = observationPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetTargetPeriod(float num) {
 		targetPresentationPeriod = num;
+		UpdateSessionTotals();
 		GameManager.instance.targetPresentationPeriod = targetPresentationPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetRestPeriodMin(float num) {
 		restPeriodMin = num;
+		UpdateSessionTotals();
 		GameManager.instance.restPeriodMinimum = restPeriodMin;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetRestPeriodMax(float num) {
 		restPeriodMax = num;
+		UpdateSessionTotals();
 		GameManager.instance.restPeriodMaximum = restPeriodMax;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetPostTrialWaitPeriod(float num) {
 		postTrialWaitPeriod = num;
+		UpdateSessionTotals();
 		GameManager.instance.postTrialWaitPeriod = postTrialWaitPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetPostBlockWaitPeriod(float num) {
 		postBlockWaitPeriod = num;
+		UpdateSessionTotals();
 		GameManager.instance.postBlockRestPeriod = postBlockWaitPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
 	}
 	public void SetPostRunWaitPeriod(float num) {
 		postRunWaitPeriod = num;
+		UpdateSessionTotals();
 		GameManager.instance.postRunRestPeriod = postRunWaitPeriod;
 		GameManager.instance.InitialiseSession();
 		SaveState();
@@ -840,7 +850,7 @@ public class Settings : MonoBehaviour {
 		
 		settingsData.preTrialWaitPeriod = preTrialWaitPeriod;
 		settingsData.fixationDuration = fixationPeriod;
-		settingsData.arrowDuration = indicationPeriod;
+		settingsData.indicationDuration = indicationPeriod;
 		settingsData.observationDuration = observationPeriod;
 		settingsData.targetDuration = targetPresentationPeriod;
 		settingsData.restPeriodMin = restPeriodMin;

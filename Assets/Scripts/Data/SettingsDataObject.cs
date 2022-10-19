@@ -22,7 +22,7 @@ public class SettingsDataObject
 
     public float preTrialWaitPeriod;
     public float fixationDuration;
-    public float arrowDuration;
+    public float indicationDuration;
     public float observationDuration;
     public float targetDuration;
     public float restPeriodMin;
@@ -62,7 +62,7 @@ public class SettingsDataObject
         int trialsPerBlock, int trialsPerRun, int trialsPerSession,
         float estimatedTrialDuration, string estimatedBlockDuration, string estimatedRunDuration, string estimatedSessionDuration,
         int preBlockCountdown,int visibleCountdown,int interRunRestPeriod,
-        float preTrialWaitPeriod,float fixationDuration,float arrowDuration,float observationDuration,
+        float preTrialWaitPeriod,float fixationDuration,float indicationDuration,float observationDuration,
         float targetDuration,float restPeriodMin,float restPeriodMax,
         float postTrialWaitPeriod,float postBlockWaitPeriod,float postRunWaitPeriod, 
         bool actionObservation, string sampleRate,
@@ -95,7 +95,7 @@ public class SettingsDataObject
         
         this.preTrialWaitPeriod = preTrialWaitPeriod;
         this.fixationDuration = fixationDuration;
-        this.arrowDuration = arrowDuration;
+        this.indicationDuration = indicationDuration;
         this.observationDuration = observationDuration;
         this.targetDuration = targetDuration;
         this.restPeriodMin = restPeriodMin;
