@@ -30,11 +30,12 @@ public class ScoreBlockDataObject
     
     //Performance Average
     public float overallPerformance;
+    public int streakBonus;
  
     public ScoreBlockDataObject(string name, int sessionNumber, string run, string block, string runType,
         int assistancePercentage, float distanceAccuracyKinematic,float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted,
         Vector3 correlationUnassisted, Vector3 correlationAssisted, Vector3 correlationDisplay, Vector3 correlationAssistedDisplay,
-        float overallPerformance)
+        float overallPerformance, int streakBonus)
     {
         this.name = name;
         this.sessionNumber = sessionNumber;
@@ -55,5 +56,6 @@ public class ScoreBlockDataObject
         this.correlationAssistedDisplay = correlationAssistedDisplay;
 
         this.overallPerformance = overallPerformance;
+        this.streakBonus = streakBonus;
     }
 }

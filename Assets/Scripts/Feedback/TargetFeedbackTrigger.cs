@@ -27,6 +27,7 @@ public class TargetFeedbackTrigger : MonoBehaviour
         //trial started
         if (targetPresent){
             feedbackReady = true;
+            this.gameObject.GetComponent<Collider>().enabled = true;
         }
         //Executes after a trial...
         if (restPresent){
@@ -51,6 +52,7 @@ public class TargetFeedbackTrigger : MonoBehaviour
     public void OnTriggerEnter(Collider other){
         if (other.GetComponent<Tag>()){
             if (other.GetComponent<Tag>().tag == "fingers" && feedbackReady == true){
+                this.gameObject.GetComponent<Collider>().enabled = false;
                 feedbackReady = false;
                 ScoreManager.instance.AddToStreak();
                 Feedback();

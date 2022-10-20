@@ -126,12 +126,16 @@ public class ScoreManager : MonoBehaviour{
     public bool streaking = false;
     public int targetStreak = 0;
     public int streakCounterKin = 4;
+    private int sckDefault; //value to reset the counter to each block
     public int streakFeedbackRepeatKin = 4;
-    public int streakCounterImag = 2;
+    public int streakCounterImag = 4;
+    private int sciDefault; //value to reset the counter to each block
     public int streakFeedbackRepeatImag = 4;
     public float streakBonus = 0;
     public List<float> streaks = new List<float>();
     public int longestStreak;
+    public int blockStartStreakScore;
+    public int streakBonusBlock;
     public int streakBonusSession;
     
     #region Broadcast Score Events
@@ -197,6 +201,7 @@ public class ScoreManager : MonoBehaviour{
             ResetScores();
             print("restt block");
             ResetStreakBlock();
+            blockStartStreakScore = streakBonusSession;
         }
     }
 
@@ -263,6 +268,8 @@ public class ScoreManager : MonoBehaviour{
     private void Start(){
         dao = DAO.instance;
         settings = Settings.instance;
+        sckDefault = streakCounterKin;
+        sciDefault = streakCounterImag;
         ResetSession();
     }
 
@@ -341,9 +348,12 @@ public class ScoreManager : MonoBehaviour{
                 AccumulateStreak(targetStreak,1);
             }
             else{
-                if (OnTargetStreakAction != null){
-                    OnTargetStreakAction(false, targetStreak,true);
+                if (streaking){
+                    if (OnTargetStreakAction != null){
+                        OnTargetStreakAction(false, targetStreak,true);
+                    }
                 }
+                AccumulateStreak(targetStreak,1);
             }
 
         }
@@ -355,16 +365,24 @@ public class ScoreManager : MonoBehaviour{
                 if (OnTargetStreakAction != null){
                     OnTargetStreakAction(true, targetStreak, true);
                 }
-//                Debug.Log(overallPerformanceSession);
                 AccumulateStreak(targetStreak,4);
+            }
+            else
+            {
+                if (streaking){
+                    if (OnTargetStreakAction != null){
+                        OnTargetStreakAction(false, targetStreak,true);
+                    }
+                }
+                AccumulateStreak(targetStreak,1);
             }
         }
 
     }
     public void ResetStreak(){
         targetStreak = 0;
-        streakCounterKin = 4;
-        streakCounterImag = 2;
+        streakCounterKin = sckDefault;
+        streakCounterImag = sciDefault;
         streaking = false;
         if (OnTargetStreakAction != null){
             OnTargetStreakAction(streaking, targetStreak, false);
@@ -377,6 +395,7 @@ public class ScoreManager : MonoBehaviour{
         streakBonus = 0;
         streaks.Clear();
         longestStreak = 0;
+        streakBonusBlock = 0;
         streaking = false;
         
         if (OnTargetStreakAction != null){
@@ -390,6 +409,7 @@ public class ScoreManager : MonoBehaviour{
         longestStreak = Mathf.RoundToInt(streaks.Max()-1);
         int bonus = Mathf.RoundToInt(streakBonus + longestStreak) * multiplier;
         streakBonusSession = streakBonusSession + bonus;
+        streakBonusBlock = streakBonusSession - blockStartStreakScore;
     }
     #endregion
     
@@ -633,7 +653,7 @@ public class ScoreManager : MonoBehaviour{
             meanSqErrorSum,meanSqErrorSumAssisted,meanSquareErrorAverage,meanSquareErrorAverageAssisted,
                 overallPerformanceSession, streakBonusSession);
             
-            Debug.Log(streakBonusSession);
+            //Debug.Log(streakBonusSession);
         }
     }
 
@@ -734,6 +754,9 @@ public class ScoreManager : MonoBehaviour{
         
         scoreBlockData.correlationDisplay = correlationPercentage_Display;
         scoreBlockData.correlationAssistedDisplay = correlationAssistedPercentage_Display;
+
+        scoreBlockData.overallPerformance = overallPerformanceBlock; //not sure this is working..
+        scoreBlockData.streakBonus = streakBonusBlock;
         
         //---------SESSION
         scoreSessionData.name = Settings.instance.sessionName;
