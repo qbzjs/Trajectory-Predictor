@@ -1,8 +1,8 @@
 -TODO-
-
-
-end text - session over
+reset baseline correction
 
 //todo check input manager sensel tap
 wait to enable start button 
+
+
 

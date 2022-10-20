@@ -126,7 +126,9 @@ public class ScoreManager : MonoBehaviour{
     public bool streaking = false;
     public int targetStreak = 0;
     public int streakCounterKin = 4;
+    public int streakFeedbackRepeatKin = 4;
     public int streakCounterImag = 2;
+    public int streakFeedbackRepeatImag = 4;
     public float streakBonus = 0;
     public List<float> streaks = new List<float>();
     public int longestStreak;
@@ -331,7 +333,7 @@ public class ScoreManager : MonoBehaviour{
         if (Settings.instance.currentRunType == RunType.Kinematic){
             if (targetStreak == streakCounterKin){
   //              Debug.Log(("streak..."));
-                streakCounterKin = targetStreak + 4;
+                streakCounterKin = targetStreak + streakFeedbackRepeatKin;
                 streaking = true;
                 if (OnTargetStreakAction != null){
                     OnTargetStreakAction(true, targetStreak, true);
@@ -348,7 +350,7 @@ public class ScoreManager : MonoBehaviour{
         if (Settings.instance.currentRunType == RunType.Imagined){
             if (targetStreak == streakCounterImag){
 //                Debug.Log(("streak..."));
-                streakCounterImag = targetStreak + 1;
+                streakCounterImag = targetStreak + streakFeedbackRepeatImag;
                 streaking = true;
                 if (OnTargetStreakAction != null){
                     OnTargetStreakAction(true, targetStreak, true);
