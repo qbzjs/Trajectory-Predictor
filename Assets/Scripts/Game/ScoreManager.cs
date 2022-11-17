@@ -138,6 +138,9 @@ public class ScoreManager : MonoBehaviour{
     public int streakBonusBlock;
     public int streakBonusSession;
     
+    //todo - record targets hit kinematic and imagined
+    
+    
     #region Broadcast Score Events
 
     public delegate void ScoreBlockObjectAction(ScoreBlockDataObject sessionScoreData);
