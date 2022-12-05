@@ -5,6 +5,7 @@ using UnityEngine;
 using MoreMountains.Feedbacks;
 using UnityEngine.Events;
 using UnityEngine.SocialPlatforms.Impl;
+using Enums;
 
 public class TargetFeedbackTrigger : MonoBehaviour
 {
@@ -15,6 +16,13 @@ public class TargetFeedbackTrigger : MonoBehaviour
     public MMFeedbacks targetFeedback;
 
     private bool feedbackReady;
+    private bool targetReady = false;
+
+    private RunType rType = RunType.Imagined;
+    private int tNumber;
+    
+    public delegate void TargetHit(RunType runType, int tNum);
+    public static event TargetHit OnTargetHit;
     
     #region Event Subscriptions
     private void OnEnable(){
@@ -26,7 +34,10 @@ public class TargetFeedbackTrigger : MonoBehaviour
     private void TargetManagerOnTargetAction(bool targetPresent, bool restPresent, Vector3 position, Transform activeTarget){
         //trial started
         if (targetPresent){
+            
             feedbackReady = true;
+            feedbackActive = true;
+            targetReady = true;
             this.gameObject.GetComponent<Collider>().enabled = true;
         }
         //Executes after a trial...
@@ -50,10 +61,15 @@ public class TargetFeedbackTrigger : MonoBehaviour
     }
 
     public void OnTriggerEnter(Collider other){
-        if (other.GetComponent<Tag>()){
+        if (other.GetComponent<Tag>() && targetReady){
+            targetReady = false;
             if (other.GetComponent<Tag>().tag == "fingers" && feedbackReady == true){
                 this.gameObject.GetComponent<Collider>().enabled = false;
                 feedbackReady = false;
+                //add target hit score
+                if (OnTargetHit != null){
+                    OnTargetHit(rType,0);
+                }
                 ScoreManager.instance.AddToStreak();
                 Feedback();
             }
@@ -62,6 +78,7 @@ public class TargetFeedbackTrigger : MonoBehaviour
 
     public void Feedback(){
         if (feedbackActive){
+            feedbackActive = false;
             targetFeedback.PlayFeedbacks();
         }
     }

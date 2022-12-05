@@ -395,6 +395,11 @@ public class Settings : MonoBehaviour {
 		return runSequence[index]; 
 	}
 
+	public RunType GetRunType(){
+		return currentRunType;
+	}
+
+	//no longer used - for doing odd even / imagined real
 	public bool CheckImaginedRun(int index){
 		bool b = false;
 		if (runSequence[index] == RunType.Imagined){

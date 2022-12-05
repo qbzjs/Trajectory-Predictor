@@ -23,6 +23,7 @@ public class DAO : MonoBehaviour
 
     //public int blockSequence
     public int reachTarget;
+    public RunType currentRunType;
 
     void Awake(){
         instance = this;

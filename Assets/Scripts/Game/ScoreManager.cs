@@ -337,6 +337,10 @@ public class ScoreManager : MonoBehaviour{
 
     #region Streak Score
 
+    public void AddTargetHit(){
+        //int t = DAO.instance.reachTarget;
+        // s = Settings.instance.
+    }
     public void AddToStreak(){
         targetStreak++;
 
