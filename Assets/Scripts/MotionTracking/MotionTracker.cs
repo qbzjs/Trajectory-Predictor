@@ -243,7 +243,7 @@ public class MotionTracker : MonoBehaviour
                 targetTag = targetNumber.ToString();
             }
             else{
-                targetTag = "";
+                targetTag = "0"; // NOTE: This is changed to zero so trigger tags are not NAN
             }
             
 
