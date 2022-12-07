@@ -331,6 +331,7 @@ public class GameManager : MonoBehaviour
             if (status == GameStatus.Ready || status == GameStatus.RunComplete){
                 runType = Settings.instance.GetRunType(runIndex);
                 Settings.instance.currentRunType = runType;
+                DAO.instance.currentRunType = runType;
             }
         }
   //      Debug.Log(" GAME MANAGER - RUN TYPE : " + runType);
@@ -351,6 +352,7 @@ public class GameManager : MonoBehaviour
         trialSequenceTotal = total;
         trialSequenceIndex = index;
         activeTarget = targetNum;
+        DAO.instance.CurrentReachTarget = activeTarget; //update the dao with current target 
         trialPhase = eType;
         activePhaseDuration = dur;
         if (trialPhase == TrialEventType.PostTrialPhase){

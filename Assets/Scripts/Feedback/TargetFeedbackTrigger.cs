@@ -71,6 +71,7 @@ public class TargetFeedbackTrigger : MonoBehaviour
                     OnTargetHit(rType,0);
                 }
                 ScoreManager.instance.AddToStreak();
+                ScoreManager.instance.AddTargetHit();
                 Feedback();
             }
         }

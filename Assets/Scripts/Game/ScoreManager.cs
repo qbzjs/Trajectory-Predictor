@@ -22,6 +22,7 @@ public class ScoreManager : MonoBehaviour{
     public int runNumber;
     public int blockNumber;
     public string runType;
+    public RunType runTypeEnum;
     
     [Header("----TARGET-----------------------")]
     public bool targetActive;
@@ -122,6 +123,9 @@ public class ScoreManager : MonoBehaviour{
     public float overallPerformanceBlock;
     public float overallPerformanceSession;
 
+    [Header("TARGET HIT")] 
+    public int tOne;
+    
     [Header("STREAK")] 
     public bool streaking = false;
     public int targetStreak = 0;
@@ -337,9 +341,18 @@ public class ScoreManager : MonoBehaviour{
 
     #region Streak Score
 
+    //TODO - log all targets hit in all capacities
     public void AddTargetHit(){
-        //int t = DAO.instance.reachTarget;
-        // s = Settings.instance.
+        int t = DAO.instance.CurrentReachTarget;
+        runTypeEnum = DAO.instance.GetRunType();
+        
+        Debug.Log("TARGET: " + t + " :: Run: " + runTypeEnum.ToString());
+        if (runTypeEnum == RunType.Kinematic){
+            
+        }
+        if (runTypeEnum == RunType.Imagined){
+            
+        }
     }
     public void AddToStreak(){
         targetStreak++;

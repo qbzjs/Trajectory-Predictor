@@ -90,7 +90,7 @@ public class ReachTargetManager : MonoBehaviour{
 
         currentTrigger = targetNumber;
 
-        DAO.instance.ReachTarget = targetNumber + 1;
+        DAO.instance.CurrentReachTarget = targetNumber + 1;
         
         PlayBeep(1f);
 
@@ -122,7 +122,7 @@ public class ReachTargetManager : MonoBehaviour{
 
         lastTrigger = currentTrigger;
         lastTrigger++;
-        DAO.instance.ReachTarget = lastTrigger + 10;
+        DAO.instance.CurrentReachTarget = lastTrigger + 10;
         SendUDP_byte(lastTrigger+10);
 
         //PlayBeep(0.8f);

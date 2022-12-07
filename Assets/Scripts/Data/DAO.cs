@@ -22,8 +22,10 @@ public class DAO : MonoBehaviour
     public EyeDataFormat eyeData;
 
     //public int blockSequence
-    public int reachTarget;
+    public int currentReachTarget;
     public RunType currentRunType;
+
+    public int num;
 
     void Awake(){
         instance = this;
@@ -96,10 +98,13 @@ public class DAO : MonoBehaviour
     //     set { motionDataRightWrist = value; }
     // }
     
-    public int ReachTarget
+    public int CurrentReachTarget
     {
-        get { return reachTarget; }
-        set { reachTarget = value; }
+        get { return currentReachTarget; }
+        set { currentReachTarget = value; }
 
+    }
+    public RunType GetRunType(){
+        return currentRunType;
     }
 }
