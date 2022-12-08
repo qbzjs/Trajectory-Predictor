@@ -389,6 +389,10 @@ public class TargetManager : MonoBehaviour{
             fixationCross.transform.DOScale(0, 0);
             fixationRenderer.material.DOFade(0, 0);
             fixationCross.SetActive(true);
+            //tag fixation targets
+            if (fixationCross.GetComponent<Tag>()){
+                fixationCross.GetComponent<Tag>().tag = "0";
+            }
         }
         
         fixationCross.transform.DOScale(0.5f, GameManager.instance.SpeedCheck(animationDuration));
@@ -547,6 +551,10 @@ public class TargetManager : MonoBehaviour{
             for (int i = 0; i < targetGhosts.Length; i++){
                 targetGhosts[i] = Instantiate(targetGhostPrefab, originPoint.position, quaternion.identity);
                 targetGhosts[i].transform.DOScale(0, 0);
+                //tag ghost targets
+                if (targetGhosts[i].GetComponent<Tag>()){
+                    targetGhosts[i].GetComponent<Tag>().tag = (i+1).ToString();
+                }
             }
         }
         
@@ -554,6 +562,11 @@ public class TargetManager : MonoBehaviour{
             targetGhosts[i].transform.DOScale(0, 0);
             targetGhosts[i].transform.DOScale(0.75f, GameManager.instance.SpeedCheck(animationDuration));
             targetGhosts[i].transform.DOMove(GetDestination(i), GameManager.instance.SpeedCheck(animationDuration));
+        }
+        //enable gazetrigger colliders
+        GazeObectTag[] gazeTags = (GazeObectTag[]) GameObject.FindObjectsOfType (typeof(GazeObectTag));
+        foreach (GazeObectTag t in gazeTags){
+            t.transform.GetComponent<Collider>().enabled = true;
         }
         
         targetHomeObject.transform.DOScale(1.5f, GameManager.instance.SpeedCheck(animationDuration));
@@ -566,6 +579,12 @@ public class TargetManager : MonoBehaviour{
         
         targetHomeObject.transform.DOScale(0.0f, GameManager.instance.SpeedCheck(animationDuration));
         homeTargetRenderer.material.DOColor(defaultColour, lifeTime / 4);
+        
+        //disable gazetrigger colliders
+        GazeObectTag[] gazeTags = (GazeObectTag[]) GameObject.FindObjectsOfType (typeof(GazeObectTag));
+        foreach (GazeObectTag t in gazeTags){
+            t.transform.GetComponent<Collider>().enabled = false;
+        }
         
         //observation ml events
         if (OnTargetAction!=null){

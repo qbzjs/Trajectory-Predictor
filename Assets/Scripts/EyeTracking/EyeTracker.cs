@@ -6,6 +6,7 @@ using UnityEngine.Assertions;
 using TMPro;
 using Enums;
 using Tobii.Gaming.Examples.GazePointData;
+using UnityEngine.UI;
 
 namespace ViveSR
 {
@@ -15,6 +16,8 @@ namespace ViveSR
         {
             public class EyeTracker : MonoBehaviour
             {
+                #region Eye Tracker Variables
+
                 public bool visualiseEyeData;
                 
                 public int LengthOfRay = 25;
@@ -37,10 +40,18 @@ namespace ViveSR
                 static float pupilDiameterLeft;
                 static float pupilDiameterRight;
 
+                public Vector3 rayDirection;
+
+                #endregion
+
+
+                //debug display
                 public TextMeshPro blinkDisplay;
                 public TextMeshPro gazeDataDisplay;
                 public TextMeshPro eyeOpennessDisplay;
                 public TextMeshPro pupilDiameterDisplay;
+                
+                public TextMeshPro gazeHitObjectDisplay;
                 
                 private void Start()
                 {
@@ -57,6 +68,8 @@ namespace ViveSR
 
                 private void Update()
                 {
+                    
+
                     if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING &&
                         SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.NOT_SUPPORT) return;
                     
@@ -109,7 +122,12 @@ namespace ViveSR
                         }
                     }
 
+                    rayDirection = Camera.main.transform.TransformDirection(GazeDirectionCombinedLocal);
+                    
+                    
+
                 }
+
                 private void Release()
                 {
                     if (eye_callback_registered == true)
@@ -130,11 +148,11 @@ namespace ViveSR
                     pupilDiameterLeft = eyeData.verbose_data.left.pupil_diameter_mm;
                     pupilDiameterRight = eyeData.verbose_data.right.pupil_diameter_mm;
                 }
-                
-                //*************************************
-                
-                
-                
+
+
+                #region Data Writing Variables
+
+                // DATA WRITING *************************************
                 private DataWriter dataWriter;
                 
                 public bool recordEnabled;
@@ -157,22 +175,13 @@ namespace ViveSR
                 [Range(0, 1f)] 
                 public float blinkThreshold = 0.05f;
                 public bool blinking;
+
+                #endregion
+
                 
-                //TODO - fix file name generator from new 'BlockManager' 
-                private string GenerateFileName(){
-                    BlockManager tm = BlockManager.instance;
-                    sessionTag = Settings.instance.GetSessionInfo();
-                    string n = "";
-                    if (motionTag == MotionTag.Null)
-                    {
-                        n = transform.name+"_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
-                    }
-                    else{
-                        n = motionTag.ToString() + "_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
-                    }
-                    return n;
-                }
-                
+
+                #region Subscription Events
+
                 private void OnEnable(){
                     GameManager.OnBlockAction+=GameManagerOnBlockAction;
                     GameManager.OnTrialAction+= GameManagerOnTrialAction;
@@ -231,10 +240,58 @@ namespace ViveSR
                         }
                     }
 
+                }               
+
+                #endregion
+
+                private void LateUpdate(){
+                    Debug.DrawRay(Camera.main.transform.position, rayDirection, Color.green);
                 }
 
                 void FixedUpdate()
                 {
+                    //RAYCAST TO CHECK TARGETS
+                    RaycastHit hit;
+
+                    
+                    
+                    if (Physics.Raycast(Camera.main.transform.position, rayDirection, out hit)){
+                        // if (hit.collider.isTrigger){
+                        //     print("Trigger - distance: " + hit.distance + " : " + hit.transform.name);
+                        //     gazeHitObjectDisplay.text = "Trigger - distance: " + hit.distance + " : " + hit.transform.name;
+                        //     Debug.DrawLine(Camera.main.transform.position, hit.transform.position,Color.green);
+                        //     hit.transform.gameObject.GetComponent<Renderer>().material.color = Color.green;
+                        // }
+                        // else{
+                        //     print("Collider - distance: " + hit.distance + " : " + hit.transform.name);
+                        //     gazeHitObjectDisplay.text = "Collider - distance: " + hit.distance + " : " + hit.transform.name;
+                        //     Debug.DrawLine(Camera.main.transform.position, hit.transform.position,Color.magenta);
+                        //     hit.transform.gameObject.GetComponent<Renderer>().material.color = Color.magenta;
+                        // }
+                        if (hit.collider.isTrigger){
+                            if (hit.transform.GetComponent<GazeObectTag>()){
+                                gazeHitObjectDisplay.text = "Gaze distance: " + hit.distance + "\n" +" : " + hit.transform.name + ": " + hit.transform.GetComponent<GazeObectTag>().tag;
+                                
+                                if (hit.transform.GetComponent<GazeObectTag>().tag==""){
+                                    gazeHitObjectDisplay.color = Color.grey;
+                                }
+                                if (hit.transform.GetComponent<GazeObectTag>().tag=="0"){
+                                    gazeHitObjectDisplay.color = Color.magenta;
+                                }
+                                if (hit.transform.GetComponent<GazeObectTag>().tag=="1"||hit.transform.GetComponent<GazeObectTag>().tag=="2"
+                                ||hit.transform.GetComponent<GazeObectTag>().tag=="3"||hit.transform.GetComponent<GazeObectTag>().tag=="4"){
+                                    gazeHitObjectDisplay.color = Color.cyan;
+                                }
+
+                            }
+                        }
+                        else{
+                            gazeHitObjectDisplay.color = Color.grey;
+                            gazeHitObjectDisplay.text = "No Target at Gaze";
+                        }
+                    }
+                        
+                    
                     blinking = CheckBlinkThreshold();
                     
                     RouteEyeData();
@@ -275,7 +332,9 @@ namespace ViveSR
                     }
                 }
 
-                private void RouteEyeData()
+                #region Data and General Functions
+
+                               private void RouteEyeData()
                 {
                     //format the eyedata for saving
                     eyeDataFormat.blinking = blinking;
@@ -307,6 +366,23 @@ namespace ViveSR
 
                     return blink;
                 }
+                //TODO - fix file name generator from new 'BlockManager' 
+                private string GenerateFileName(){
+                    BlockManager tm = BlockManager.instance;
+                    sessionTag = Settings.instance.GetSessionInfo();
+                    string n = "";
+                    if (motionTag == MotionTag.Null)
+                    {
+                        n = transform.name+"_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
+                    }
+                    else{
+                        n = motionTag.ToString() + "_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
+                    }
+                    return n;
+                }
+
+                #endregion
+ 
             }
         }
     }
