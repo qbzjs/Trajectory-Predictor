@@ -197,6 +197,42 @@ public class DataWriter : MonoBehaviour
                 .Append(yCoord2D).AppendLine();
         }
     }
+
+    public void WriteEyeClassificationData(string tag, string ts, string elapsed,
+        int trigger, string phaseName, int phase, 
+        int reachTarget, int lookTarget, string lookTargetName, int blink, string blinking){
+        if (writeTitle){
+            stringBuilder.Append("Data Tag").Append(",")
+                .Append("TimeStamp").Append(",")
+                .Append("Elapsed Time").Append(",")
+                .Append("Trigger").Append(",")
+                .Append("Phase Name").Append(",")
+                .Append("Phase").Append(",")
+                .Append("Reach Target").Append(",")
+                .Append("Look Target").Append(",")
+                .Append("Look Target Name").Append(",")
+                .Append("Blink").Append(",")
+                .Append("Blinking").Append(",");
+            
+            writeTitle = false;
+        }
+        else{
+            //todo write data
+            stringBuilder.Append(tag).Append(",")
+                .Append(ts).Append(",")
+                .Append(elapsed).Append(",")
+                .Append(trigger).Append(",")
+                .Append(phaseName).Append(",")
+                .Append(phase).Append(",")
+                .Append(reachTarget).Append(",")
+                .Append(lookTarget).Append(",")
+                .Append(lookTargetName).Append(",")
+                .Append(blink).Append(",")
+                .Append(blinking).Append(",");
+        }
+    }
+        
+        
     //TODO - fix naming with new classes---------------------
     public void WriteData(string fileName)
     {

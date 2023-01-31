@@ -143,8 +143,8 @@ public class ScoreManager : MonoBehaviour{
     public int streakBonusSession;
     
     //todo - record targets hit kinematic and imagined
-    
-    
+    public TargetHitFormat targetsHit;
+
     #region Broadcast Score Events
 
     public delegate void ScoreBlockObjectAction(ScoreBlockDataObject sessionScoreData);
@@ -181,6 +181,7 @@ public class ScoreManager : MonoBehaviour{
         TrackedObjectReference.OnTrackedObject += TrackedObjectReferenceOnTrackedObject;
         BCI_ControlManager.OnControlSignal += BCI_ControlManagerOnControlSignal;
         GameManager.OnProgressAction += GameManagerOnProgressAction;
+        TargetFeedbackTrigger.OnTargetHit += TargetFeedbackTriggerOnTargetHit;
     }
 
     private void InputManagerOnUserInputAction(UserInputType inputType){
@@ -197,6 +198,7 @@ public class ScoreManager : MonoBehaviour{
         TrackedObjectReference.OnTrackedObject -= TrackedObjectReferenceOnTrackedObject;
         BCI_ControlManager.OnControlSignal -= BCI_ControlManagerOnControlSignal;
         GameManager.OnProgressAction -= GameManagerOnProgressAction;
+        TargetFeedbackTrigger.OnTargetHit -= TargetFeedbackTriggerOnTargetHit;
     }
     private void GameManagerOnBlockAction(GameStatus eventType, float lifetime, int blockIndex, int blockTotal){
         if (eventType == GameStatus.Countdown){
@@ -249,6 +251,15 @@ public class ScoreManager : MonoBehaviour{
             this.activeTarget = activeTarget.gameObject;
             targetMagnitudeTracker = this.activeTarget.GetComponent<TargetMagnitudeTracker>();
             TargetPresented();
+            
+            //add target count for target hit score
+            targetsHit.totalTargetsPresented++;
+            if (DAO.instance.currentRunType == RunType.Kinematic){
+                targetsHit.kinTargetsPresented++;
+            }
+            if (DAO.instance.currentRunType == RunType.Imagined){
+                targetsHit.imgTargetsPresented++;
+            }
         }
         //Executes after a trial...
         if (restPresent){
@@ -264,6 +275,42 @@ public class ScoreManager : MonoBehaviour{
         vectorAssisted = cvAssisted; 
         vectorRefined = cvRefined; 
     }
+
+    private void TargetFeedbackTriggerOnTargetHit(RunType runType, int tNum){
+        if (runType == RunType.Kinematic){
+            switch (tNum){
+                case 1:
+                    targetsHit.t1_kin++;
+                    break;
+                case 2:
+                    targetsHit.t2_kin++;
+                    break;
+                case 3:
+                    targetsHit.t3_kin++;
+                    break;
+                case 4:
+                    targetsHit.t4_kin++;
+                    break;
+            }
+        }
+        if (runType == RunType.Imagined){
+            switch (tNum){
+                case 1:
+                    targetsHit.t1_img++;
+                    break;
+                case 2:
+                    targetsHit.t2_img++;
+                    break;
+                case 3:
+                    targetsHit.t3_img++;
+                    break;
+                case 4:
+                    targetsHit.t4_img++;
+                    break;
+            }
+        }
+    }
+    
     #endregion
 
     #region Initialise

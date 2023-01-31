@@ -166,6 +166,7 @@ public class TargetManager : MonoBehaviour{
 
     private void GameManagerOnTrialAction(TrialEventType eventType, int targetNum, float lifeTime, int index, int total){
         targetIndex = targetNum;
+        
         this.lifeTime = lifeTime;
         if (eventType == TrialEventType.TrialSequenceStarted){
             //no tNum yet
@@ -204,6 +205,7 @@ public class TargetManager : MonoBehaviour{
             if (debugTrialPhases){
                 Debug.Log("Present Target");
             }
+            DAO.instance.ActiveTarget = targetIndex + 1;
             DisplayTarget();
         }
 
@@ -212,6 +214,7 @@ public class TargetManager : MonoBehaviour{
                 Debug.Log("Start Target Removal");
             }
             RemoveTarget();
+            DAO.instance.ActiveTarget = 0;
         }
 
         if (eventType == TrialEventType.PostTrialPhase){

@@ -25,6 +25,8 @@ public class DAO : MonoBehaviour
     public int currentReachTarget;
     public RunType currentRunType;
 
+    public int activeTarget;
+
     public int num;
 
     void Awake(){
@@ -106,5 +108,12 @@ public class DAO : MonoBehaviour
     }
     public RunType GetRunType(){
         return currentRunType;
+    }
+    
+    public int ActiveTarget
+    {
+        get { return activeTarget; }
+        set { activeTarget = value; }
+
     }
 }

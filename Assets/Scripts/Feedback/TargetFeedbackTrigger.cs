@@ -68,8 +68,10 @@ public class TargetFeedbackTrigger : MonoBehaviour
                 feedbackReady = false;
                 //add target hit score
                 if (OnTargetHit != null){
-                    OnTargetHit(rType,0);
+                    OnTargetHit(DAO.instance.GetRunType(), DAO.instance.ActiveTarget);
                 }
+                print("TARGET HIT--------------------");
+                
                 ScoreManager.instance.AddToStreak();
                 ScoreManager.instance.AddTargetHit();
                 Feedback();

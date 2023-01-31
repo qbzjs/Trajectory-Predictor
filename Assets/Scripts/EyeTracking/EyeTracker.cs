@@ -41,6 +41,15 @@ namespace ViveSR
                 static float pupilDiameterRight;
 
                 public Vector3 rayDirection;
+                
+                //Classifier
+                public EyeDataClassifierFormat eyeDataClassifierFormat;
+
+                public string phase;
+                public int lookTarget;
+                public string lookTargetName;
+                
+                
 
                 #endregion
 
@@ -250,28 +259,18 @@ namespace ViveSR
 
                 void FixedUpdate()
                 {
-                    //RAYCAST TO CHECK TARGETS
-                    RaycastHit hit;
 
-                    
+                    /// Eye Gaze Target Selection
+                    #region Eye Gaze Target Selection
+
+                    RaycastHit hit;
                     
                     if (Physics.Raycast(Camera.main.transform.position, rayDirection, out hit)){
-                        // if (hit.collider.isTrigger){
-                        //     print("Trigger - distance: " + hit.distance + " : " + hit.transform.name);
-                        //     gazeHitObjectDisplay.text = "Trigger - distance: " + hit.distance + " : " + hit.transform.name;
-                        //     Debug.DrawLine(Camera.main.transform.position, hit.transform.position,Color.green);
-                        //     hit.transform.gameObject.GetComponent<Renderer>().material.color = Color.green;
-                        // }
-                        // else{
-                        //     print("Collider - distance: " + hit.distance + " : " + hit.transform.name);
-                        //     gazeHitObjectDisplay.text = "Collider - distance: " + hit.distance + " : " + hit.transform.name;
-                        //     Debug.DrawLine(Camera.main.transform.position, hit.transform.position,Color.magenta);
-                        //     hit.transform.gameObject.GetComponent<Renderer>().material.color = Color.magenta;
-                        // }
                         if (hit.collider.isTrigger){
                             if (hit.transform.GetComponent<GazeObectTag>()){
                                 gazeHitObjectDisplay.text = "Gaze distance: " + hit.distance + "\n" +" : " + hit.transform.name + ": " + hit.transform.GetComponent<GazeObectTag>().tag;
                                 
+                                //debugging..
                                 if (hit.transform.GetComponent<GazeObectTag>().tag==""){
                                     gazeHitObjectDisplay.color = Color.grey;
                                 }
@@ -283,6 +282,13 @@ namespace ViveSR
                                     gazeHitObjectDisplay.color = Color.cyan;
                                 }
 
+                                if (hit.transform.GetComponent<GazeObectTag>().tag==""){
+                                    eyeDataClassifierFormat.lookTarget = -1;
+                                }
+                                if (hit.transform.GetComponent<GazeObectTag>().tag!=""){
+                                    eyeDataClassifierFormat.lookTarget = int.Parse(hit.transform.GetComponent<GazeObectTag>().tag);
+                                }
+                                LabelTarget(eyeDataClassifierFormat.lookTarget);
                             }
                         }
                         else{
@@ -290,6 +296,9 @@ namespace ViveSR
                             gazeHitObjectDisplay.text = "No Target at Gaze";
                         }
                     }
+
+                    #endregion
+
                         
                     
                     blinking = CheckBlinkThreshold();
@@ -329,12 +338,16 @@ namespace ViveSR
                         dataWriter.WriteEyeData(timeStamp, elapsedTime.ToString("f2"), motionTag.ToString(), targetTag,
                             blinking.ToString(), eyeOpennessLeft, eyeOpennessRight, gazeDirectionLeft, gazeDirectionRight,
                             pupilDiameterLeft, pupilDiameterRight, xCoord2D, yCoord2D);
+                        
+                        //todo triggers/phasenames 
+                        dataWriter.WriteEyeClassificationData(motionTag.ToString()+"Class", timeStamp, elapsedTime.ToString("f2"),
+                            0,"phase Name", 0, 0, 0, "look target name", 0, blinking.ToString());
                     }
                 }
 
                 #region Data and General Functions
 
-                               private void RouteEyeData()
+                private void RouteEyeData()
                 {
                     //format the eyedata for saving
                     eyeDataFormat.blinking = blinking;
@@ -351,6 +364,15 @@ namespace ViveSR
                     {
                         DAO.instance.eyeData = eyeDataFormat;
                     }
+                    
+                    //todo format the eye classification 
+                    eyeDataClassifierFormat.blinking = blinking;
+                    if (blinking){
+                        eyeDataClassifierFormat.blink = 1;
+                    }
+                    else{
+                        eyeDataClassifierFormat.blink = 0;
+                    }
                 }
                 private bool CheckBlinkThreshold()
                 {
@@ -365,6 +387,31 @@ namespace ViveSR
                     }
 
                     return blink;
+                }
+
+                private string LabelTarget(int n){
+                    string s = "";
+
+                    if (n == -1){
+                        s = "";
+                    }
+                    if (n == 0){
+                        s = "fixation";
+                    }
+                    if (n == 1){
+                        s = "left";
+                    }
+                    if (n == 2){
+                        s = "top";
+                    }
+                    if (n == 3){
+                        s = "right";
+                    }
+                    if (n == 4){
+                        s = "bottom";
+                    }
+                    
+                    return s;
                 }
                 //TODO - fix file name generator from new 'BlockManager' 
                 private string GenerateFileName(){
