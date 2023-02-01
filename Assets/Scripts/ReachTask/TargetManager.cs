@@ -49,6 +49,11 @@ public class TargetManager : MonoBehaviour{
     public Transform originPoint;
     [Range(0.05f,0.25f)]
     public float targetDistance = 0.125f;
+    //adjusts are used to modify the position of specific targets closer to the subject
+    public float t1_adjust = 0;
+    public float t2_adjust = 0;
+    public float t3_adjust = 0;
+    public float t4_adjust = 0;
 
     public bool flipOrientation = false; // this is needed to flip the targets depending on which direction the subject is seated
     
@@ -216,13 +221,14 @@ public class TargetManager : MonoBehaviour{
                 Debug.Log("Start Target Removal");
             }
             RemoveTarget();
-            DAO.instance.ActiveTarget = 0;
+            DAO.instance.ActiveTarget = targetIndex + 11;
         }
 
         if (eventType == TrialEventType.PostTrialPhase){
             if (debugTrialPhases){
                 Debug.Log("Destroy Target Objects");
             }
+            DAO.instance.ActiveTarget = 0;
             DestroyObjects();
         }
 
@@ -613,16 +619,16 @@ public class TargetManager : MonoBehaviour{
         if (flipOrientation){
             switch (tNum) {
                 case 0:
-                    targetDestination = new Vector3(originPoint.position.x + targetDistance, originPoint.position.y, originPoint.position.z);
+                    targetDestination = new Vector3(originPoint.position.x + targetDistance, originPoint.position.y, originPoint.position.z + t1_adjust);
                     break;
                 case 1:
-                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y + targetDistance, originPoint.position.z);
+                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y + targetDistance, originPoint.position.z + t2_adjust);
                     break;
                 case 2:
-                    targetDestination = new Vector3(originPoint.position.x - targetDistance, originPoint.position.y, originPoint.position.z);
+                    targetDestination = new Vector3(originPoint.position.x - targetDistance, originPoint.position.y, originPoint.position.z + t3_adjust);
                     break;
                 case 3:
-                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y-targetDistance, originPoint.position.z);
+                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y-targetDistance, originPoint.position.z + t4_adjust);
                     break;
             }
         }
@@ -632,16 +638,16 @@ public class TargetManager : MonoBehaviour{
                 //     targetDestination = new Vector3(originPoint.position.x, originPoint.position.y, originPoint.position.z);
                 //     break;
                 case 0:
-                    targetDestination = new Vector3(originPoint.position.x - targetDistance, originPoint.position.y, originPoint.position.z);
+                    targetDestination = new Vector3(originPoint.position.x - targetDistance, originPoint.position.y, originPoint.position.z - t1_adjust);
                     break;
                 case 1:
-                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y + targetDistance, originPoint.position.z);
+                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y + targetDistance, originPoint.position.z - t2_adjust);
                     break;
                 case 2:
-                    targetDestination = new Vector3(originPoint.position.x + targetDistance, originPoint.position.y, originPoint.position.z);
+                    targetDestination = new Vector3(originPoint.position.x + targetDistance, originPoint.position.y, originPoint.position.z - t3_adjust);
                     break;
                 case 3:
-                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y-targetDistance, originPoint.position.z);
+                    targetDestination = new Vector3(originPoint.position.x, originPoint.position.y-targetDistance, originPoint.position.z - t4_adjust);
                     break;
             }
         }

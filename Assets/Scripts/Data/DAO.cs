@@ -27,7 +27,7 @@ public class DAO : MonoBehaviour
 
     public int activeTarget;
 
-    public int num;
+
 
     void Awake(){
         instance = this;

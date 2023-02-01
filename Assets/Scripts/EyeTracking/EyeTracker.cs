@@ -270,6 +270,7 @@ namespace ViveSR
                             if (hit.transform.GetComponent<GazeObectTag>()){
                                 gazeHitObjectDisplay.text = "Gaze distance: " + hit.distance + "\n" +" : " + hit.transform.name + ": " + hit.transform.GetComponent<GazeObectTag>().tag;
                                 
+                                //TODO CHECK THIS WORKS TO RECORD EYE CLASSIFICATION DATA
                                 //debugging..
                                 if (hit.transform.GetComponent<GazeObectTag>().tag==""){
                                     gazeHitObjectDisplay.color = Color.grey;
@@ -341,7 +342,8 @@ namespace ViveSR
                         
                         //todo triggers/phasenames 
                         dataWriter.WriteEyeClassificationData(motionTag.ToString()+"Class", timeStamp, elapsedTime.ToString("f2"),
-                            0,"phase Name", 0, 0, 0, "look target name", 0, blinking.ToString());
+                            eyeDataClassifierFormat.trigger, eyeDataClassifierFormat.phaseName, eyeDataClassifierFormat.phase, DAO.instance.currentReachTarget, 
+                            eyeDataClassifierFormat.lookTarget, LabelTarget( eyeDataClassifierFormat.lookTarget), eyeDataClassifierFormat.blink, blinking.ToString());
                     }
                 }
 
@@ -366,6 +368,10 @@ namespace ViveSR
                     }
                     
                     //todo format the eye classification 
+                    eyeDataClassifierFormat.trigger = DAO.instance.activeTarget;
+                    
+                    eyeDataClassifierFormat.phaseName = GameManager.instance.trialPhase.ToString();
+                    eyeDataClassifierFormat.phase = PhaseIndexer(GameManager.instance.trialPhase);
                     eyeDataClassifierFormat.blinking = blinking;
                     if (blinking){
                         eyeDataClassifierFormat.blink = 1;
@@ -373,6 +379,7 @@ namespace ViveSR
                     else{
                         eyeDataClassifierFormat.blink = 0;
                     }
+                    
                 }
                 private bool CheckBlinkThreshold()
                 {
@@ -413,6 +420,21 @@ namespace ViveSR
                     
                     return s;
                 }
+
+                private int PhaseIndexer(TrialEventType trialPhase){
+                    int p = 0;
+                    if (trialPhase == TrialEventType.PreTrialPhase){
+                        p = 0;
+                    }
+                    if (trialPhase == TrialEventType.TargetPresentation){
+                        p = 1;
+                    }
+                    if (trialPhase == TrialEventType.Rest){
+                        p = 2;
+                    }
+                    return p;
+                }
+                
                 //TODO - fix file name generator from new 'BlockManager' 
                 private string GenerateFileName(){
                     BlockManager tm = BlockManager.instance;
