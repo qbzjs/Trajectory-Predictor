@@ -31,6 +31,9 @@ public class ScoreBlockDataObject
     //Performance Average
     public float overallPerformance;
     public int streakBonus;
+    
+    //targets hit
+    
  
     public ScoreBlockDataObject(string name, int sessionNumber, string run, string block, string runType,
         int assistancePercentage, float distanceAccuracyKinematic,float distanceAccuracyBCI_Assisted, float distanceAccuracyBCI_Unassisted,

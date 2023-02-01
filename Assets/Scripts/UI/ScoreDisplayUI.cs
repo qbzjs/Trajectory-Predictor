@@ -130,7 +130,7 @@ public class ScoreDisplayUI : MonoBehaviour
         BCI_DistanceText.text = Mathf.RoundToInt(bd).ToString()+"%";
         
         //targethit accuracy
-        targetsHit = ScoreManager.instance.targetsHit; //assign the data format
+        targetsHit = ScoreManager.instance.targetsHitSession; //assign the data format
         t1_Kin.text = targetsHit.t1_kin.ToString();
         t2_Kin.text = targetsHit.t2_kin.ToString();
         t3_Kin.text = targetsHit.t3_kin.ToString();

@@ -143,7 +143,8 @@ public class ScoreManager : MonoBehaviour{
     public int streakBonusSession;
     
     //todo - record targets hit kinematic and imagined
-    public TargetHitFormat targetsHit;
+    public TargetHitFormat targetsHitSession;
+    public TargetHitFormat targetsHitBlock;
 
     #region Broadcast Score Events
 
@@ -240,6 +241,8 @@ public class ScoreManager : MonoBehaviour{
             if (debugScore){
                 print("TRIAL COMPLETE......................");
             }
+            
+            TargetTotals();
             SessionTotals();
             SaveScore();
             //ResetScores();
@@ -251,15 +254,6 @@ public class ScoreManager : MonoBehaviour{
             this.activeTarget = activeTarget.gameObject;
             targetMagnitudeTracker = this.activeTarget.GetComponent<TargetMagnitudeTracker>();
             TargetPresented();
-            
-            //add target count for target hit score
-            targetsHit.totalTargetsPresented++;
-            if (DAO.instance.currentRunType == RunType.Kinematic){
-                targetsHit.kinTargetsPresented++;
-            }
-            if (DAO.instance.currentRunType == RunType.Imagined){
-                targetsHit.imgTargetsPresented++;
-            }
         }
         //Executes after a trial...
         if (restPresent){
@@ -277,38 +271,7 @@ public class ScoreManager : MonoBehaviour{
     }
 
     private void TargetFeedbackTriggerOnTargetHit(RunType runType, int tNum){
-        if (runType == RunType.Kinematic){
-            switch (tNum){
-                case 1:
-                    targetsHit.t1_kin++;
-                    break;
-                case 2:
-                    targetsHit.t2_kin++;
-                    break;
-                case 3:
-                    targetsHit.t3_kin++;
-                    break;
-                case 4:
-                    targetsHit.t4_kin++;
-                    break;
-            }
-        }
-        if (runType == RunType.Imagined){
-            switch (tNum){
-                case 1:
-                    targetsHit.t1_img++;
-                    break;
-                case 2:
-                    targetsHit.t2_img++;
-                    break;
-                case 3:
-                    targetsHit.t3_img++;
-                    break;
-                case 4:
-                    targetsHit.t4_img++;
-                    break;
-            }
-        }
+        TargetHitCounter(runType, tNum);
     }
     
     #endregion
@@ -382,13 +345,83 @@ public class ScoreManager : MonoBehaviour{
         }
     }
 
-    public void TargetPresented(){
+    #region Target Hit Counters
+    
+    private void TargetPresented(){
+        //add target count for target hit score
+        targetsHitSession.totalTargetsPresented++;
+        targetsHitBlock.totalTargetsPresented++;
+        if (DAO.instance.currentRunType == RunType.Kinematic){
+            targetsHitSession.kinTargetsPresented++;
+            targetsHitBlock.kinTargetsPresented++;
+        }
+        if (DAO.instance.currentRunType == RunType.Imagined){
+            targetsHitSession.imgTargetsPresented++;
+            targetsHitBlock.imgTargetsPresented++;
+        }
+    }
+    private void TargetHitCounter(RunType runType, int tNum){
+        //count hit targets for kin or img
+        if (runType == RunType.Kinematic){
+            switch (tNum){
+                case 1:
+                    targetsHitSession.t1_kin++;
+                    targetsHitBlock.t1_kin++;
+                    break;
+                case 2:
+                    targetsHitSession.t2_kin++;
+                    targetsHitBlock.t2_kin++;
+                    break;
+                case 3:
+                    targetsHitSession.t3_kin++;
+                    targetsHitBlock.t3_kin++;
+                    break;
+                case 4:
+                    targetsHitSession.t4_kin++;
+                    targetsHitBlock.t4_kin++;
+                    break;
+            }
+        }
+        if (runType == RunType.Imagined){
+            switch (tNum){
+                case 1:
+                    targetsHitSession.t1_img++;
+                    targetsHitBlock.t1_img++;
+                    break;
+                case 2:
+                    targetsHitSession.t2_img++;
+                    targetsHitBlock.t2_img++;
+                    break;
+                case 3:
+                    targetsHitSession.t3_img++;
+                    targetsHitBlock.t3_img++;
+                    break;
+                case 4:
+                    targetsHitSession.t4_img++;
+                    targetsHitBlock.t4_img++;
+                    break;
+            }
+        }
+    }
+
+    private void TargetTotals(){
+        
+        targetsHitSession.totalKinHit = targetsHitSession.t1_kin + targetsHitSession.t2_kin + targetsHitSession.t3_kin + targetsHitSession.t4_kin;
+        targetsHitSession.totalImgHit = targetsHitSession.t1_img + targetsHitSession.t2_img + targetsHitSession.t3_img + targetsHitSession.t4_img;
+        targetsHitSession.totalTargetsHit = targetsHitSession.totalKinHit + targetsHitSession.totalImgHit;
+        
+        targetsHitBlock.totalKinHit = targetsHitBlock.t1_kin + targetsHitBlock.t2_kin + targetsHitBlock.t3_kin + targetsHitBlock.t4_kin;
+        targetsHitBlock.totalImgHit = targetsHitBlock.t1_img + targetsHitBlock.t2_img + targetsHitBlock.t3_img + targetsHitBlock.t4_img;
+        targetsHitBlock.totalTargetsHit = targetsHitBlock.totalKinHit + targetsHitBlock.totalImgHit;
         
     }
 
+    #endregion
+
+
     #region Streak Score
 
-    //TODO - log all targets hit in all capacities
+    //TODO - DEPRECIATED???
     public void AddTargetHit(){
         int t = DAO.instance.CurrentReachTarget;
         runTypeEnum = DAO.instance.GetRunType();
@@ -730,6 +763,23 @@ public class ScoreManager : MonoBehaviour{
 
     //after a block
     private void ResetScores(){
+        //reset target counts for block
+        targetsHitBlock.totalTargetsPresented = 0;
+        targetsHitBlock.totalTargetsHit = 0;
+        targetsHitBlock.kinTargetsPresented = 0;
+        targetsHitBlock.totalKinHit = 0;
+        targetsHitBlock.t1_kin = 0;
+        targetsHitBlock.t2_kin = 0;
+        targetsHitBlock.t3_kin = 0;
+        targetsHitBlock.t4_kin = 0;
+        targetsHitBlock.imgTargetsPresented = 0;
+        targetsHitBlock.totalImgHit = 0;
+        targetsHitBlock.t1_img = 0;
+        targetsHitBlock.t2_img = 0;
+        targetsHitBlock.t3_img = 0;
+        targetsHitBlock.t4_img = 0;
+        
+        //reset score for block
         targetDistanceKin = 0;
         trialDistanceKin.Clear();
         totalDistanceKin = 0;
@@ -861,6 +911,15 @@ public class ScoreManager : MonoBehaviour{
         jWriter.OutputScoreSessionJSON(scoreSessionData);
         if (debugScore){
             print("session score written------------------------");
+        }
+        
+        jWriter.OutputTargetHitBlockJSON(targetsHitBlock);
+        if (debugScore){
+            print("target block score written------------------------");
+        }
+        jWriter.OutputTargetHitSessionSON(targetsHitSession);
+        if (debugScore){
+            print("target SESSION score written------------------------");
         }
 
         //SEND SCORE DATA OBJECTS

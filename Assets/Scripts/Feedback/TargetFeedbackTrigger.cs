@@ -73,7 +73,7 @@ public class TargetFeedbackTrigger : MonoBehaviour
                 print("TARGET HIT--------------------");
                 
                 ScoreManager.instance.AddToStreak();
-                ScoreManager.instance.AddTargetHit();
+                ScoreManager.instance.AddTargetHit(); //depreciated ???
                 Feedback();
             }
         }
