@@ -6,6 +6,7 @@ using Enums;
 using UnityEngine;
 using PathologicalGames;
 using DG.Tweening;
+using HighlightPlus;
 using Leap.Unity;
 using Unity.MLAgents;
 
@@ -22,6 +23,7 @@ public class TargetManager : MonoBehaviour{
     public GameObject targetPrefab;
     private GameObject target; //move this
     private GameObject targetMesh; //scale and colour this
+    private HighlightEffect highlight;
     public GameObject fixationCrossPrefab;
     private GameObject fixationCross;
     public GameObject indicatorPrefab;
@@ -415,6 +417,7 @@ public class TargetManager : MonoBehaviour{
         target.transform.position = targetDestination;
         targetMesh = target.transform.Find("Target").gameObject;
         targetMesh.transform.DOScale(0, 0);
+        highlight = targetMesh.gameObject.GetComponent<HighlightEffect>();
 
         targetRenderer = targetMesh.GetComponent<Renderer>();
 
@@ -501,7 +504,11 @@ public class TargetManager : MonoBehaviour{
         
         targetMesh.transform.DOScale(1, lifeTime/8);
         targetRenderer.material.DOColor(highlightColour, lifeTime / 8);
+        //highlight
+        highlight.highlighted = true;
         
+
+
         //change indicatior colour //done in script on indicator line
         // LineRenderer lr = indicatorLineTransform.gameObject.GetComponent<LineRenderer>();
         // lr.startColor = Color.green;
@@ -523,6 +530,8 @@ public class TargetManager : MonoBehaviour{
         
         targetMesh.transform.DOScale(0f, lifeTime/4);
         targetRenderer.material.DOColor(defaultColour, lifeTime / 4);
+
+        highlight.highlighted = false;
         
         targetGhosts[targetIndex].transform.DOScale(0.75f, lifeTime/4);
         // fixationRenderer.material.DOFade(0,lifeTime/4);
