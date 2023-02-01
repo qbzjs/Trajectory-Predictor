@@ -553,23 +553,23 @@ public class ScoreManager : MonoBehaviour{
 //      correlationAssistedPercentageBCI = new Vector3(Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.x, 200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.y, 200f), Utilities.SetUpperLimit(predictedAssistedTargetPercentageBCI.z, 200f));
 
         //Limits and casting
-        x = correlationPercentage.x; y = correlationPercentage.y; z = correlationPercentage.z;
-        
-        xa = correlationAssistedPercentage.x; ya = correlationAssistedPercentage.y; za = correlationAssistedPercentage.z;
-        
-        x = Utilities.SetUpperLimit(x, 200f); y = Utilities.SetUpperLimit(y, 200f); z = Utilities.SetUpperLimit(z, 200f);
-
-        xa = Utilities.SetUpperLimit(xa, 200f); ya = Utilities.SetUpperLimit(ya, 200f); za = Utilities.SetUpperLimit(za, 200f);
-        
-        correlationPercentage_Display = new Vector3(x, y, z);
-        correlationAssistedPercentage_Display = new Vector3(xa, ya, za);
-        
-        x = Utilities.SetLowerLimit(x, 0f); y = Utilities.SetLowerLimit(y, 0f); z = Utilities.SetLowerLimit(z, 0f);
-        
-        xa = Utilities.SetLowerLimit(xa, 0f); ya = Utilities.SetLowerLimit(ya, 0f); za = Utilities.SetLowerLimit(za, 0f);
-
-        correlationPercentage_Display = new Vector3(x, y, z);
-        correlationAssistedPercentage_Display = new Vector3(xa, ya, za);
+        // x = correlationPercentage.x; y = correlationPercentage.y; z = correlationPercentage.z;
+        //
+        // xa = correlationAssistedPercentage.x; ya = correlationAssistedPercentage.y; za = correlationAssistedPercentage.z;
+        //
+        // x = Utilities.SetUpperLimit(x, 200f); y = Utilities.SetUpperLimit(y, 200f); z = Utilities.SetUpperLimit(z, 200f);
+        //
+        // xa = Utilities.SetUpperLimit(xa, 200f); ya = Utilities.SetUpperLimit(ya, 200f); za = Utilities.SetUpperLimit(za, 200f);
+        //
+        // correlationPercentage_Display = new Vector3(x, y, z);
+        // correlationAssistedPercentage_Display = new Vector3(xa, ya, za);
+        //
+        // x = Utilities.SetLowerLimit(x, 0f); y = Utilities.SetLowerLimit(y, 0f); z = Utilities.SetLowerLimit(z, 0f);
+        //
+        // xa = Utilities.SetLowerLimit(xa, 0f); ya = Utilities.SetLowerLimit(ya, 0f); za = Utilities.SetLowerLimit(za, 0f);
+        //
+        // correlationPercentage_Display = new Vector3(x, y, z);
+        // correlationAssistedPercentage_Display = new Vector3(xa, ya, za);
 
         #endregion
 
@@ -689,7 +689,12 @@ public class ScoreManager : MonoBehaviour{
                 y = y + sck[i].y;
                 z = z + sck[i].z;
             }
+            
+            //set limits and outputs here
+            Vector3 tmp;
             sessionCorrelationKin = new Vector3(x / sck.Count, y / sck.Count, z / sck.Count);
+            tmp = sessionCorrelationKin;
+            sessionCorrelationKin = new Vector3(Utilities.SetUpperLowerLimit(tmp.x, 200f, 0f), Utilities.SetUpperLowerLimit(tmp.y, 200f, 0f), Utilities.SetUpperLowerLimit(tmp.z, 200f, 0f));
             sessionCorrelationKinAvg = (sessionCorrelationKin.x + sessionCorrelationKin.y + sessionCorrelationKin.z) / 3;
         }
 
@@ -724,10 +729,21 @@ public class ScoreManager : MonoBehaviour{
                 yu = yu + scbu[i].y;
                 zu = zu + scbu[i].z;
             }
+            
+            //limits and oputputs here
+            Vector3 tmp;
             sessionCorrelationBCI_Assisted = new Vector3(xa / scba.Count, ya / scba.Count, za / scba.Count);
+            tmp = sessionCorrelationBCI_Assisted;
+            sessionCorrelationBCI_Assisted = new Vector3(Utilities.SetUpperLowerLimit(tmp.x, 200f, 0f), Utilities.SetUpperLowerLimit(tmp.y, 200f, 0f), Utilities.SetUpperLowerLimit(tmp.z, 200f, 0f));
             sessionCorrelationBCIAvg_Assisted = (sessionCorrelationBCI_Assisted.x + sessionCorrelationBCI_Assisted.y + sessionCorrelationBCI_Assisted.z) / 3;
+            
             sessionCorrelationBCI_Unassisted = new Vector3(xu / scbu.Count, yu / scbu.Count, zu / scbu.Count);
+            tmp = sessionCorrelationBCI_Unassisted;
+            sessionCorrelationBCI_Unassisted = new Vector3(Utilities.SetUpperLowerLimit(tmp.x, 200f, 0f), Utilities.SetUpperLowerLimit(tmp.y, 200f, 0f), Utilities.SetUpperLowerLimit(tmp.z, 200f, 0f));
             sessionCorrelationBCIAvg_Unassisted = (sessionCorrelationBCI_Unassisted.x + sessionCorrelationBCI_Unassisted.y + sessionCorrelationBCI_Unassisted.z) / 3;
+            
+            
+            
         }
 
         //all metrics combined - 
