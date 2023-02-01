@@ -155,6 +155,49 @@ public class Utilities
             return input; 
         }
     }
+
+    public static float SetUpperLowerLimit(float input, float upper, float lower){
+        float i = input;
+        float o = 0;
+
+        if (i >= upper){
+            o = upper;
+        }
+        if (i <= lower){
+            o = lower;
+        }
+
+        if (i < upper && i > lower){
+            o = i;
+        }
+        return o;
+    }
+    public static float SetLimitsPositiveNegative(float input, float limit){
+        if (limit >= 0){
+            if (input >= limit){
+                return limit;
+            }
+
+            if (input <= -limit){
+                return -limit;
+            }
+            else{
+                return input; 
+            }
+        }
+        else{
+            if (input >= -limit){
+                return -limit;
+            }
+
+            if (input <= limit){
+                return limit;
+            }
+            else{
+                return input; 
+            }
+        }
+    }
     public static Vector3 SetUpperLimit(Vector3 input, Vector3 limit){
         float x = 0; float y = 0; float z = 0;
         if (input.x >= limit.x){

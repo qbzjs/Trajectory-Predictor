@@ -744,6 +744,9 @@ public class ScoreManager : MonoBehaviour{
         if (overallPerformanceSession >= 100){
             overallPerformanceSession = 100;
         }
+        if (overallPerformanceSession <= 0){
+            overallPerformanceSession = 0;
+        }
         
         if (OnScoreSessionAction != null){
             OnScoreSessionAction(sessionDistanceAccuracyKin, sessionDistanceAccuracyBCI_Assisted,sessionDistanceAccuracyBCI_Unassisted,

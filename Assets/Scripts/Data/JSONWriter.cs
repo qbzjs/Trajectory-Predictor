@@ -79,7 +79,7 @@ public class JSONWriter{
     {
         this.targetsHitBlock = targetsHitBlock;
 
-        string saveName = "TargetsHit R_" + scoreBlockData.run + "_B_" + scoreBlockData.block + ".txt"; 
+        string saveName = "Targets Hit R_" + scoreBlockData.run + "_B_" + scoreBlockData.block + ".txt"; 
         
         string output = JsonUtility.ToJson(this.targetsHitBlock,true);
         
@@ -100,7 +100,7 @@ public class JSONWriter{
     {
         this.targetsHitSession = targetsHitSession;
 
-        string saveName = "TargetsHit" + ".txt"; 
+        string saveName = "Targets Hit Session" + ".txt"; 
         
         string output = JsonUtility.ToJson(this.targetsHitSession,true);
         
