@@ -10,17 +10,32 @@ public class ScoreDisplayUI : MonoBehaviour
     [Range(1f, 10f)] 
     public float updateSpeed = 4f; 
     
-    //ui elements..
+    //UI
+    [Header("OVERALL")]
     public Slider performanceSlider;
     public TextMeshProUGUI performanceText;
-    
     public TextMeshProUGUI streakBonusText;
     
+    
+    [Header("TARGETS HIT")]
+    public Image kinDistanceFill;
     public Slider kinematicDistanceSlider;
     public TextMeshProUGUI kinematicDistanceText;
+    public TextMeshProUGUI t1_Kin;
+    public TextMeshProUGUI t2_Kin;
+    public TextMeshProUGUI t3_Kin;
+    public TextMeshProUGUI t4_Kin;
+    
+    public Image imgDistanceFill;
     public Slider BCI_DistanceSlider;
     public TextMeshProUGUI BCI_DistanceText;
+    public TextMeshProUGUI t1_Img;
+    public TextMeshProUGUI t2_Img;
+    public TextMeshProUGUI t3_Img;
+    public TextMeshProUGUI t4_Img;
+
     
+    [Header("CORRELATION")]
     public Slider kinematicCorrelationSliderX;
     public Slider kinematicCorrelationSliderY;
     public Slider kinematicCorrelationSliderZ;
@@ -44,15 +59,21 @@ public class ScoreDisplayUI : MonoBehaviour
     public Slider BCI_CorrelationAvgSliderZ;
     public TextMeshProUGUI BCI_CorrelationAvgText;
     
+    
+    
     [Header("-----------------")]
     //scores
     public float performance;
     private float p;
     public int streakBonus;
+    
     public float kinematicDistance;
     private float kd;
     public float BCI_Distance;
     private float bd;
+    public TargetHitFormat targetsHit;
+    
+    
     public Vector3 kinematicCorrelation;
     private Vector3 kc;
     private float kcx;private float kcy;private float kcz;
@@ -90,19 +111,36 @@ public class ScoreDisplayUI : MonoBehaviour
         // accuracyKin = Mathf.Lerp(accuracyKin, aKin, Time.deltaTime*2);
         // accuracyTextKinematic.text = "Kinematic Distance Accuracy : " + Mathf.RoundToInt(accuracyKin).ToString() + "%";
 
+        //overall
         p = Mathf.Lerp(p, performance, Time.deltaTime * updateSpeed);
         performanceSlider.value = p;
         performanceText.text = Mathf.RoundToInt(p).ToString()+"%";
 
         streakBonusText.text = "Streak Bonus : " + streakBonus.ToString();
 
+        
+        //distance accuracy
         kd = Mathf.Lerp(kd, kinematicDistance, Time.deltaTime * updateSpeed);
         kinematicDistanceSlider.value = kd;
+        kinDistanceFill.rectTransform.localScale = new Vector3(kd/100, kd/100, 1); //check this
         kinematicDistanceText.text = Mathf.RoundToInt(kd).ToString()+"%";
         bd = Mathf.Lerp(bd, BCI_Distance, Time.deltaTime * updateSpeed);
         BCI_DistanceSlider.value = bd;
+        imgDistanceFill.rectTransform.localScale = new Vector3(bd/100, bd/100, 1); //check this
         BCI_DistanceText.text = Mathf.RoundToInt(bd).ToString()+"%";
         
+        //targethit accuracy
+        targetsHit = ScoreManager.instance.targetsHit; //assign the data format
+        t1_Kin.text = targetsHit.t1_kin.ToString();
+        t2_Kin.text = targetsHit.t2_kin.ToString();
+        t3_Kin.text = targetsHit.t3_kin.ToString();
+        t4_Kin.text = targetsHit.t4_kin.ToString();
+        t1_Img.text = targetsHit.t1_img.ToString();
+        t2_Img.text = targetsHit.t2_img.ToString();
+        t3_Img.text = targetsHit.t3_img.ToString();
+        t4_Img.text = targetsHit.t4_img.ToString();
+        
+        //correlation
         kc = Vector3.Lerp(kc,kinematicCorrelation, Time.deltaTime * updateSpeed);
         kinematicCorrelationSliderX.value = kc.x;
         kinematicCorrelationSliderY.value = kc.y;
