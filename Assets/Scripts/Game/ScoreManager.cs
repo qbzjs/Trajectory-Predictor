@@ -650,9 +650,14 @@ public class ScoreManager : MonoBehaviour{
             
         #endregion
 
-        //todo average the block correlation vectors for overall performance
-        //float p = distanceKin + distanceBCI_assisted + distanceBCI_unassisted + correlationPercentage + correlationAssistedPercentage;
-        //overallPerformanceBlock = p / 5;
+        //todo average the block correlation vectors for overall performance ***** not sure i need to save overall score per block!!!!
+
+        float p = 0;
+        //only assisted BCI
+        float avCor = (correlationAssistedPercentage.x + correlationAssistedPercentage.y + correlationAssistedPercentage.z) / 3;
+        p = distanceBCI_assisted + avCor; 
+        overallPerformanceBlock = p / 2;
+
         
         //broadcast the score
         if (OnScoreBlockAction != null){
@@ -746,23 +751,35 @@ public class ScoreManager : MonoBehaviour{
             
         }
 
+        //OVERALL SCORING..............
+        float p = 0;
         //all metrics combined - 
-        // float p = sessionDistanceAccuracyKin + sessionDistanceAccuracyBCI_Assisted + sessionDistanceAccuracyBCI_Unassisted
-        //           + sessionCorrelationKinAvg + sessionCorrelationBCIAvg_Assisted + sessionCorrelationBCIAvg_Unassisted;
-        //overallPerformanceSession = p / 6;
+        p = sessionDistanceAccuracyKin + sessionDistanceAccuracyBCI_Assisted + sessionDistanceAccuracyBCI_Unassisted + sessionCorrelationKinAvg + sessionCorrelationBCIAvg_Assisted + sessionCorrelationBCIAvg_Unassisted;
+        overallPerformanceSession = p / 6;
         
         //no kinematic metrics
-        float p = sessionDistanceAccuracyBCI_Assisted + sessionDistanceAccuracyBCI_Unassisted + sessionCorrelationBCIAvg_Assisted + sessionCorrelationBCIAvg_Unassisted;
+        p = sessionDistanceAccuracyBCI_Assisted + sessionDistanceAccuracyBCI_Unassisted + sessionCorrelationBCIAvg_Assisted + sessionCorrelationBCIAvg_Unassisted; 
         overallPerformanceSession = p / 4;
-        //TODO ADD STREAK TO OVERAll performance - streak is shown seperately
-        //overallPerformanceSession = overallPerformanceSession + (streakBonus + longestStreak);
         
-        if (overallPerformanceSession >= 100){
-            overallPerformanceSession = 100;
-        }
-        if (overallPerformanceSession <= 0){
-            overallPerformanceSession = 0;
-        }
+        //only assisted BCI
+        p = sessionDistanceAccuracyBCI_Assisted + sessionCorrelationBCIAvg_Assisted; 
+        overallPerformanceSession = p / 2;
+        
+        //assisted BCI + Kinematic - todo TRY THIS IN LAB!!!
+        p = sessionDistanceAccuracyBCI_Assisted + sessionCorrelationBCIAvg_Assisted + sessionDistanceAccuracyKin + sessionCorrelationKinAvg; 
+        overallPerformanceSession = p / 4;
+        
+        //TODO ADD STREAK TO OVERAll performance - streak is shown seperately???
+        //overallPerformanceSession = overallPerformanceSession + (streakBonus + longestStreak);
+
+        overallPerformanceSession = Utilities.SetUpperLowerLimit(overallPerformanceSession, 100F, 0);
+        
+        // if (overallPerformanceSession >= 100){
+        //     overallPerformanceSession = 100;
+        // }
+        // if (overallPerformanceSession <= 0){
+        //     overallPerformanceSession = 0;
+        // }
         
         if (OnScoreSessionAction != null){
             OnScoreSessionAction(sessionDistanceAccuracyKin, sessionDistanceAccuracyBCI_Assisted,sessionDistanceAccuracyBCI_Unassisted,
@@ -891,7 +908,7 @@ public class ScoreManager : MonoBehaviour{
         scoreBlockData.correlationDisplay = correlationPercentage_Display;
         scoreBlockData.correlationAssistedDisplay = correlationAssistedPercentage_Display;
 
-        scoreBlockData.overallPerformance = overallPerformanceBlock; //not sure this is working..
+        scoreBlockData.overallPerformance = overallPerformanceBlock; //not sure this is working
         scoreBlockData.streakBonus = streakBonusBlock;
         
         //---------SESSION
