@@ -26,7 +26,7 @@ public class DAO : MonoBehaviour
     public RunType currentRunType;
 
     public int activeTarget;
-
+    
 
 
     void Awake(){
