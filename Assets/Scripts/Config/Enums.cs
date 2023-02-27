@@ -68,7 +68,11 @@
 		RightPointerFinger_Leap,
 		Waist,
 		Eyes,
-		BCI
+		BCI,
+		BCI_Target,
+		BCI_Predicted,
+		BCI_Assisted,
+		BCI_Refined //refined is assisted plus scale and offsets
 	}
 	
 	// public enum TrialParadigm{

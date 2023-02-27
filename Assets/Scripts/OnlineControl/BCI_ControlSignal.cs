@@ -144,6 +144,11 @@ public class BCI_ControlSignal : MonoBehaviour
         //assign control to a vector for use in other classes 
         controlVectorRefined = cv;
 
+       //// Debug.Log("predicted: " + controlVectorPredicted);
+       // Debug.Log("target: " + controlVectorTarget);
+       // Debug.Log("assisted: " + controlVectorAssisted);
+       // Debug.Log("refined: " + controlVectorRefined);
+
     }
 
     private void LateUpdate(){
