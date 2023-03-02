@@ -162,7 +162,8 @@ namespace ViveSR
                 #region Data Writing Variables
 
                 // DATA WRITING *************************************
-                private DataWriter dataWriter;
+                private DataWriter dataWriterEye;
+                private DataWriter dataWriterEyeClass;
                 
                 public bool recordEnabled;
                 [Space(10)]
@@ -172,8 +173,10 @@ namespace ViveSR
                 
                 public MotionTag motionTag;
                 public string sessionTag = "Session Name Here";
-                public string fileName = "Name Here";
-                private string testID;
+                public string fileNameTracker = "Name Here";
+                public string fileNameClassifier = "Name Here";
+                private string testIDTracker;
+                private string testIDClassifier;
                 public int targetNumber;
                 private string targetTag = "Target Tag Here";
                 public string id;
@@ -186,9 +189,7 @@ namespace ViveSR
                 public bool blinking;
 
                 #endregion
-
                 
-
                 #region Subscription Events
 
                 private void OnEnable(){
@@ -234,9 +235,12 @@ namespace ViveSR
                         {
                             //Debug.Log("---- Start Eye Tracking Record : " + fileName);
                             //testID = jointTag + "_" + System.Guid.NewGuid().ToString();
-                            dataWriter = new DataWriter();
-                            fileName = GenerateFileName();
-                            testID = fileName + "_" + id;
+                            dataWriterEye = new DataWriter();
+                            dataWriterEyeClass = new DataWriter();
+                            fileNameTracker = GenerateFileName("Tracker");
+                            fileNameClassifier = GenerateFileName("Classifier");
+                            testIDTracker = fileNameTracker + id;
+                            testIDClassifier = fileNameClassifier  + id;
                             elapsedTime = 0;
                             recordEyeData = true;
                         }
@@ -245,7 +249,8 @@ namespace ViveSR
                             print("TODO - VERIFY EYE TRACKING RECORDING");
                             //Debug.Log("---- Stop Eye Tracking Tracking : " + fileName);
                             recordEyeData = false;
-                            dataWriter.WriteData(testID);
+                            dataWriterEye.WriteData(testIDTracker);
+                            dataWriterEyeClass.WriteData(testIDClassifier);
                         }
                     }
 
@@ -330,19 +335,19 @@ namespace ViveSR
                         //     p_speed,p_velocity,p_acceleration,p_accelerationStrength,p_direction,
                         //     p_angularSpeed,p_angularVelocity,p_angularAcceleration,p_angularAccelerationStrength,p_angularAxis);
                         
-                        //2D Gaze tracking!!!!!!!!!
+                        //2D Gaze tracking!!!!!!!!! USED FOR TOBII ON 2D SCREEN
                         if (gameObject.GetComponent<EyeTracker2D>()){
                             xCoord2D = gameObject.GetComponent<EyeTracker2D>().xCoord;
                             yCoord2D = gameObject.GetComponent<EyeTracker2D>().yCoord;
                         }
                         
-                        dataWriter.WriteEyeData(timeStamp, elapsedTime.ToString("f2"), motionTag.ToString(), targetTag,
+                        dataWriterEye.WriteEyeData(timeStamp, elapsedTime.ToString("f2"), motionTag.ToString(), targetTag,
                             blinking.ToString(), eyeOpennessLeft, eyeOpennessRight, gazeDirectionLeft, gazeDirectionRight,
                             pupilDiameterLeft, pupilDiameterRight, xCoord2D, yCoord2D);
                         
                         //todo triggers/phasenames 
-                        dataWriter.WriteEyeClassificationData(motionTag.ToString()+"Class", timeStamp, elapsedTime.ToString("f2"),
-                            eyeDataClassifierFormat.trigger, eyeDataClassifierFormat.phaseName, eyeDataClassifierFormat.phase, DAO.instance.currentReachTarget, 
+                        dataWriterEyeClass.WriteEyeClassificationData(motionTag.ToString()+"Class", timeStamp, elapsedTime.ToString("f2"),
+                            eyeDataClassifierFormat.trigger, eyeDataClassifierFormat.phaseName, eyeDataClassifierFormat.phase, eyeDataClassifierFormat.reachTarget, 
                             eyeDataClassifierFormat.lookTarget, LabelTarget( eyeDataClassifierFormat.lookTarget), eyeDataClassifierFormat.blink, blinking.ToString());
                     }
                 }
@@ -372,6 +377,7 @@ namespace ViveSR
                     
                     eyeDataClassifierFormat.phaseName = GameManager.instance.trialPhase.ToString();
                     eyeDataClassifierFormat.phase = PhaseIndexer(GameManager.instance.trialPhase);
+                    eyeDataClassifierFormat.reachTarget = TargetIndexer(GameManager.instance.trialPhase, DAO.instance.currentReachTarget); 
                     eyeDataClassifierFormat.blinking = blinking;
                     if (blinking){
                         eyeDataClassifierFormat.blink = 1;
@@ -423,29 +429,43 @@ namespace ViveSR
 
                 private int PhaseIndexer(TrialEventType trialPhase){
                     int p = 0;
-                    if (trialPhase == TrialEventType.PreTrialPhase){
+                    if (trialPhase == TrialEventType.Ready || trialPhase == TrialEventType.PreTrialPhase || trialPhase == TrialEventType.PostTrialPhase){
                         p = 0;
                     }
-                    if (trialPhase == TrialEventType.TargetPresentation){
+                    if (trialPhase == TrialEventType.Fixation || trialPhase == TrialEventType.Indication){
                         p = 1;
                     }
-                    if (trialPhase == TrialEventType.Rest){
+                    if (trialPhase == TrialEventType.TargetPresentation){
                         p = 2;
+                    }
+                    if (trialPhase == TrialEventType.Rest){
+                        p = 3;
                     }
                     return p;
                 }
+
+                private int TargetIndexer(TrialEventType trialPhase, int currentTarget){
+                    int t = 0;
+                    if (trialPhase == TrialEventType.Ready || trialPhase == TrialEventType.PreTrialPhase || trialPhase == TrialEventType.PostTrialPhase){
+                        t = 0;
+                    }
+                    else{
+                        t = currentTarget + 1;//add 1 to current reach so targets are 1-4 on eye class output;
+                    }
+                    return t;
+                }
                 
                 //TODO - fix file name generator from new 'BlockManager' 
-                private string GenerateFileName(){
+                private string GenerateFileName(string dataType){
                     BlockManager tm = BlockManager.instance;
                     sessionTag = Settings.instance.GetSessionInfo();
                     string n = "";
                     if (motionTag == MotionTag.Null)
                     {
-                        n = transform.name+"_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
+                        n = transform.name + dataType +"_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
                     }
                     else{
-                        n = motionTag.ToString() + "_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
+                        n = motionTag.ToString() + dataType + "_" + sessionTag + "_"+"Block" + tm.blockSequence.sequenceStartTrigger[tm.blockIndex-1].ToString();
                     }
                     return n;
                 }

@@ -212,7 +212,7 @@ public class DataWriter : MonoBehaviour
                 .Append("Look Target").Append(",")
                 .Append("Look Target Name").Append(",")
                 .Append("Blink").Append(",")
-                .Append("Blinking").Append(",");
+                .Append("Blinking").AppendLine();
             
             writeTitle = false;
         }
@@ -228,7 +228,7 @@ public class DataWriter : MonoBehaviour
                 .Append(lookTarget).Append(",")
                 .Append(lookTargetName).Append(",")
                 .Append(blink).Append(",")
-                .Append(blinking).Append(",");
+                .Append(blinking).AppendLine();
         }
     }
         
