@@ -219,16 +219,16 @@ public class UDPClient : MonoBehaviour
     }
 
     //Exit UDP client
-    public void OnDisable()
-    {
-        if (receiveThread != null){
-            receiveThread.Abort();
-            receiveThread = null;
-        }
-        client.Close();
-        Debug.Log("UDPClient: exit");
-    }
-    
+    // public void OnDisable()
+    // {
+    //     if (receiveThread != null){
+    //         receiveThread.Abort();
+    //         receiveThread = null;
+    //     }
+    //     client.Close();
+    //     Debug.Log("UDPClient: exit");
+    // }
+    //
     public void OnApplicationQuit()
     {
         if (receiveThread != null){
